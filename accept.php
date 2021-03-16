@@ -54,7 +54,7 @@ if (!empty ($_POST['name']))
 							$suc = 1;
 							while ($lot > 0)
 							{
-								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."')";
+								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', NOW())";
 								if (mysqli_query($link, $query))
 									$id = (mysqli_insert_id($link));
 								else 
@@ -133,7 +133,7 @@ if (!empty ($_POST['name']))
 			<label>Исполнение</label><input type="text" name="perfomance" onfocus="this.value=''" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"/>
 			
 			<div class="serial_lot">
-			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if ($error_s1>0) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
+			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
 			<div class="lol"><label>Количество</label><input class="lot" type="text" name="lot" onfocus="this.value=''" value="1"/></div>
 			</div>
 			<label>От кого</label><input type="text" name="order_from" onfocus="this.value=''" value="<?php if (!empty($_POST['order_from'])) echo $_POST['order_from']; ?>" required/>

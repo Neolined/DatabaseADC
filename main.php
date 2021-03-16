@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "view") && ($_SESSION['root'] !== "accept")))
+if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (empty($_SESSION['root'])))
 {
 	$_SESSION['err'] = 1;
 	header('Location: index.php');
@@ -48,7 +48,7 @@ $worker = $worker[0];
 						if (!empty($_POST))
 						$table_name = "history";
 						else $table_name = "products";
-						$result = mysqli_query($link, "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table_name."'");
+						$result = mysqli_query($link, "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table_name."' order by ORDINAL_POSITION");
 						if(!$result)
 						{
 						 die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
