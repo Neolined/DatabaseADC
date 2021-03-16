@@ -28,8 +28,6 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 							$suc = 1;
 							$_SESSION['user'] = $log;
 							$_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
-							$result = mysqli_query($link, "select `root` from users where `user` = '".$log."'");
-							$tm = mysqli_fetch_row($result);
 							$_SESSION['root'] = "view";
 							}
 							else 
