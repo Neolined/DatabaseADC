@@ -4,14 +4,7 @@ if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGEN
 {
 	header('Location: main.php');
 }
-$host = 'localhost'; // адрес сервера
-$database = 'adcproducts'; // имя базы данных
-$user = 'root'; // имя пользователя
-$password = 'qwerty123'; // пароль
-
-$link = mysqli_connect($host, $user, $password, $database);
-if (!$link)
-		die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
+require_once 'connect.php';
 mysqli_set_charset($link, 'utf8');
 
 $error_s1 = 0;
