@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
 $database = 'adcproducts';
-$user = 'adcuser';
-$password = 'vbq7-oi5tw';
+$user = 'root';
+$password = 'qwerty123';
 $link = mysqli_connect($host, $user, $password, $database);
 if (!$link) 
 {

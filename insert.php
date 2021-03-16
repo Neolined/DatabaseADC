@@ -1,6 +1,13 @@
 ﻿<?php
 session_start();
-require_once 'connect.php';
+$host = 'localhost';
+$database = 'adcproducts';
+$user = 'root';
+$password = 'qwerty123';
+$link = mysqli_connect($host, $user, $password, $database);
+mysqli_set_charset($link, 'utf8');
+if (!$link)
+    die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
 if ((!empty($_POST['insn'])) && (!empty($_POST['inst'])))
 {
 $query = "INSERT INTO list_of_products (`name`, `type`) VALUE ('".$_POST['insn']."', '".$_POST['inst']."')";

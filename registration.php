@@ -22,15 +22,13 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 						$result = mysqli_query($link, "SELECT user FROM users WHERE user = '".$log."'");
 						if (mysqli_num_rows($result) == 0)
 						{
-							$query = "INSERT INTO users (`user`, `password`, `worker`, `root`) VALUE ('$log', '$hash', '".$_POST['worker']."', 'view')";
+							$query = "INSERT INTO users (`user`, `password`, `worker`, `root`) VALUE ('$log', '$hash', '".$_POST['worker']."', '')";
 							if (mysqli_query($link, $query))
 							{
 							$suc = 1;
 							$_SESSION['user'] = $log;
 							$_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
-							$result = mysqli_query($link, "select `root` from users where `user` = '".$log."'");
-							$tm = mysqli_fetch_row($result);
-							$_SESSION['root'] = "view";
+							$_SESSION['root'] = "";
 							}
 							else 
 							{
