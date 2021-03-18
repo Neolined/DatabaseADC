@@ -169,7 +169,6 @@ input {
 }
 #regdata, #regdata:hover {
     background: linear-gradient(to left, #96ad2c, #f4fc76);
-    color:white;
 }
 #savedata, #regdata{
     margin-top: 1em;
@@ -177,12 +176,13 @@ input {
     border: 0;
     box-shadow: none;
     width: 100%;
+    color:black;
 }
     #regdata a {
     margin:0;
     }
     #savedata:hover, #regdata:hover, #history {
-        color: black;
+        color:white;
         opacity: 0.8;
     }
 
