@@ -178,6 +178,9 @@ input {
     box-shadow: none;
     width: 100%;
 }
+    #regdata a {
+    margin:0;
+    }
     #savedata:hover, #regdata:hover, #history {
         color: black;
         opacity: 0.8;
@@ -322,6 +325,3 @@ input {
             background-color: #5c6f93;
             color: white;
         }
-a:hover:not(.active) {
-    background-color: #ddd;
-}

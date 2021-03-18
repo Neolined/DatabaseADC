@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (empty($_SESSION['root'])))
+if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "") && ($_SESSION['root'] !== "accept")))
 {
 	$_SESSION['err'] = 1;
 	header('Location: index.php');

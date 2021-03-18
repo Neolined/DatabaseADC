@@ -99,7 +99,6 @@ if (!empty ($_POST['name']))
 	<p><?php echo $worker; ?></p>
 	</div>
 </div>
-		
  <div id="forma">
 		<form action="accept.php" position= "bottom" method="post" id="cleardata" class = "form">
 		<p id="priem_name" align="center">Первичный прием </p>
@@ -119,7 +118,7 @@ if (!empty ($_POST['name']))
 				}
 				?>
 				<?php
-				$result = mysqli_query($link, "select distinct`type` from `list_of_products`");
+				$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
 				$num = mysqli_num_rows($result);
 				while ($num > 0)
 				{
