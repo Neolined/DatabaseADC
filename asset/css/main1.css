@@ -1,6 +1,7 @@
 ﻿html, body {
     height: 100%;
 }
+
 body {
     background: #fcdd76; /* fallback for old browsers */
     margin: 0;
@@ -82,7 +83,7 @@ body {
     color: white;
     background-color: #5c6f93;
     padding: 0.5em 1em;
-    margin-top: 0;
+    margin: -1.3em -1.2em 1em -1.2em;
     border-radius: 1.5em 1.5em 0em 0em;
 }
 #cleardata {
@@ -97,6 +98,10 @@ body {
     border: 2px solid #fcdd76;
     border-radius:1em;
     }
+    #cleardata input:hover {
+        cursor: pointer;
+        opacity: 0.8;
+        }
 option{
     margin:0,5em;
 }
