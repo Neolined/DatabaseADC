@@ -128,15 +128,15 @@ if (!empty ($_POST['name']))
 				}
 				?>
 				</select>
-			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> type="text" name="name" onfocus="this.value=''" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
+			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> type="text" name="name" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
 			<label>Исполнение</label><input type="text" name="perfomance" onfocus="this.value=''" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"/>
 			
 			<div class="serial_lot">
-			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
-			<div class="lol"><label>Количество</label><input class="lot" type="text" name="lot" onfocus="this.value=''" value="1"/></div>
+			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
+			<div class="lol"><label>Количество</label><input class="lot" type="text" name="lot" onfocus="this.value=''" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>
 			</div>
 			<label>От кого</label><input type="text" name="order_from" onfocus="this.value=''" value="<?php if (!empty($_POST['order_from'])) echo $_POST['order_from']; ?>" required/>
-			<label>Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=''" value="<?php if (!empty($_POST['comment'])) echo $_POST['comment']; ?>" > </textarea>
+			<label>Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=''"> <?php if (!empty($_POST['comment'])) echo $_POST['comment']; ?></textarea>
 			<input type="submit" id="savedata" value="Сохранить данные" />
 			<?php
 			if (($error_s1>0) || ($error_s3>0))

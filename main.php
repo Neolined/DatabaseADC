@@ -81,7 +81,7 @@ $worker = $worker[0];
 					if (!empty($_POST))
 					{
 					$uid = $view_rows + $_POST['history'];
-					$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$uid."'" );
+					$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$uid."'  order by date desc" );
 					}
 					else $result = mysqli_query($link, "SELECT * FROM  `products` LIMIT $view_rows, $max_rows");//выводим таблицу
 					if(!$result)
