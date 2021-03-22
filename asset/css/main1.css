@@ -1,7 +1,7 @@
 ﻿html, body {
     height: 100%;
+    font-family: Arial, Helvetica, sans-serif;
 }
-
 body {
     background: #fcdd76; /* fallback for old browsers */
     margin: 0;
@@ -116,7 +116,7 @@ input {
     height: 2em;
 }
 .color_err {
-    background-color: #ffc7c7;
+    background-color: #ffc266;
     height: 100px,inherit;
     width: 15em;
 }
@@ -151,7 +151,7 @@ input {
     display:inline-flex;
 }
 .color_err1 {
-    background-color: #ffc7c7;
+    background-color: #ffc266;
     height: 100px,inherit;
 }
 .footer {
@@ -330,3 +330,39 @@ input {
             background-color: #5c6f93;
             color: white;
         }
+        .autocomplete {
+            /* контейнер должен быть расположен относительно: */
+            position: relative;
+            display: inline-block;
+          }
+         
+          #myInput[type=text] {
+            width: 29.7em;
+          }
+          .autocomplete-items {
+            position: absolute;
+            z-index: 99;
+            /* расположите элементы автозаполнения так, чтобы они имели ту же ширину, что и контейнер: */
+            top: 100%;
+            width: 100%;
+            border-radius: 3px;
+            box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.19);
+            
+          }
+          .autocomplete-items div {
+            padding: 0.5em 0.5em;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 0.1em;
+          }
+          .autocomplete-items div:hover {
+            /* при наведении курсора на элемент: */
+            background-color: #d7d7d7;
+            box-shadow: 0px 1px 4px 0px rgba(0,0,0,0.19);
+            
+          }
+          .autocomplete-active {
+            /* при навигации по элементам используются клавиши со стрелками: */
+            background-color: DodgerBlue !important;
+            color: #ffffff;
+          }
