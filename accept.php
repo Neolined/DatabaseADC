@@ -2,7 +2,7 @@
 session_start();
 if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) || ($_SESSION['root'] !== "accept"))
 {
-	header('Location: main.php');
+	header('Location: err403.php');
 }
 require_once 'connect.php';
 mysqli_set_charset($link, 'utf8');
@@ -84,19 +84,21 @@ if (!empty ($_POST['name']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="asset/css/main1.css"<?php echo(microtime(true).rand()); ?>>
   <title>Интерфейс приемщика</title>
+  <script src="jquery.js"></script>
+  <script type="text/javascript" src="jquery.autocomplete.js"></script>
  </head>
  <body>
  <div class="header">
 	<div class="dropdown">
-		<button class="dropbtn" align="center">МЕНЮ</button>
+	<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
 		<div class="dropdown-content">
-			<a href="main.php">Главная</a>
-			<a href="exit.php"><img id="exit" src="exit.png"><p id="exitp">Выход</p></a>
+		<a href="main.php">Главная</a>
+		<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
 		</div>
 	</div>
 	<img id="adc" src="adc.png">
 	<div id="worker">
-	<p><?php echo $worker; ?></p>
+	<p><img id="exit" src="worker.png"><?php echo $worker; ?></p>
 	</div>
 </div>
  <div id="forma">
@@ -105,31 +107,9 @@ if (!empty ($_POST['name']))
 		<input type="submit" name = "villy" value="Очистить данные формы"/>
 		</form>
 		<form action="accept.php" method="post" align="left" class="form">
-			<label>Тип изделия</label>
-				<select size="1" name="type" required>
-				<?php
-				if (empty($_POST['type']))
-				echo "<option selected disabled hidden style='display: none' value=''>Выберите тип</option>";
-				else
-				{
-				echo "<option selected style='display: none'>";
-				echo $_POST['type'];
-				echo "</option>";
-				}
-				?>
-				<?php
-				$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
-				$num = mysqli_num_rows($result);
-				while ($num > 0)
-				{
-				$row = mysqli_fetch_array($result);
-				echo '<option>'.$row['type'].'</option>';
-				$num--;
-				}
-				?>
-				</select>
-			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> type="text" name="name" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
-			<label>Исполнение</label><input type="text" name="perfomance" onfocus="this.value=''" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"/>
+			<label>Тип</label><input type="text" id = "type" name="type" onfocus="this.value=''" value="<?php if (!empty($_POST['type'])) echo $_POST['type']; ?>" required/>
+			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
+			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" onfocus="this.value=''" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"required/>
 			
 			<div class="serial_lot">
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
@@ -152,5 +132,46 @@ if (!empty ($_POST['name']))
 	<div class="footer">
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
+	<script>
+$(document).ready(function(){
+$("#name").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `name` from `list_of_products`");
+	$ass = mysqli_fetch_all($result);
+	echo json_encode($ass); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+);
+$("#type").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
+	$row = mysqli_fetch_all($result);
+	echo json_encode($row); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+	);
+});
+
+
+function show_item(id, status)
+{
+	if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
+	else $('#'+id).animate({ height: "show" }, "slow");
+}
+</script>
  </body>
 </html>

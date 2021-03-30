@@ -2,8 +2,7 @@
 session_start();
 if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "") && ($_SESSION['root'] !== "accept")))
 {
-	$_SESSION['err'] = 1;
-	header('Location: index.php');
+	header('Location: err403.php');
 }
 require_once 'connect.php';
 $link = mysqli_connect($host, $user, $password, $database);
@@ -14,6 +13,71 @@ die('Ошибка при подключении к базе данных: ' . my
 $query = mysqli_query($link, "select worker from users where user = '".$_SESSION['user']."'");
 $worker = mysqli_fetch_row($query);
 $worker = $worker[0];
+
+if (empty($_POST['filter']['date1'][0]))
+unset($_POST['filter']['date1']);
+if (empty($_POST['filter']['date2'][0]))
+unset($_POST['filter']['date2']);
+function selectDB($link, $option_text, $option, $table_name)
+{	
+	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
+	$result = mysqli_query($link, "select distinct $option from $table_name where $option != ''");
+	$num = mysqli_num_rows($result);
+	while ($num > 0)
+	{
+		$row = mysqli_fetch_array($result);
+		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'">'.$row[$option].'</label>';
+		$num--;
+	}
+	mysqli_free_result($result);
+	echo '</div>';
+}
+
+function sortSelect($order, $name_disabled, $sorttag1, $sorttag2)
+		{
+		echo '<td>';
+		echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$order.'\')"><select><option>'.$name_disabled.'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$order.'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' desc ">'.$sorttag2.'</label></div></div>';
+		echo '</td>';
+		}
+
+function requestDB($index)
+{
+	$str = "where ";
+	$j = 0;
+	while (!empty($index[$j]))
+	{
+	
+		if (!empty($_POST['filter'][$index[$j]]))
+		{
+			$i = 0;
+			$str = $str . "(";
+			while(!empty($_POST['filter'][$index[$j]][$i]))
+			{
+				if ($index[$j] == "comment")
+				$str = $str. "`" .$index[$j]. "` != '" .$_POST['filter'][$index[$j]][$i]. "'";
+				else if ($index[$j] == "date1")
+				$str = $str . "`date` >= '" .$_POST['filter'][$index[$j]][$i]. "'";
+				else if ($index[$j] == "date2")
+				$str = $str . "`date` <= '" .$_POST['filter'][$index[$j]][$i]. "'";
+				else
+				$str = $str. "`" .$index[$j]. "` = '" .$_POST['filter'][$index[$j]][$i]. "'";
+				$i++;
+				if (!empty($_POST['filter'][$index[$j]][$i]))
+				$str = $str. " or ";
+			}
+			$str = $str . ")";
+			$end = array_keys($_POST['filter']);
+			if (end($end) != $index[$j])
+			$str = $str . " and ";
+
+
+		}
+		$j++;
+	}
+	
+	
+	return($str);
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -25,18 +89,19 @@ $worker = $worker[0];
  <body>
  <div class="header">
 	<div class="dropdown">
-		<button class="dropbtn" align="center">МЕНЮ</button>
+		<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
 		<div class="dropdown-content">
 			<a href="accept.php">Приемка</a>
-			<a href="exit.php"><img id="exit" src="exit.png"><p id="exitp">Выход</p></a>
+			<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
 		</div>
 	</div>
 	<img id="adc" src="adc.png" align="center">
 	<div id="worker">
 	<p><?php echo $worker; ?></p>
 	</div>
-</div>
- <div id="forma">
+	</div>
+
+	<div id="forma">
 		<form action = "<?php echo $_SERVER['REQUEST_URI'];?>" method = "post" id="myform"></form>
 		<table class="table" align="center">
 				<?php
@@ -44,8 +109,30 @@ $worker = $worker[0];
 					echo "<caption>База изделий АДС</caption>";
 					else
 					echo "<caption>История изделия</caption>";
-					echo "<tr>";
-						if (!empty($_POST))
+				?>
+		</table>
+	<div class = "filterButton">
+			<div id = "filtersButtonAct">
+			<button id="showFilter" onclick = "show('showFilter', 'hideFilter', 'filterContent')">Показать фильтры</button>
+			<button id="hideFilter" onclick = "hide('showFilter', 'hideFilter', 'filterContent')" style="display:none;">Скрыть</button>
+			<input id="hideFilter" type = "submit" form = "myform" value = "Отправить данные"></input>
+			<input id="hideFilter" type="button" onclick="location.href='clearmain.php'" value = "Сбросить фильтры">
+			<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>
+			<div id="filterContent" style="display:none;">
+			<?php
+				selectDB($link, "Тип", "type", "products");	
+				selectDB($link, "Название", "name", "list_of_products");
+				selectDB($link, "Местоположение", "location", "products");
+				selectDB($link, "Владелец", "owner", "products");
+				selectDB($link, "ОТК", "otk", "products");
+				?>
+			<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "comment[]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>
+				<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="2100-12-31" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="2099-12-31" form = "myform"></input></label></div>
+			</div>
+	</div>
+	<table class="table" align="center">
+<?php
+						if (!empty($_POST['history']))
 						$table_name = "history";
 						else $table_name = "products";
 						$result = mysqli_query($link, "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table_name."' order by ORDINAL_POSITION");
@@ -53,18 +140,52 @@ $worker = $worker[0];
 						{
 						 die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 						}
-						$col = 0;
-						while ($row = mysqli_fetch_assoc($result))
+						echo '<tr>';
+						if ($table_name == "history")
 						{
-							echo "<td>";
-							echo $row['COLUMN_NAME'];
-							echo "</td>";
-							++$col;
+							$col = 0;
+							while ($row = mysqli_fetch_assoc($result))
+							{
+								echo "<td>";
+								echo $row['COLUMN_NAME'];
+								echo "</td>";
+								++$col;
+							}
 						}
-					if (empty($_POST))
+						else
+						{
+							$col = mysqli_num_rows($result);
+							sortSelect("uid", "UID", "По возрастанию", "По убыванию");
+							sortSelect("type", "Тип", "А-Я", "А-Я");
+							sortSelect("name", "Имя", "A-Z", "A-Z");
+							sortSelect("perfomance", "Исполнение", "A-Z", "A-Z");
+							sortSelect("serial", "Сирийный номер", "Прямой порядок", "Обратный порядок");
+							sortSelect("enter", "Вхождение", "Прямой порядок", "Обратный порядок");
+							sortSelect("date", "Дата", "Сначала", "С конца");
+							sortSelect("location", "Местонахождение", "А-Я", "Я-А");
+							sortSelect("owner", "Владелец", "А-Я", "Я-А");
+							sortSelect("software", "ПО", "Прямой порядок", "Обратный порядок");
+							sortSelect("otk", "ОТК", "А-Я", "Я-А");
+							sortSelect("comment", "Комментарий", "А-Я", "Я-А");
+						}
+					if (empty($_POST['history']))
 					echo "<td id=\"his\"> history </td>";
 					echo "</tr>";
-					$result = mysqli_query($link, "SELECT * FROM  `products`");
+					//формирование Запроса чере SESSION
+					if (empty($_SESSION['order']) && empty($_POST['order']))
+					$_SESSION['order'] = '';
+					else if (!empty($_POST['order']))
+					$_SESSION['order'] = $_POST['order'];
+					if (empty($_SESSION['filter']) && empty($_POST['filter']))
+					$_SESSION['filter'] = '';
+					else if (!empty($_POST['filter']))
+					{
+					$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "comment", "date1", "date2"));
+					if (empty($_POST['order']))
+					$_SESSION['order'] = '';
+					}
+					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']."");
+
 					if(!$result)
 						{
 						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
@@ -78,16 +199,17 @@ $worker = $worker[0];
 					$view_rows = 0;
 					else 
 					$view_rows = ($_GET['page'] - 1) * $max_rows;
-					if (!empty($_POST))
+					if (!empty($_POST['history']))
 					{
 					$uid = $view_rows + $_POST['history'];
 					$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$uid."'  order by date desc" );
 					}
-					else $result = mysqli_query($link, "SELECT * FROM  `products` LIMIT $view_rows, $max_rows");//выводим таблицу
+					else 
+					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 					if(!$result)
-						{
-						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
-						}
+					{
+					die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
+					}
 					$h=1;
 					while ($row = mysqli_fetch_array($result))
 					{
@@ -99,7 +221,7 @@ $worker = $worker[0];
 						echo '<td> '.$row[++$c].'</td>';
 						++$i;
 						}
-						if (empty($_POST))
+						if (empty($_POST['history']))
 						echo '<td><button id = "history" type = "submit" name = "history" value="'.$h++.'" form = "myform">Показать историю изделия</button></td>';
 						echo "</tr>";
 					}
@@ -108,7 +230,7 @@ $worker = $worker[0];
 			</table>
 			<div class= "pagination">
 			<?php
-				if(empty($_POST))
+				if(empty($_POST['history']))
 				{
 					for ($j = 1; $j <= $pages; $j++)
 					{
@@ -128,5 +250,6 @@ $worker = $worker[0];
 	<div class="footer">
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
+	<script src = "script.js"></script>
  </body>
 </html>

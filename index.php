@@ -57,12 +57,6 @@ if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 			<?php
 			if (($err == 1))
 			echo "<p class=\"msg\"> Неправильно введен логин или пароль </p>";
-			else if (!empty($_SESSION['err']))
-			{
-			if ($_SESSION['err'] == 1)
-			echo "<p class=\"msg\">В доступе отказано. Требуется авторизация</p>";
-			session_unset();
-			}
 			?>
 		</form>
 		</div>
