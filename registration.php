@@ -22,12 +22,7 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 					{
 						$query = "INSERT INTO users (`user`, `password`, `worker`, `root`) VALUE ('$log', '$hash', '".$_POST['worker']."', '')";
 						if (mysqli_query($link, $query))
-						{
 						$suc = 1;
-						$_SESSION['user'] = $log;
-						$_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
-						$_SESSION['root'] = "";
-						}
 						else 
 						{
 						$err = 6;
@@ -80,7 +75,7 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 			else if ($suc == 1)
 			{
 			echo "<p class=\"msg1\"> Регистрация прошла успешно</p>";
-			echo "<a href=\"main.php\"><input type=\"button\" id=\"savedata\" value=\"Перейти на главную\" /></a>";
+			echo "<a href=\"index.php\"><input type=\"button\" id=\"savedata\" value=\"Авторизоваться\" /></a>";
 			}
 			?>
 			</form>	

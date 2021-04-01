@@ -13,13 +13,14 @@
 		<div class="dropdown-content">
 		<?php
 			session_start();
-			if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "") && ($_SESSION['root'] !== "accept")))
+			if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "") && ($_SESSION['root'] !== "accept") && ($_SESSION['root'] !== "otk")))
 			{
 				echo '<a href="index.php">Авторизация</a>';
 			}
 			else if ((isset($_SESSION['user'])) || ($_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT'])  || ($_SESSION['root'] == ""))
 			{
 				echo '<a href="main.php">Главная</a>';
+				echo '<a href="otk.php">ОТК</a>';
 				echo '<a href="exit.php">Выход<img id="exit" src="exit.png"></a>';
 			}
 		?>

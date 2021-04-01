@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || (($_SESSION['root'] !== "") && ($_SESSION['root'] !== "accept")))
+if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || ($_SESSION['root'] == ""))
 {
 	header('Location: err403.php');
 }
@@ -92,6 +92,7 @@ function requestDB($index)
 		<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
 		<div class="dropdown-content">
 			<a href="accept.php">Приемка</a>
+			<a href="otk.php">ОТК</a>
 			<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
 		</div>
 	</div>

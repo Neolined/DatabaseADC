@@ -54,13 +54,13 @@ if (!empty ($_POST['name']))
 							$suc = 1;
 							while ($lot > 0)
 							{
-								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', NOW())";
+								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', 'Не проверялась',  NOW())";
 								if (mysqli_query($link, $query))
 									$id = (mysqli_insert_id($link));
 								else 
 									die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 								
-								$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '$worker', 'Запись', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
+								$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `otk_status`, `comment`) VALUES ('$id', NOW(), '$worker', 'Запись', '".$_POST['order_from']."', 'АДС', 'Не проверялась', '".$_POST['comment']."')";
 								if (!(mysqli_query($link, $query)))
 									die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 								$str++;
@@ -93,6 +93,7 @@ if (!empty ($_POST['name']))
 	<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
 		<div class="dropdown-content">
 		<a href="main.php">Главная</a>
+		<a href="otk.php">ОТК</a>
 		<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
 		</div>
 	</div>
@@ -108,12 +109,12 @@ if (!empty ($_POST['name']))
 		</form>
 		<form action="accept.php" method="post" align="left" class="form">
 			<label>Тип</label><input type="text" id = "type" name="type" onfocus="this.value=''" value="<?php if (!empty($_POST['type'])) echo $_POST['type']; ?>" required/>
-			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
+			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" onfocus="this.value=''" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
 			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" onfocus="this.value=''" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"required/>
 			
 			<div class="serial_lot">
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
-			<div class="lol"><label>Количество</label><input class="lot" type="text" name="lot" onfocus="this.value=''" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>
+			<div><label>Количество</label><input class="lot" type="text" name="lot" onfocus="this.value=''" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>
 			</div>
 			<label>От кого</label><input type="text" name="order_from" onfocus="this.value=''" value="<?php if (!empty($_POST['order_from'])) echo $_POST['order_from']; ?>" required/>
 			<label>Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=''"> <?php if (!empty($_POST['comment'])) echo $_POST['comment']; ?></textarea>
