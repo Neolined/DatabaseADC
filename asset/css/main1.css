@@ -9,10 +9,14 @@ body {
 }
 #forma {
     min-height: 100vh;
+    margin: 2em;
 }
 #errForma{
     min-height: 100vh;
     text-align: center;
+}
+#inputLabel{
+display: grid;
 }
 #adc, #adc1 {
     height:3em;
@@ -45,7 +49,6 @@ body {
     text-align: center;
     padding-bottom: 0.5em;
     width: 100%;
-    min-width: 55em;
     margin-bottom: 4em;
 }
 button{
@@ -72,7 +75,8 @@ button{
     display: flex;
     flex-direction: column;
     position: center absolute;
-    width: 25em;
+    min-width: 25em;
+    width: fit-content;
     margin-left: auto;
     margin-right: auto;
     padding: 1.3em;
@@ -86,6 +90,9 @@ button{
 }
 .form1 input:hover::placeholder, .form input:hover::placeholder {
     color: grey;
+}
+#formalign{
+    width: min-content;
 }
 #priem_name {
     font-size: large;
@@ -117,7 +124,8 @@ option{
 }
 select, input, textarea {
     background-color: white;
-    border:none;
+    border:1px solid #ced4da;;
+
 }
 select {
     height: 2.4em;
@@ -131,8 +139,10 @@ input {
     width: 15em;
 }
 .comment {
+    resize: vertical;
     height: 5em;
     font-family:Arial;
+    width: -webkit-fill-available;
 }
 .msg {
     border: 1px solid orangered;
@@ -153,12 +163,10 @@ input {
     width: 15em;
     float:left;
 }
-.lot {
-    width: 5em;
-    text-align:center;
-}
 .serial_lot {
     display:inline-flex;
+    align-items: flex-end;
+    align-self: center;
 }
 .color_err1 {
     background-color: #ffc7c7;
@@ -176,16 +184,15 @@ input {
     border: none;
     text-align: center;
     box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
-    min-width: 55em;
     width: 100%;
 }
-#savedata, #savedata:hover, #history, #history:hover {
+#savedata, #savedata:hover, #nextbtn, #history, #history:hover {
     background:  #5c6f93;
 }
 #regdata, #regdata:hover {
     background: #fcdd76;
 }
-#savedata, #regdata{
+#savedata, #regdata, #nextbtn{
     margin-top: 1em;
     height: 3em;
     border: 0;
@@ -193,15 +200,19 @@ input {
     width: 100%;
     color:white;
 }
+#nextbtn{
+    height: 2.2em;
+    width: 10em;
+    margin-left: 2em;
+}
     #regdata a {
     margin:0;
     }
-    #savedata:hover, #regdata:hover, #history {
-        color:white;
+    #savedata:hover, #regdata:hover, #history #nextbtn{
         opacity: 0.8;
     }
 
-    button, #exitbut, #savedata:hover, #regdata:hover {
+    button, #exitbut, #savedata:hover, #regdata:hover, #nextbtn {
         cursor: pointer;
     }
 
@@ -277,7 +288,7 @@ input {
 }
 
 /*Table*/
-.table {
+.table, .tableOtk {
     width: 100%;
     border: 5px solid #fff;
     border-top: 5px solid #fff;
@@ -286,11 +297,10 @@ input {
     background: #fff !important;
     box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
     border-collapse: collapse;
-    min-width: 55em;
     margin-bottom: 0;
 }
 
-    .table th {
+    .table th, .tableOtk th{
         font-weight: bold;
         padding: 7px;
         background: #ffd300;
@@ -300,13 +310,14 @@ input {
         border-bottom: 0.2em solid #ffd300;
     }
 
-    .table td {
+    .table td, .tableOtk td{
         padding: 7px;
         border: none;
         border-bottom: 0.1em solid #5c6f93;
         font-size: 15px;
         min-width: 3em;
-        border-bottom: 0.1em solid grey;
+        max-width: 25em;
+        border-bottom: 0.1em solid #ced4da;;
     }
     .table #his{
         text-align:center;
@@ -317,7 +328,7 @@ input {
         box-shadow: none;
         min-width:9em;
     }
-    .table caption {
+    .table caption, .tableOtk caption {
         border: 0.2em solid #fff;
         background-color: #5c6f93;
         color: white;
@@ -356,6 +367,9 @@ input {
   
   .selectBox {
     position: relative;
+  }
+  .selectBox select{
+    border: none;
   }
   .overSelect {
     position: absolute;
@@ -496,12 +510,58 @@ margin: 0;
     height: 100vh;
     text-align: center;
 }
-/*#return{
-    float: left;
-    text-decoration: none;
-    padding-left: 0.5em;
-    font-family: Arial;
-    font-size: larger;
+.tableOtk{
+    border: 1px solid #ced4da;
+    border-top: none;
+}
+.tableOtk caption{
+    border: none;
+    font-size: medium;
+}
+
+.select {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+.new-select {
+    position: relative;
+    border: 1px solid #ced4da;
+    padding: 0.4em 0.2em;
+    cursor: pointer;
+    user-select: none;
+    background: white;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+}
+.new-select__list {
+    position: absolute;
+    border: 1px solid #ced4da;
+    cursor: pointer;
+    width: -webkit-fill-available;
+    z-index: 2;
+    background: #fff;
+    user-select: none;
+}
+
+.new-select__list.on {
+    display: block;
+}
+
+.new-select__item span {
+    display: block;
+    padding: 0.4em 0.2em;
+    background-color: white;
+}
+
+.new-select__item span:hover {
     color: #5c6f93;
-    padding-top: 1.7em;
+    cursor: pointer;
+}
+.new-select.on:after {
+    -webkit-transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+         -o-transform: rotate(180deg);
+            transform: rotate(180deg);
 }
