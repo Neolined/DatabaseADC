@@ -1,8 +1,9 @@
-﻿<?php
+<?php
 session_start();
-if ((isset($_SESSION['user'])) && ($_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT'])  && (($_SESSION['root'] == "view") || ($_SESSION['root'] == "accept")))
+if ((isset($_SESSION['user'])) && ($_SESSION['ua'] == $_SERVER['HTTP_USER_AGENT'])  && (!empty($_SESSION['hash'])))
 header('Location: main.php');
-require_once 'connect.php';
+require_once 'lib/main.lib.php';
+$link = connect();
 $err=0;
 if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 {
@@ -20,9 +21,10 @@ if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 				echo $err;
 				$_SESSION['user'] = $log;
 				$_SESSION['ua'] = $_SERVER['HTTP_USER_AGENT'];
-				$result = mysqli_query($link, "select `root` from users where `user` = '".$log."'");
-				$tm = mysqli_fetch_row($result);
-				$_SESSION['root'] = $tm[0];
+				$_SESSION['hash'] = $tm[0];
+				$result = mysqli_query($link, "select worker from users where user = '".$log."'");
+				$worker = mysqli_fetch_row($result);
+				$_SESSION['worker'] = $worker[0];
 				mysqli_close($link);
 				header('Location: main.php');
 			}
@@ -40,12 +42,12 @@ if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 <html>
  <head>
   <meta charset=utf-8">
-  <link rel="stylesheet" href="asset/css/main1.css"<?php echo(microtime(true).rand()); ?>>
+  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <title>Авторизация</title>
  </head>
  <body>
  <div class="header">
-			<img id="adc1" src="adc.png">
+			<img id="adc1" src="images/adc.png">
 </div>
 		<div id="forma">
 		<form action="index.php" method="post" id="inp" align="center" class="form1">

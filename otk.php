@@ -1,11 +1,8 @@
-﻿<?php
+<?php
 session_start();
-
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) || ($_SESSION['root'] !== "otk"))
-{
-	header('Location: err403.php');
-}
-require_once 'connect.php';
+require_once 'lib/main.lib.php';
+$link = connect();
+checkRoot($link, "otk");
 mysqli_set_charset($link, 'utf8');
 $error_s1 = 0;
 $error_s2 = 0;
@@ -13,49 +10,31 @@ $error_s3 = 0;
 $error_s4 = 0;
 $error_n1 = 1;
 $succ = 0;
-$result = mysqli_query($link, "SELECT worker FROM users WHERE user = '".$_SESSION['user']."'");
-$worker = mysqli_fetch_row($result);
-$worker = $worker[0];
-if ((!empty($_POST['token']) && !empty($_SESSION['lastToken'])) && ($_POST['token'] == $_SESSION['lastToken']))
-{
-    header('Location: otk.php');
-}
-
 if (!empty($_POST['savebtn']))
 {
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `otk_status`, `date`) values ('".$_SESSION['uid']."', '$worker', 'ОТК', '".$_POST['comment']."', '".$_POST['otkstatus']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `otk`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'ОТК', '".$_POST['comment']."', '".$_POST['otkstatus']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	$result = "UPDATE products set `otk` = '".$_POST['otkstatus']."' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	else $succ = 1;
-	$_SESSION['lastToken'] = $_POST['token'];
-	
-}  
-		
+}
 ?>
 <!DOCTYPE html>
 <html>
  <head>
   <meta charset=utf-8">
-  <link rel="stylesheet" href="asset/css/main1.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="jquery.js"></script>
+  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
+  <script src="js/jquery.js"></script>
   <title>Интерфейс приемщика</title>
  </head>
  <body>
  <div class="header">
-	<div class="dropdown">
-	<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
-		<div class="dropdown-content">
-		<a href="main.php">Главная</a>
-		<a href="accept.php">Приемка</a>
-		<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
-		</div>
-	</div>
-	<img id="adc" src="adc.png">
+ <?php createMenu() ?>
+	<img id="adc" src="images/adc.png">
 	<div id="worker">
-	<p><img id="exit" src="worker.png"><?php echo $worker; ?></p>
+	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
 	</div>
 </div>
  <div id="forma">
@@ -86,7 +65,7 @@ if (!empty($_POST['savebtn']))
 							echo '<td> '.$row['otk'].'</td>';
 							echo "</tr>";
 							echo '</table>';
-							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `otk_status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'ОТК')");
+							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `otk`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'ОТК')");
 							$num = mysqli_num_rows($result);
 							if (!empty($num))
 							{
@@ -101,23 +80,20 @@ if (!empty($_POST['savebtn']))
 									echo '<td> '.$row['uid'].'</td>';
 									echo '<td> '.$row['worker'].'</td>';
 									echo '<td> '.$row['date'].'</td>';
-									echo '<td> '.$row['otk_status'].'</td>';
+									echo '<td> '.$row['otk'].'</td>';
 									echo '<td> '.$row['comment'].'</td>';
 									echo "</tr>";
 									$num--;
 								}
 								echo '</table>';
 							}
-							echo '<select class="select" name="otkstatus">';
+							echo '<select class="select" name="otkstatus" >';
 							echo '<option disabled>Выберите статус ОТК</option>';
-							echo '<option value="Проверка прошла успешно">Проверка прошла успешно</option>';
-							echo '<option value="Изделие не прошло проверку">Изделие не прошло проверку</option>';
+							echo '<option value="ok">Проверка прошла успешно</option>';
+							echo '<option value="fail">Изделие не прошло проверку</option>';
 							echo '</select>';
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
-							echo '<input type="hidden" name="token" value="';
-							echo (rand(10000,99999));
-							echo '" />';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						
@@ -144,6 +120,10 @@ if (!empty($_POST['savebtn']))
 			once = 1;
 			}
 		}
+		if ( window.history.replaceState )
+		{
+        	window.history.replaceState( null, null, window.location.href );
+    	}
 	</script>
 	<script>
 				$('.select').each(function() {

@@ -1,10 +1,8 @@
-﻿<?php
+<?php
 session_start();
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) || ($_SESSION['root'] !== "accept"))
-{
-	header('Location: err403.php');
-}
-require_once 'connect.php';
+require_once 'lib/main.lib.php';
+$link = connect();
+checkRoot($link, "accept");
 mysqli_set_charset($link, 'utf8');
 
 $error_s1 = 0;
@@ -12,10 +10,7 @@ $error_s2 = 0;
 $error_s3 = 0;
 $error_s4 = 0;
 $error_n1 = 1;
-$suc= 0;
-$query = mysqli_query($link, "select worker from users where user = '".$_SESSION['user']."'");
-$worker = mysqli_fetch_row($query);
-$worker = $worker[0];		
+$suc= 0;		
 
 if (!empty ($_POST['name']))
 {
@@ -54,13 +49,13 @@ if (!empty ($_POST['name']))
 							$suc = 1;
 							while ($lot > 0)
 							{
-								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', 'Не проверялась',  NOW())";
+								$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', NOW())";
 								if (mysqli_query($link, $query))
 									$id = (mysqli_insert_id($link));
 								else 
 									die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 								
-								$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `otk_status`, `comment`) VALUES ('$id', NOW(), '$worker', 'Запись', '".$_POST['order_from']."', 'АДС', 'Не проверялась', '".$_POST['comment']."')";
+								$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'Запись', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
 								if (!(mysqli_query($link, $query)))
 									die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 								$str++;
@@ -82,24 +77,17 @@ if (!empty ($_POST['name']))
 <html>
  <head>
   <meta charset=utf-8">
-  <link rel="stylesheet" href="asset/css/main1.css"<?php echo(microtime(true).rand()); ?>>
+  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <title>Интерфейс приемщика</title>
-  <script src="jquery.js"></script>
-  <script type="text/javascript" src="jquery.autocomplete.js"></script>
+  <script src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
  </head>
  <body>
  <div class="header">
-	<div class="dropdown">
-	<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
-		<div class="dropdown-content">
-		<a href="main.php">Главная</a>
-		<a href="otk.php">ОТК</a>
-		<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
-		</div>
-	</div>
-	<img id="adc" src="adc.png">
+ 	<?php createMenu(); ?>
+	<img id="adc" src="images/adc.png">
 	<div id="worker">
-	<p><img id="exit" src="worker.png"><?php echo $worker; ?></p>
+	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
 	</div>
 </div>
  <div id="forma">
@@ -134,22 +122,6 @@ if (!empty ($_POST['name']))
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
 	<script>
-$(document).ready(function(){
-$("#name").autocompleteArray(
-	<?php
-	$result = mysqli_query($link, "select distinct `name` from `list_of_products`");
-	$ass = mysqli_fetch_all($result);
-	echo json_encode($ass); 
-	?>
-	,
-		{
-			delay:10,
-			minChars:1,
-			matchSubset:1,
-			autoFill:true,
-			maxItemsToShow:10
-		}
-);
 $("#type").autocompleteArray(
 	<?php
 	$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
@@ -167,6 +139,22 @@ $("#type").autocompleteArray(
 	);
 });
 
+$(document).ready(function(){
+$("#name").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `name` from `list_of_products`");
+	$ass = mysqli_fetch_all($result);
+	echo json_encode($ass); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+);
 
 function show_item(id, status)
 {

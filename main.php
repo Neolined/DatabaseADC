@@ -1,104 +1,26 @@
-﻿<?php
+<?php
 session_start();
-if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT'])  || ($_SESSION['root'] == ""))
-{
-	header('Location: err403.php');
-}
-require_once 'connect.php';
-$link = mysqli_connect($host, $user, $password, $database);
-if (!$link) 
-{
-die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
-}
-$query = mysqli_query($link, "select worker from users where user = '".$_SESSION['user']."'");
-$worker = mysqli_fetch_row($query);
-$worker = $worker[0];
-
+require_once 'lib/main.lib.php';
+$link = connect();
+//checkRoot($link, NULL);
 if (empty($_POST['filter']['date1'][0]))
 unset($_POST['filter']['date1']);
 if (empty($_POST['filter']['date2'][0]))
 unset($_POST['filter']['date2']);
-function selectDB($link, $option_text, $option, $table_name)
-{	
-	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
-	$result = mysqli_query($link, "select distinct $option from $table_name where $option != ''");
-	$num = mysqli_num_rows($result);
-	while ($num > 0)
-	{
-		$row = mysqli_fetch_array($result);
-		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'">'.$row[$option].'</label>';
-		$num--;
-	}
-	mysqli_free_result($result);
-	echo '</div>';
-}
-
-function sortSelect($order, $name_disabled, $sorttag1, $sorttag2)
-		{
-		echo '<td>';
-		echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$order.'\')"><select><option>'.$name_disabled.'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$order.'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' desc ">'.$sorttag2.'</label></div></div>';
-		echo '</td>';
-		}
-
-function requestDB($index)
-{
-	$str = "where ";
-	$j = 0;
-	while (!empty($index[$j]))
-	{
-	
-		if (!empty($_POST['filter'][$index[$j]]))
-		{
-			$i = 0;
-			$str = $str . "(";
-			while(!empty($_POST['filter'][$index[$j]][$i]))
-			{
-				if ($index[$j] == "comment")
-				$str = $str. "`" .$index[$j]. "` != '" .$_POST['filter'][$index[$j]][$i]. "'";
-				else if ($index[$j] == "date1")
-				$str = $str . "`date` >= '" .$_POST['filter'][$index[$j]][$i]. "'";
-				else if ($index[$j] == "date2")
-				$str = $str . "`date` <= '" .$_POST['filter'][$index[$j]][$i]. "'";
-				else
-				$str = $str. "`" .$index[$j]. "` = '" .$_POST['filter'][$index[$j]][$i]. "'";
-				$i++;
-				if (!empty($_POST['filter'][$index[$j]][$i]))
-				$str = $str. " or ";
-			}
-			$str = $str . ")";
-			$end = array_keys($_POST['filter']);
-			if (end($end) != $index[$j])
-			$str = $str . " and ";
-
-
-		}
-		$j++;
-	}
-	
-	
-	return($str);
-}
 ?>
 <!DOCTYPE html>
 <html>
  <head>
   <meta charset=utf-8">
-  <link rel="stylesheet" href="asset/css/main1.css"<?php echo(microtime(true).rand()); ?>>
+  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <title>Главная</title>
  </head>
  <body>
  <div class="header">
-	<div class="dropdown">
-		<button class="dropbtn" align="center"><img id = "menu" src = "menu.png"></button>
-		<div class="dropdown-content">
-			<a href="accept.php">Приемка</a>
-			<a href="otk.php">ОТК</a>
-			<a href="exit.php">Выход<img id="exit" src="exit.png"></a>
-		</div>
-	</div>
-	<img id="adc" src="adc.png" align="center">
+	<?php createMenu() ?>
+	<img id="adc" src="images/adc.png" align="center">
 	<div id="worker">
-	<p><?php echo $worker; ?></p>
+	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
 	</div>
 	</div>
 
@@ -116,7 +38,7 @@ function requestDB($index)
 			<div id = "filtersButtonAct">
 			<button id="showFilter" onclick = "show('showFilter', 'hideFilter', 'filterContent')">Показать фильтры</button>
 			<button id="hideFilter" onclick = "hide('showFilter', 'hideFilter', 'filterContent')" style="display:none;">Скрыть</button>
-			<input id="hideFilter" type = "submit" form = "myform" value = "Отправить данные"></input>
+			<input id="hideFilter" type = "submit" form = "myform" value = "Применить фильтры"></input>
 			<input id="hideFilter" type="button" onclick="location.href='clearmain.php'" value = "Сбросить фильтры">
 			<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>
 			<div id="filterContent" style="display:none;">
@@ -157,9 +79,9 @@ function requestDB($index)
 						{
 							$col = mysqli_num_rows($result);
 							sortSelect("uid", "UID", "По возрастанию", "По убыванию");
-							sortSelect("type", "Тип", "А-Я", "А-Я");
-							sortSelect("name", "Имя", "A-Z", "A-Z");
-							sortSelect("perfomance", "Исполнение", "A-Z", "A-Z");
+							sortSelect("type", "Тип", "А-Я", "Я-А");
+							sortSelect("name", "Имя", "A-Z", "Z-A");
+							sortSelect("perfomance", "Исполнение", "A-Z", "Z-A");
 							sortSelect("serial", "Сирийный номер", "Прямой порядок", "Обратный порядок");
 							sortSelect("enter", "Вхождение", "Прямой порядок", "Обратный порядок");
 							sortSelect("date", "Дата", "Сначала", "С конца");
@@ -223,7 +145,7 @@ function requestDB($index)
 						++$i;
 						}
 						if (empty($_POST['history']))
-						echo '<td><button id = "history" type = "submit" name = "history" value="'.$h++.'" form = "myform">Показать историю изделия</button></td>';
+						echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$h++.'" form = "myform">Показать историю изделия</button></td>';
 						echo "</tr>";
 					}
 					mysqli_free_result($result);
@@ -251,6 +173,6 @@ function requestDB($index)
 	<div class="footer">
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
-	<script src = "script.js"></script>
+	<script src = "js/script.js"></script>
  </body>
 </html>
