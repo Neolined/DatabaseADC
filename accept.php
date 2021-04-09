@@ -122,6 +122,7 @@ if (!empty ($_POST['name']))
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
 	<script>
+$(document).ready(function(){
 $("#type").autocompleteArray(
 	<?php
 	$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
@@ -155,7 +156,7 @@ $("#name").autocompleteArray(
 			maxItemsToShow:10
 		}
 );
-
+});
 function show_item(id, status)
 {
 	if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
