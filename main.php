@@ -145,7 +145,7 @@ unset($_POST['filter']['date2']);
 						++$i;
 						}
 						if (empty($_POST['history']))
-						echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$h++.'" form = "myform">Показать историю изделия</button></td>';
+						echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row[0].'" form = "myform">Показать историю изделия</button></td>';
 						echo "</tr>";
 					}
 					mysqli_free_result($result);
