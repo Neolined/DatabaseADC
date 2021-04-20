@@ -28,31 +28,34 @@ unset($_POST['filter']['date2']);
 		<form action = "<?php echo $_SERVER['REQUEST_URI'];?>" method = "post" id="myform"></form>
 		<table class="table" align="center">
 				<?php
-					if (empty($_POST))
+					if (empty($_POST['history']))
 					echo "<caption>База изделий АДС</caption>";
 					else
 					echo "<caption>История изделия</caption>";
 				?>
 		</table>
-	<div class = "filterButton">
-			<div id = "filtersButtonAct">
-			<button id="showFilter" onclick = "show('showFilter', 'hideFilter', 'filterContent')">Показать фильтры</button>
-			<button id="hideFilter" onclick = "hide('showFilter', 'hideFilter', 'filterContent')" style="display:none;">Скрыть</button>
-			<input id="hideFilter" type = "submit" form = "myform" value = "Применить фильтры"></input>
-			<input id="hideFilter" type="button" onclick="location.href='clearmain.php'" value = "Сбросить фильтры">
-			<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>
-			<div id="filterContent" style="display:none;">
 			<?php
+				if (empty($_POST['history']))
+				{
+				echo '<div class = "filterButton">';
+				echo '<div id = "filtersButtonAct">';
+				echo '<button id="showFilter" onclick = "show(\'showFilter\', \'hideFilter\', \'filterContent\')">Показать фильтры</button>';
+				echo '<button id="hideFilter" onclick = "hide(\'showFilter\', \'hideFilter\', \'filterContent\')" style="display:none;">Скрыть</button>';
+				echo '<input id="hideFilter" type = "submit" form = "myform" value = "Применить фильтры"></input>';
+				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
+				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
+				echo '<div id="filterContent" style="display:none">';
 				selectDB($link, "Тип", "type", "products");	
 				selectDB($link, "Название", "name", "list_of_products");
 				selectDB($link, "Местоположение", "location", "products");
 				selectDB($link, "Владелец", "owner", "products");
 				selectDB($link, "ОТК", "otk", "products");
+				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "comment[]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>';
+				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="2100-12-31" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="2099-12-31" form = "myform"></input></label></div>';
+				echo '</div>';
+				echo '</div>';
+				}
 				?>
-			<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "comment[]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>
-				<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="2100-12-31" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="2099-12-31" form = "myform"></input></label></div>
-			</div>
-	</div>
 	<table class="table" align="center">
 <?php
 						if (!empty($_POST['history']))
@@ -133,7 +136,6 @@ unset($_POST['filter']['date2']);
 					{
 					die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 					}
-					$h=1;
 					while ($row = mysqli_fetch_array($result))
 					{
 						echo "<tr>";
