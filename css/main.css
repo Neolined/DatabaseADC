@@ -291,7 +291,6 @@ input {
 .table, .tableOtk {
     width: 100%;
     border: 5px solid #fff;
-    border-top: 5px solid #fff;
     border-bottom: 0.1em solid #5c6f93;
     font-size: 1em;
     background: #fff !important;
@@ -346,7 +345,7 @@ input {
     }
 .pagination {
     display: inline-block;
-    padding: 0.5em 0;
+    padding: 0.5em 0em;
     margin-bottom: 4em;
     background-color: white;
     min-width: 55em;
@@ -358,6 +357,7 @@ input {
         float: left;
         padding: 8px 16px;
         text-decoration: none;
+        margin-left: 0.5em;
     }
 
         .pagination a.active {
@@ -415,11 +415,13 @@ input {
   }
   .filterButton{
       background-color: white;
-      padding: 0em 0em 0.25em 0.2em;
       border-bottom:1px solid grey;;
   }
   #filtersButtonAct{
       display: flex;
+      padding-bottom: 0.4em;
+      padding-top: 0.25em;
+      padding-left: 0.6em;
   }
   #showFilter, #hideFilter{
     display: block;
@@ -438,6 +440,9 @@ cursor: pointer;
     padding: 1em 0.5em;
     width: fit-content;
     margin-top: 0;
+    padding-top: 0.4em;
+    border-top: 1px solid lightgray;
+    width: -webkit-fill-available;
   }
   #label{
     border: 1px solid gray;
