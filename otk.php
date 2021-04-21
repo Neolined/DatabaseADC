@@ -72,7 +72,7 @@ if (!empty($_POST['savebtn']))
 								//Рисую таблицу с историей ОТК
 								echo '<table class="tableOtk" align="center" style = "margin: 0;">';
 								echo '<caption> История ОТК</caption>';
-								echo '<tr><td>UID</td><td>Сотрудник</td><td>date</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
+								echo '<tr><td>UID</td><td>Сотрудник</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
 								while ($num > 0)
 								{
 									$row = mysqli_fetch_array($result);
@@ -87,13 +87,14 @@ if (!empty($_POST['savebtn']))
 								}
 								echo '</table>';
 							}
-							echo '<select class="select" name="otkstatus" >';
-							echo '<option disabled>Выберите статус ОТК</option>';
+							echo '<select class="select" name="otkstatus" required>';
+							echo '<option value = "">Выберите статус ОТК</option>';
 							echo '<option value="ok">Проверка прошла успешно</option>';
 							echo '<option value="fail">Изделие не прошло проверку</option>';
 							echo '</select>';
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
+							
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						
@@ -104,6 +105,7 @@ if (!empty($_POST['savebtn']))
 					echo "<p class=\"msg1\">Данные успешно занесены в БД</p>";	
 				}
 				?>
+				
 			</div>
 		</form>
 	</div>
@@ -131,13 +133,12 @@ if (!empty($_POST['savebtn']))
 				selectOption = _this.find('option'),
 				selectOptionLength = selectOption.length,
 				selectedOption = selectOption.filter(':selected'),
-				duration = 450; // длительность анимации 
+				duration = 100; // длительность анимации 
 
-			_this.hide();
 			_this.wrap('<div class="select"></div>');
 			$('<div>', {
 				class: 'new-select',
-				text: _this.children('option:disabled').text()
+				text: _this.children('option:first').text()
 			}).insertAfter(_this);
 
 			const selectHead = _this.next('.new-select');
