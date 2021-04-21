@@ -85,7 +85,7 @@ unset($_POST['filter']['date2']);
 							sortSelect("type", "Тип", "А-Я", "Я-А");
 							sortSelect("name", "Имя", "A-Z", "Z-A");
 							sortSelect("perfomance", "Исполнение", "A-Z", "Z-A");
-							sortSelect("serial", "Сирийный номер", "Прямой порядок", "Обратный порядок");
+							sortSelect("serial", "Серийный номер", "Прямой порядок", "Обратный порядок");
 							sortSelect("enter", "Вхождение", "Прямой порядок", "Обратный порядок");
 							sortSelect("date", "Дата", "Сначала", "С конца");
 							sortSelect("location", "Местонахождение", "А-Я", "Я-А");
