@@ -2,22 +2,17 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "otk");
+//checkRoot($link, "mismatch");
 mysqli_set_charset($link, 'utf8');
-$error_s1 = 0;
-$error_s2 = 0;
-$error_s3 = 0;
-$error_s4 = 0;
-$error_n1 = 1;
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['comment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
-	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+	die ('Error recording in table history:'  .mysqli_error($link));
+	$result = "UPDATE products set `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
-	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
 }
 ?>
@@ -27,7 +22,7 @@ if (!empty($_POST['savebtn']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
-  <title>Интерфейс приемщика</title>
+  <title>Интерфейс испытателя</title>
  </head>
  <body>
  <div class="header">
@@ -38,8 +33,8 @@ if (!empty($_POST['savebtn']))
 	</div>
 </div>
  <div id="forma">
-		<form action="otk.php" method="post" align="left" class="form1">
-			<p id="priem_name" align="center">ОТК</p>
+		<form action="mismatch.php" method="post" align="left" class="form1">
+			<p id="priem_name" align="center">Несоответствия</p>
 			<div class="serial_lot">
 			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
@@ -50,51 +45,12 @@ if (!empty($_POST['savebtn']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serial']."'");
-						$row = mysqli_fetch_array($result);
+						$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
-							$_SESSION['uid'] = $row['uid'];
-							//Рисую таблицу с информацией о типе, имени, ОТК
-							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
-							echo '<caption> Данные изделия</caption>';
-							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
-							echo "<tr>";
-							echo '<td> '.$row['type'].'</td>';
-							echo '<td> '.$row['name'].'</td>';
-							echo '<td> '.$row['otk'].'</td>';
-							echo "</tr>";
-							echo '</table>';
-							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
-							$num = mysqli_num_rows($result);
-							if (!empty($num))
-							{
-								//Рисую таблицу с историей ОТК
-								echo '<table class="tableOtk" align="center" style = "margin: 0;">';
-								echo '<caption> История ОТК</caption>';
-								echo '<tr><td>UID</td><td>Сотрудник</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
-								while ($num > 0)
-								{
-									$row = mysqli_fetch_array($result);
-									echo "<tr>";
-									echo '<td> '.$row['uid'].'</td>';
-									echo '<td> '.$row['worker'].'</td>';
-									echo '<td> '.$row['date'].'</td>';
-									echo '<td> '.$row['status'].'</td>';
-									echo '<td> '.$row['comment'].'</td>';
-									echo "</tr>";
-									$num--;
-								}
-								echo '</table>';
-							}
-							echo '<select class="select" name="status" required>';
-							echo '<option value = "">Выберите статус ОТК</option>';
-							echo '<option value="ok">Проверка прошла успешно</option>';
-							echo '<option value="fail">Изделие не прошло проверку</option>';
-							echo '</select>';
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
-							
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						

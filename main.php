@@ -7,6 +7,13 @@ if (empty($_POST['filter']['date1'][0]))
 unset($_POST['filter']['date1']);
 if (empty($_POST['filter']['date2'][0]))
 unset($_POST['filter']['date2']);
+$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "comment");
+$replace = array ("ok" => "Прошло успешно", "fail" => "Не успешно",
+"notest" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "mismatch" => "Несоответствия", "testing" => "Испытания",
+"shipment" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "repair_possition" => "Позиция в ремонте", "repair_element" => "Ремонтируемый элемент", "protocol" => "Протокол");
 ?>
 <!DOCTYPE html>
 <html>
@@ -55,101 +62,76 @@ unset($_POST['filter']['date2']);
 				echo '</div>';
 				echo '</div>';
 				}
+				else
+				{
+					$result = mysqli_query($link, "select `type`, `name`, `serial` from products where `uid` = '".$_POST['history']."'");
+					$row = mysqli_fetch_row($result);
+					echo '<div id = "infoHist"><p>Тип: '.$row[0].'</p>';
+					echo '<p>Наименование: '.$row[1].'</p>';
+					echo '<p>Серийный номер: '.$row[2].'</p></div>';
+				}
 				?>
-	<table class="table" align="center">
-<?php
-						if (!empty($_POST['history']))
-						$table_name = "history";
-						else $table_name = "products";
-						$result = mysqli_query($link, "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '".$table_name."' order by ORDINAL_POSITION");
+			<table class="table" align="center">
+				<?php
+					if (!empty($_POST['history']))
+					{
+						$result = mysqli_query($link, "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'history' order by ORDINAL_POSITION");
 						if(!$result)
-						{
-						 die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
-						}
+							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 						echo '<tr>';
-						if ($table_name == "history")
+						$i = 0;
+						while ($row = mysqli_fetch_assoc($result))
 						{
-							$col = 0;
-							while ($row = mysqli_fetch_assoc($result))
-							{
-								echo "<td>";
+							echo "<td>";
+							if (!empty($replace[$row['COLUMN_NAME']]))
+								echo $replace[$row['COLUMN_NAME']];
+							else
 								echo $row['COLUMN_NAME'];
-								echo "</td>";
-								++$col;
-							}
+							$columnName[$i] = $row['COLUMN_NAME'];
+							echo "</td>";
+							$i++;
 						}
-						else
-						{
-							$col = mysqli_num_rows($result);
-							sortSelect("uid", "UID", "По возрастанию", "По убыванию");
-							sortSelect("type", "Тип", "А-Я", "Я-А");
-							sortSelect("name", "Имя", "A-Z", "Z-A");
-							sortSelect("perfomance", "Исполнение", "A-Z", "Z-A");
-							sortSelect("serial", "Серийный номер", "Прямой порядок", "Обратный порядок");
-							sortSelect("enter", "Вхождение", "Прямой порядок", "Обратный порядок");
-							sortSelect("date", "Дата", "Сначала", "С конца");
-							sortSelect("location", "Местонахождение", "А-Я", "Я-А");
-							sortSelect("owner", "Владелец", "А-Я", "Я-А");
-							sortSelect("software", "ПО", "Прямой порядок", "Обратный порядок");
-							sortSelect("otk", "ОТК", "А-Я", "Я-А");
-							sortSelect("comment", "Комментарий", "А-Я", "Я-А");
-						}
+					}
+					else
+					{
+						for ($i = 0; !empty($columnName[$i]); $i++)
+						sortSelect($columnName[$i], $replace[$columnName[$i]], "Прямая сортировка", "Обратная сортировка");
+					}
 					if (empty($_POST['history']))
-					echo "<td id=\"his\"> history </td>";
+						echo "<td id=\"his\"> История </td>";
 					echo "</tr>";
 					//формирование Запроса чере SESSION
 					if (empty($_SESSION['order']) && empty($_POST['order']))
-					$_SESSION['order'] = '';
+						$_SESSION['order'] = '';
 					else if (!empty($_POST['order']))
-					$_SESSION['order'] = $_POST['order'];
+						$_SESSION['order'] = $_POST['order'];
 					if (empty($_SESSION['filter']) && empty($_POST['filter']))
-					$_SESSION['filter'] = '';
+						$_SESSION['filter'] = '';
 					else if (!empty($_POST['filter']))
 					{
-					$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "comment", "date1", "date2"));
-					if (empty($_POST['order']))
-					$_SESSION['order'] = '';
+						$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "comment", "date1", "date2"));
+						if (empty($_POST['order']))
+						$_SESSION['order'] = '';
 					}
 					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']."");
-
 					if(!$result)
-						{
 						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
-						}
 					$all_rows=mysqli_num_rows($result);
 					$max_rows = 20;
 					$pages = ((floor($all_rows/$max_rows)) + 1);
 					if($all_rows%$max_rows == 0)
-					$pages = floor($all_rows/$max_rows);
+						$pages = floor($all_rows/$max_rows);
 					if ((empty($_GET['page'])) || ($_GET['page'] == 1))
-					$view_rows = 0;
+						$view_rows = 0;
 					else 
-					$view_rows = ($_GET['page'] - 1) * $max_rows;
+						$view_rows = ($_GET['page'] - 1) * $max_rows;
 					if (!empty($_POST['history']))
-					{
-					$uid = $view_rows + $_POST['history'];
-					$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$uid."'  order by date desc" );
-					}
-					else 
-					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
+						$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$_POST['history']."'  order by date desc" );
+					else
+						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 					if(!$result)
-					{
-					die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
-					}
-					while ($row = mysqli_fetch_array($result))
-					{
-						echo "<tr>";
-						$c = -1;
-						$i = 0;
-						while ($i<$col)
-						{
-						echo '<td> '.$row[++$c].'</td>';
-						++$i;
-						}
-						if (empty($_POST['history']))
-						echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row[0].'" form = "myform">Показать историю изделия</button></td>';
-						echo "</tr>";
-					}
+						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
+					paintRow($result, $columnName, $replace, empty($_POST['history']));
 					mysqli_free_result($result);
 				?>
 			</table>
@@ -160,15 +142,13 @@ unset($_POST['filter']['date2']);
 					for ($j = 1; $j <= $pages; $j++)
 					{
 					echo ' <a ';
-						if (($_SERVER['REQUEST_URI'] == $_SERVER['SCRIPT_NAME'].'?page='.$j) || (empty($_GET['page']) && ($j == 1)))
+					if (($_SERVER['REQUEST_URI'] == $_SERVER['SCRIPT_NAME'].'?page='.$j) || (empty($_GET['page']) && ($j == 1)))
 						echo "class=\"active\"";
-						echo 'href='.$_SERVER['SCRIPT_NAME'].'?page='.$j.'>'.$j.'</a> ';
+					echo 'href='.$_SERVER['SCRIPT_NAME'].'?page='.$j.'>'.$j.'</a> ';
 					}
 				}
 				else 
-				{
-				echo '<a class="active" href='.$_SERVER['SCRIPT_NAME'].'>Назад</a> ';
-				}
+				echo '<a class="active" href='.$_SERVER['HTTP_REFERER'].'>Назад</a> ';
 			?>
 			</div>
 	</div>
