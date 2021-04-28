@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "otk");
+checkRoot($link, "otk");
 mysqli_set_charset($link, 'utf8');
 $error_s1 = 0;
 $error_s2 = 0;
@@ -12,10 +12,10 @@ $error_n1 = 1;
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `otk`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'ОТК', '".$_POST['comment']."', '".$_POST['otkstatus']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+	$result = "UPDATE products set `otk` = '".$_POST['otkstatus']."' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	else $succ = 1;
@@ -65,7 +65,7 @@ if (!empty($_POST['savebtn']))
 							echo '<td> '.$row['otk'].'</td>';
 							echo "</tr>";
 							echo '</table>';
-							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
+							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `otk`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'ОТК')");
 							$num = mysqli_num_rows($result);
 							if (!empty($num))
 							{
@@ -80,14 +80,14 @@ if (!empty($_POST['savebtn']))
 									echo '<td> '.$row['uid'].'</td>';
 									echo '<td> '.$row['worker'].'</td>';
 									echo '<td> '.$row['date'].'</td>';
-									echo '<td> '.$row['status'].'</td>';
+									echo '<td> '.$row['otk'].'</td>';
 									echo '<td> '.$row['comment'].'</td>';
 									echo "</tr>";
 									$num--;
 								}
 								echo '</table>';
 							}
-							echo '<select class="select" name="status" required>';
+							echo '<select class="select" name="otkstatus" required>';
 							echo '<option value = "">Выберите статус ОТК</option>';
 							echo '<option value="ok">Проверка прошла успешно</option>';
 							echo '<option value="fail">Изделие не прошло проверку</option>';

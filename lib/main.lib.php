@@ -93,12 +93,6 @@ function createMenu()
             echo '<a href="accept.php">Приемка</a>';
         if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php"))
             echo '<a href="otk.php">ОТК</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php"))
-		echo '<a href="testing.php">Тестирование</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php"))
-            echo '<a href="mismatch.php">Несоответствия</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
-            echo '<a href="repair.php">Ремонт</a>';
         echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
     }
     echo '</div>';
@@ -145,26 +139,5 @@ function connect()//connect to DB
         die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
     }
     return($link);
-}
-function paintRow($result, $array, $replace, $posthist)
-{
-	
-	while ($row = mysqli_fetch_assoc($result))
-	{
-		$i = 0;
-		echo "<tr>";
-		while (!empty($array[$i]))
-		{
-			echo '<td>';
-			if (!empty($replace[$row[$array[$i]]]))
-			echo $replace[$row[$array[$i]]];
-			else echo $row[$array[$i]];
-			echo '</td>';
-			$i++;
-		}
-		if ($posthist == true)
-		echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
-		echo "</tr>";
-	}
 }
 ?>

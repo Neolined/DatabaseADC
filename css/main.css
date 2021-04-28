@@ -11,9 +11,6 @@ body {
     min-height: 100vh;
     margin: 2em;
 }
-#contentOtk{
-    text-align: -webkit-center;
-}
 #errForma{
     min-height: 100vh;
     text-align: center;
@@ -137,7 +134,7 @@ input {
     height: 2em;
 }
 .color_err {
-    border:2px solid orangered;
+    background-color: #ffc7c7;
     height: 100px,inherit;
     width: 15em;
 }
@@ -155,16 +152,12 @@ input {
     background-color: white;
     color:orangered;
 }
-.msg1, .msg2 {
+.msg1 {
     border: 1px solid green;
     border-radius: 3px;
     text-align: center;
     padding: 3px;
     background-color: white;
-    color: green;
-}
-.msg2{
-    margin-top: 0.1em;
 }
 .serial {
     width: 15em;
@@ -176,7 +169,7 @@ input {
     align-self: center;
 }
 .color_err1 {
-    border:2px solid orangered;
+    background-color: #ffc7c7;
     height: 100px,inherit;
 }
 .footer {
@@ -199,7 +192,7 @@ input {
 #regdata, #regdata:hover {
     background: #fcdd76;
 }
-#savedata, #regdata, #nextbtn, .buttons{
+#savedata, #regdata, #nextbtn{
     margin-top: 1em;
     height: 3em;
     border: 0;
@@ -215,11 +208,11 @@ input {
     #regdata a {
     margin:0;
     }
-    #savedata:hover, #regdata:hover, .buttons:hover, #history #nextbtn{
+    #savedata:hover, #regdata:hover, #history #nextbtn{
         opacity: 0.8;
     }
 
-    button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
+    button, #exitbut, #savedata:hover, #regdata:hover, #nextbtn {
         cursor: pointer;
     }
 
@@ -324,7 +317,6 @@ input {
         min-width: 3em;
         max-width: 25em;
         border-bottom: 0.1em solid #ced4da;;
-        height: auto;
     }
     .table #his{
         text-align:center;
@@ -586,34 +578,4 @@ margin: 0;
     display: inline-grid;
     max-height: 17em;
     overflow-y: auto;
-}
-#downContentTesting{
-    width: 30em;
-    display: grid;
-}
-#downContentrepair{
-    margin-top: 1em;
-    min-width: 30em;
-}
-#downContentrepair input[type=submit]{
-margin-top: -0.1em;
-}
-#acceptbtn{
-    background-color: red;
-}
-#infoHist{
-    border: 0.2em solid #fff;
-    background-color: #5c6f93;
-    color: white;
-    font-size: large;
-    box-shadow: 0px 0em 1em 0px rgb(255 255 255);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0em;
-    border-top: none;
-    height: 2.2em;
-}
-#infoHist p{
-    margin-left: 1em;
 }
