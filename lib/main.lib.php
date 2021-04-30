@@ -99,6 +99,8 @@ function createMenu()
             echo '<a href="mismatch.php">Несоответствия</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
             echo '<a href="repair.php">Ремонт</a>';
+		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment"))
+            echo '<a href="shipment.php">Отгрузка</a>';
         echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
     }
     echo '</div>';
