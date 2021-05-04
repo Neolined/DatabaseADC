@@ -3,6 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 //checkRoot($link, NULL);
+clearSESpage();
 if (empty($_POST['filter']['date1'][0]))
 unset($_POST['filter']['date1']);
 if (empty($_POST['filter']['date2'][0]))

@@ -2,7 +2,9 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "otk");
+//checkRoot($link, "repair");
+clearSESSION1('repairSES', array("serial", "uid", "repair", "diagnostic"));
+clearSESpage();
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 $access = 0;
@@ -22,7 +24,6 @@ if (!empty($_POST['diagBtn']))
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 	$_SESSION['diagnostic'] = $_POST['diComment'];
-	$acceptBtn = 1;
 }
 if (!empty($_POST['repairBtn']))
 {
@@ -52,7 +53,6 @@ if (!empty($_POST['endRepair']))
 	unset ($_SESSION['serial']);
 	unset ($_SESSION['diagnostic']);
 	unset ($_SESSION['repair']);
-
 }
 ?>
 <!DOCTYPE html>
@@ -92,7 +92,7 @@ if (!empty($_POST['endRepair']))
 						unset ($_SESSION['diagnostic']);
 						unset ($_SESSION['repair']);
 					}
-					if (!empty($_POST['serial']) || !empty($_SESSION['serial']))
+					if (!empty($_POST['serial']))
 					{
 						if (!empty($_POST['serial']))
 						{

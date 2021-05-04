@@ -101,6 +101,8 @@ function createMenu()
             echo '<a href="repair.php">Ремонт</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment"))
             echo '<a href="shipment.php">Отгрузка</a>';
+		if (!strpos($_SERVER['SCRIPT_NAME'], "refand"))
+			echo '<a href="refand.php">Возврат</a>';
         echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
     }
     echo '</div>';
@@ -150,7 +152,6 @@ function connect()//connect to DB
 }
 function paintRow($result, $array, $replace, $posthist)
 {
-	
 	while ($row = mysqli_fetch_assoc($result))
 	{
 		$i = 0;
@@ -168,5 +169,33 @@ function paintRow($result, $array, $replace, $posthist)
 		echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
 		echo "</tr>";
 	}
+}
+function clearSESpage()
+{
+	if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
+		unset ($_SESSION['main']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php"))
+		unset ($_SESSION['otk']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
+		unset ($_SESSION['repairSES']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php"))
+		unset ($_SESSION['refand']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php"))
+		unset ($_SESSION['shipment']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php"))
+		unset ($_SESSION['testing']);
+}
+function clearSESSION1($page, $index)
+{
+	$i = 0;
+	if (empty($_SESSION[$page]))
+{
+	while(!empty($index[$i]))
+	{
+	unset($_SESSION[$index[$i]]);
+	$i++;
+	}
+	$_SESSION[$page] = 1;
+}
 }
 ?>

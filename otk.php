@@ -3,43 +3,52 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 //checkRoot($link, "otk");
+clearSESSION1('otk', array("serial", "uid"));
+clearSESpage();
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
 	if (!empty($_POST['order']))
 	{
-		$result = mysqli_query($link, "select uid from orders where UID = '".$_POST['order']."'");
-		$row = mysqli_num_rows($result);
-		if ($row == 0)
+		if (preg_match('[^\d{7}$]', $_POST['order']))
 		{
-			$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,'".$_SESSION['serial'].",');";
-			if (!(mysqli_query($link, $result)))
-				die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
-			$msgOrder = 1;
-			$msgCmpsn1 = 1;
-		}
-		else
-		{
-			$result = mysqli_query($link, "select composition from orders where UID = '".$_POST['order']."'");
-			$row = mysqli_fetch_row($result);
-			if (!(strpos($row[0], $_SESSION['serial']) !==false))
+			$result = mysqli_query($link, "select uid from orders where UID = '".$_POST['order']."'");
+			$row = mysqli_num_rows($result);
+			if ($row == 0)
 			{
-				$result = "update orders set composition = concat (composition, '".$_SESSION['serial'].",') where uid = '".$_POST['order']."'";
+				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,'".$_SESSION['serial'].",');";
 				if (!(mysqli_query($link, $result)))
 					die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
+				$msgOrder = 1;
 				$msgCmpsn1 = 1;
 			}
-			else $msgCmpsn = 1;
+			else
+			{
+				$result = mysqli_query($link, "select composition from orders where UID = '".$_POST['order']."'");
+				$row = mysqli_fetch_row($result);
+				if (!(strpos($row[0], $_SESSION['serial']) !==false))
+				{
+					$result = "update orders set composition = concat (composition, '".$_SESSION['serial'].",') where uid = '".$_POST['order']."'";
+					if (!(mysqli_query($link, $result)))
+						die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
+					$msgCmpsn1 = 1;
+				}
+				else $msgCmpsn = 1;
+			}
 		}
+		else $msgOrder2 = 1;
 	}
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
-	if (!(mysqli_query($link, $result)))
-	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
-	if (!(mysqli_query($link, $result)))
-	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	else $succ = 1;
+	if (empty($msgOrder2))
+	{
+		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
+		if (!(mysqli_query($link, $result)))
+		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+		$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+		if (!(mysqli_query($link, $result)))
+			die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+		else $succ = 1;
+	}
 }
 ?>
 <!DOCTYPE html>
@@ -78,9 +87,11 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_fetch_array($result);
 						if (!empty($row))
 						{
-							echo '<div id = "orderUid"> <label>UID заказа</label><input type="text" name="order"></input></div>';
+							echo '<div id = "inp"> <label>UID заказа</label><input type="text" name="order"></input></div>';
 							if (!empty($msgOrder))
 							echo "<p class=\"msg1\">Новый заказ создан</p>";
+							if (!empty($msgOrder2))
+							echo "<p class=\"msg\">Некорректно введен номер заказа</p>";
 							if (!empty($msgCmpsn1))
 							echo "<p class=\"msg1\">Изделие добавлено в состав заказа</p>";
 							if (!empty($msgCmpsn))

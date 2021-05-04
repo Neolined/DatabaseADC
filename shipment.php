@@ -3,11 +3,13 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 //checkRoot($link, "shippment");
+clearSESSION1('shipment', array("year", "number", "str", "orderArr"));
+clearSESpage();
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
-	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['order']."'";
+	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
 	$result = "UPDATE products set `location` = '".$_POST['recipient']."', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
@@ -49,25 +51,25 @@ if (!empty($_POST['savebtn']))
 			<p id="priem_name" align="center">Отгрузка</p>
 			<div class="serial_lot">
 			<div id = "inputLabel"><label>Год</label><input type="text" name="year"   form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_SESSION['year'])) echo $_SESSION['year']; else echo date ( 'Y' ) ; ?>" required/> </div>
-			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order"   form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_SESSION['order'])) echo $_SESSION['order']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order"   form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_SESSION['number'])) echo $_SESSION['number']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее"  form = "nextForm"/>
 			</div>
 			<div id = "contentOtk">
 				<?php
 				if (!empty($_POST['nextbtn']) || !empty($_POST['savebtn']))
 				{
-					if ((!empty($_SESSION['year']) && !empty($_SESSION['order'])) || (!empty($_POST['year']) && !empty($_POST['order'])))
+					if ((!empty($_SESSION['year']) && !empty($_SESSION['number'])) || (!empty($_POST['year']) && !empty($_POST['order'])))
 					{
 						if (!empty($_POST['order']) && !empty($_POST['year']))
 						{
 							$_SESSION['year'] = $_POST['year'];
-							$_SESSION['order'] = $_POST['order'];
+							$_SESSION['number'] = $_POST['order'];
 						}
-						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_SESSION['year']."".$_SESSION['order']."'");
+						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
 						$row = mysqli_num_rows($result);
 						if ($row != 0)
 						{
-							$result = mysqli_query($link, "select shipped, replace (composition,',','')  from orders where `uid` = '".$_SESSION['year']."".$_SESSION['order']."'");
+							$result = mysqli_query($link, "select shipped, replace (composition,',','')  from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
 							$row = mysqli_fetch_row($result);
 							if ($row[0] == 'yes')
 								$msgShip = 1;

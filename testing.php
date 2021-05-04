@@ -2,7 +2,9 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "otk");
+//checkRoot($link, "testing");
+clearSESSION1('testing', array("uid"));
+clearSESpage();
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
@@ -33,11 +35,12 @@ if (!empty($_POST['savebtn']))
 	</div>
 </div>
  <div id="forma">
+		<form action="testing.php" method="post" align="left" id="nextForm"></form>
 		<form action="testing.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Тестирование</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
-			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
 				<?php
@@ -49,10 +52,18 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
+							$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
 							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Вхождение', 'Дата', 'Владелец', 'ПО', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
+							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "testing", "otk", "comment");
+							$replace = array ("ok" => "Прошло успешно", "fail" => "Не успешно",
+							"notest" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "mismatch" => "Несоответствия", "testing" => "Испытания",
+							"shipment" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+							"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+							"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+							"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "repair_possition" => "Позиция в ремонте", "repair_element" => "Ремонтируемый элемент", "protocol" => "Протокол");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
@@ -60,7 +71,7 @@ if (!empty($_POST['savebtn']))
 							}
 							echo '</tr>';
 							echo "<tr>";
-							paintRow($row);
+							paintRow($result ,$columnName, $replace, false);
 							echo "</tr>";
 							echo '</table>';
 							$_SESSION['uid'] = $row[0];

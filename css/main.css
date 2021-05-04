@@ -144,7 +144,6 @@ input {
 .comment {
     resize: vertical;
     height: 5em;
-    font-family:Arial;
     width: -webkit-fill-available;
 }
 .msg {
@@ -617,7 +616,7 @@ margin-top: -0.1em;
 #infoHist p{
     margin-left: 1em;
 }
-#orderUid{
+#inp{
     display: grid;
     margin-top: 1em;
 }
