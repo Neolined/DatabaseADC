@@ -17,7 +17,7 @@ if (!empty($_POST['savebtn']))
 			$row = mysqli_num_rows($result);
 			if ($row == 0)
 			{
-				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,'".$_SESSION['serial'].",');";
+				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,'".$_SESSION['serial'].",')";
 				if (!(mysqli_query($link, $result)))
 					die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 				$msgOrder = 1;

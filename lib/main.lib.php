@@ -99,10 +99,12 @@ function createMenu()
             echo '<a href="mismatch.php">Несоответствия</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
             echo '<a href="repair.php">Ремонт</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php"))
             echo '<a href="shipment.php">Отгрузка</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "refand"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php"))
 			echo '<a href="refand.php">Возврат</a>';
+		if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
+			echo '<a href="orders.php">Заказы</a>';
         echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
     }
     echo '</div>';
@@ -168,6 +170,26 @@ function paintRow($result, $array, $replace, $posthist)
 		if ($posthist == true)
 		echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
 		echo "</tr>";
+	}
+}
+
+function paintRowOrder($result, $array, $replace, $posthist)
+{
+	while ($row = mysqli_fetch_assoc($result))
+	{
+		$i = 0;
+		echo "<tr>";
+		while (!empty($array[$i]))
+		{
+			echo '<td>';
+			if ($array[$i] == 'composition' && (mb_substr($row[$array[$i]], -1) == ','))
+			echo mb_substr($row[$array[$i]], 0, -1);
+			else if (!empty($replace[$row[$array[$i]]]))
+			echo $replace[$row[$array[$i]]];
+			else echo $row[$array[$i]];
+			echo '</td>';
+			$i++;
+		}
 	}
 }
 function clearSESpage()
