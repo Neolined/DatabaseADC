@@ -12,7 +12,7 @@ if (!empty($_POST['savebtY']))
 	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_SESSION['serial']."'), NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE `products` SET `location` = 'АДС', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
+	$result = "UPDATE `products` SET `location` = 'stock', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		$succ = 1;
@@ -20,7 +20,7 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
-	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `owner`, `location`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', 'АДС', 'АДС', NOW())";
+	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `owner`, `location`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', 'stock', 'АДС', NOW())";
 	if (mysqli_query($link, $result))
 		$id = (mysqli_insert_id($link));
 	else 

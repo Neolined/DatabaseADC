@@ -12,7 +12,7 @@ if (!empty($_POST['savebtn']))
 	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
-	$result = "UPDATE products set `location` = '".$_POST['recipient']."', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
+	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
 	else $succ = 1;
