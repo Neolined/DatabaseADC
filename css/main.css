@@ -620,3 +620,7 @@ margin-top: -0.1em;
     display: grid;
     margin-top: 1em;
 }
+#empty{
+    border: 1px solid white;
+    background-color: white;
+}

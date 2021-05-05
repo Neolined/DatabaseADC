@@ -5,10 +5,30 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 	$result = mysqli_query($link, "select distinct $option from $table_name where $option != ''");
 	$num = mysqli_num_rows($result);
 	echo '<div class = "overflowClass">';
+	if ($option == 'repair')
+	{
+		$row = mysqli_fetch_array($result);
+		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="yes">Да</label>';
+		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="no">Нет</label>';
+		$num--;
+	}
+	else
 	while ($num > 0)
 	{
 		$row = mysqli_fetch_array($result);
-		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'">'.$row[$option].'</label>';
+		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'">';
+		if ($row[$option] == 'ok')
+			echo 'Успешно';
+		else if ($row[$option] == 'fail')
+		echo 'Не успешно';
+		else if ($row[$option] == 'yes')
+		echo 'Да';
+		else if ($row[$option] == 'no')
+		echo 'Нет';
+		else if ($row[$option] == 'notest')
+		echo 'Не тестировалось';
+		else echo $row[$option];
+		echo '</label>';
 		$num--;
 	}
 	mysqli_free_result($result);
@@ -34,7 +54,11 @@ function requestDB($index) //create request for DB from main
 			$str = $str . "(";
 			while(!empty($_POST['filter'][$index[$j]][$i]))
 			{
-				if ($index[$j] == "comment")
+				if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'no')
+				$str = $str. "repair = 'no'";
+				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'yes')
+				$str = $str. "repair != 'no'";
+				else if ($index[$j] == "comment")
 				$str = $str. "`" .$index[$j]. "` != '" .$_POST['filter'][$index[$j]][$i]. "'";
 				else if ($index[$j] == "date1")
 				$str = $str . "`date` >= '" .$_POST['filter'][$index[$j]][$i]. "'";
@@ -154,6 +178,8 @@ function connect()//connect to DB
 }
 function paintRow($result, $array, $replace, $posthist)
 {
+	if(mysqli_num_rows($result) != 0)
+	{
 	while ($row = mysqli_fetch_assoc($result))
 	{
 		$i = 0;
@@ -171,6 +197,8 @@ function paintRow($result, $array, $replace, $posthist)
 		echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
 		echo "</tr>";
 	}
+	}
+	else echo "<tr><td id = 'empty'>Пусто</td></tr>";
 }
 
 function paintRowOrder($result, $array, $replace, $posthist)

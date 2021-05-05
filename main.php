@@ -8,13 +8,19 @@ if (empty($_POST['filter']['date1'][0]))
 unset($_POST['filter']['date1']);
 if (empty($_POST['filter']['date2'][0]))
 unset($_POST['filter']['date2']);
-$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "comment");
-$replace = array ("ok" => "Прошло успешно", "fail" => "Не успешно",
-"notest" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "mismatch" => "Несоответствия", "testing" => "Испытания",
-"shipment" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+if (empty($_SESSION['main']))
+{
+	unset ($_SESSION['filter']);
+	unset ($_SESSION['order']);
+	$_SESSION['main'] = 1;
+}
+$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "testing", "repair", "mismatch", "comment");
+$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно",
+"notest" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
+"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "repair_possition" => "Позиция в ремонте", "repair_element" => "Ремонтируемый элемент", "protocol" => "Протокол");
+"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
 ?>
 <!DOCTYPE html>
 <html>
@@ -33,7 +39,7 @@ $replace = array ("ok" => "Прошло успешно", "fail" => "Не усп�
 	</div>
 
 	<div id="forma">
-		<form action = "<?php echo $_SERVER['REQUEST_URI'];?>" method = "post" id="myform"></form>
+		<form action = "main.php" method = "post" id="myform"></form>
 		<table class="table" align="center">
 				<?php
 					if (empty($_POST['history']))
@@ -58,7 +64,9 @@ $replace = array ("ok" => "Прошло успешно", "fail" => "Не усп�
 				selectDB($link, "Местоположение", "location", "products");
 				selectDB($link, "Владелец", "owner", "products");
 				selectDB($link, "ОТК", "otk", "products");
-				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "comment[]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>';
+				selectDB($link, "Тестирование", "testing", "products");
+				selectDB($link, "В ремонте", "repair", "products");
+				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "filter[comment][]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>';
 				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="2100-12-31" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="2099-12-31" form = "myform"></input></label></div>';
 				echo '</div>';
 				echo '</div>';
@@ -81,6 +89,7 @@ $replace = array ("ok" => "Прошло успешно", "fail" => "Не усп�
 							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 						echo '<tr>';
 						$i = 0;
+						unset ($columnName);
 						while ($row = mysqli_fetch_assoc($result))
 						{
 							echo "<td>";
@@ -110,7 +119,7 @@ $replace = array ("ok" => "Прошло успешно", "fail" => "Не усп�
 						$_SESSION['filter'] = '';
 					else if (!empty($_POST['filter']))
 					{
-						$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "comment", "date1", "date2"));
+						$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"));
 						if (empty($_POST['order']))
 						$_SESSION['order'] = '';
 					}
