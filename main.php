@@ -10,10 +10,14 @@ if (empty($_POST['filter']['date2'][0]))
 unset($_POST['filter']['date2']);
 if (empty($_SESSION['main']))
 {
-	unset ($_SESSION['filter']);
+	unset ($_SESSION['request']);
 	unset ($_SESSION['order']);
 	$_SESSION['main'] = 1;
 }
+if (!empty($_POST['filter']))
+$_SESSION['filter'] = $_POST['filter'];
+if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])))
+header('Location: clearmain.php');
 $columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "testing", "repair", "mismatch", "comment");
 $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
@@ -55,7 +59,7 @@ $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "
 				echo '<div id = "filtersButtonAct">';
 				echo '<button id="showFilter" onclick = "show(\'showFilter\', \'hideFilter\', \'filterContent\')">Показать фильтры</button>';
 				echo '<button id="hideFilter" onclick = "hide(\'showFilter\', \'hideFilter\', \'filterContent\')" style="display:none;">Скрыть</button>';
-				echo '<input id="hideFilter" type = "submit" form = "myform" value = "Применить фильтры"></input>';
+				echo '<input id="hideFilter" type = "submit" form = "myform" name = "applyFilter" value = "Применить фильтры"></input>';
 				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
 				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
 				echo '<div id="filterContent" style="display:none">';
@@ -66,8 +70,9 @@ $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "
 				selectDB($link, "ОТК", "otk", "products");
 				selectDB($link, "Тестирование", "testing", "products");
 				selectDB($link, "В ремонте", "repair", "products");
-				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "filter[comment][]" type="checkbox" form = "myform" value =" ">Наличие комментария</label></div>';
-				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="2100-12-31" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="2099-12-31" form = "myform"></input></label></div>';
+				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "filter[comment][]" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['filter']['comment'][0])) echo 'checked'; echo '>Наличие комментария</label></div>';
+				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_SESSION['filter']['date1'][0])) echo $_SESSION['filter']['date1'][0];
+				echo '" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_SESSION['filter']['date2'][0])) echo $_SESSION['filter']['date2'][0]; echo '"></input></label></div>';
 				echo '</div>';
 				echo '</div>';
 				}
@@ -115,15 +120,15 @@ $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "
 						$_SESSION['order'] = '';
 					else if (!empty($_POST['order']))
 						$_SESSION['order'] = $_POST['order'];
-					if (empty($_SESSION['filter']) && empty($_POST['filter']))
-						$_SESSION['filter'] = '';
+					if (empty($_SESSION['request']) && empty($_POST['filter']))
+						$_SESSION['request'] = '';
 					else if (!empty($_POST['filter']))
 					{
-						$_SESSION['filter'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"));
+						$_SESSION['request'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"));
 						if (empty($_POST['order']))
 						$_SESSION['order'] = '';
 					}
-					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']."");
+					$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']."");
 					if(!$result)
 						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 					$all_rows=mysqli_num_rows($result);
@@ -138,7 +143,7 @@ $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "
 					if (!empty($_POST['history']))
 						$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$_POST['history']."'  order by date desc" );
 					else
-						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['filter']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
+						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 					if(!$result)
 						die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
 					paintRow($result, $columnName, $replace, empty($_POST['history']));

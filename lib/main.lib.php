@@ -1,36 +1,43 @@
 ﻿<?php
+///////////////////////////////////////////
 function selectDB($link, $option_text, $option, $table_name) //create filters for table
 {	
 	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
 	$result = mysqli_query($link, "select distinct $option from $table_name where $option != ''");
 	$num = mysqli_num_rows($result);
 	echo '<div class = "overflowClass">';
-	if ($option == 'repair')
-	{
-		$row = mysqli_fetch_array($result);
-		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="yes">Да</label>';
-		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="no">Нет</label>';
-		$num--;
-	}
-	else
-	while ($num > 0)
-	{
-		$row = mysqli_fetch_array($result);
-		echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'">';
-		if ($row[$option] == 'ok')
+		while ($num > 0)
+		{
+			$row = mysqli_fetch_array($result);
+			echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'"';
+			$j = 0;
+			while (!empty($_SESSION['filter'][$option][$j]))
+			{
+				if ($row[$option] == $_SESSION['filter'][$option][$j])
+				echo 'checked';
+				$j++;
+			}
+			echo '>';
+			if ($row[$option] == 'ok')
 			echo 'Успешно';
-		else if ($row[$option] == 'fail')
-		echo 'Не успешно';
-		else if ($row[$option] == 'yes')
-		echo 'Да';
-		else if ($row[$option] == 'no')
-		echo 'Нет';
-		else if ($row[$option] == 'notest')
-		echo 'Не тестировалось';
-		else echo $row[$option];
-		echo '</label>';
-		$num--;
-	}
+			else if ($row[$option] == 'fail')
+			echo 'Не успешно';
+			else if ($row[$option] == 'yes')
+			echo 'Да';
+			else if ($row[$option] == 'no')
+			echo 'Нет';
+			else if ($row[$option] == 'notest')
+			echo 'Не тестировалось';
+			else if ($row[$option] == 'nocheck')
+			echo 'Не проверялось';
+			else if ($row[$option] == 'stock')
+			echo 'АДС';
+			else if ($row[$option] == 'shipped')
+			echo 'Отправлено';
+			else echo $row[$option];
+			echo '</label>';
+			$num--;
+		}
 	mysqli_free_result($result);
 	echo '</div>';
 	echo '</div>';
