@@ -54,7 +54,7 @@ if (!empty ($_POST['name']))
 								$suc = 1;
 								while ($lot > 0)
 								{
-									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', 'stock', 'АДС', NOW())";
+									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
 									if (mysqli_query($link, $query))
 										$id = (mysqli_insert_id($link));
 									else 

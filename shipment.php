@@ -6,7 +6,6 @@ $link = connect();
 clearSESSION1('shipment', array("year", "number", "str", "orderArr"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');
-$succ = 0;
 if (!empty($_POST['savebtn']))
 {
 	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'";
@@ -15,7 +14,6 @@ if (!empty($_POST['savebtn']))
 	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
-	else $succ = 1;
 	$result = "insert into history (`uid`, `worker`, `type_write`, `recipient`, `comment`, `date`) values";
 	$i = 0;
 	while (!empty($_SESSION['orderArr'][$i]))
@@ -27,6 +25,7 @@ if (!empty($_POST['savebtn']))
 	}
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "История":'  .mysqli_error($link));
+	else $succ = 1;
 }
 ?>
 <!DOCTYPE html>
@@ -99,7 +98,9 @@ if (!empty($_POST['savebtn']))
 							echo "</tr>";
 							}
 							echo '</table>';
-							if (!empty($msgShip))
+							if (!empty($succ))
+							echo '<p class="msg1">Заказ отгружен</p>';
+							else if (!empty($msgShip))
 							echo '<p class="msg">Заказ уже отгружен</p>';
 							echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" required></input></div>';
 							echo '<label>Примечание</label><textarea class="comment" type="text" name="comment"></textarea>';
