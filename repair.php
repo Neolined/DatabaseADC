@@ -157,13 +157,13 @@ if (!empty($_POST['endRepair']))
 							{
 								
 								echo '<div id = "downContentrepair">';
-								echo '<label style = "margin-top: 1em" >Дагностика</label><textarea class="comment" type="text" name="diComment" form = "diagForm" onfocus="this.value=\'\'" required>'; if (!empty($_SESSION['diagnostic'])) echo $_SESSION['diagnostic']; echo '</textarea>';
+								echo '<label style = "margin-top: 1em" >Дагностика</label><textarea class="comment" type="text" name="diComment" form = "diagForm" required>'; if (!empty($_SESSION['diagnostic'])) echo $_SESSION['diagnostic']; echo '</textarea>';
 								echo '<input type="submit" class = "buttons" id="savedata" name = "diagBtn" form = "diagForm" value="Записать диагностику"/>';
 								if (!empty($_SESSION['diagnostic']))
 								echo "<p class=\"msg2\">Данные сохранены</p>";	
 								echo '</div>';
 								echo '<div id = "downContentrepair">';
-								echo '<label style = "margin-top: 1em" >Ремонт</label><textarea class="comment" type="text" name="reComment" form = "repairForm" onfocus="this.value=\'\'" required>'; if (!empty($_SESSION['repair'])) echo $_SESSION['repair']; echo '</textarea>';
+								echo '<label style = "margin-top: 1em" >Ремонт</label><textarea class="comment" type="text" name="reComment" form = "repairForm" required>'; if (!empty($_SESSION['repair'])) echo $_SESSION['repair']; echo '</textarea>';
 								echo '<input type="submit" class = "buttons" id="savedata" name = "repairBtn" form = "repairForm" value="Записать ремонт"/>';
 								if (!empty($_SESSION['repair']))
 								echo "<p class=\"msg2\">Данные сохранены</p>";

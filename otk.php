@@ -134,7 +134,7 @@ if (!empty($_POST['savebtn']))
 							echo '<option value="ok">Проверка прошла успешно</option>';
 							echo '<option value="fail">Изделие не прошло проверку</option>';
 							echo '</select>';
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 							
 						}

@@ -82,7 +82,7 @@ if (!empty($_POST['savebtn']))
 							echo '<option value="fail">Выявлены ошибки</option>';
 							echo '</select>';
 							echo '<label>Протокол</label><input type = text name="protocol"></input>';
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
 							echo '<input type="submit" id="savedata" name="savebtn" value="Сохранить данные"/>';
 							echo '</div>';
 							

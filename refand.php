@@ -71,7 +71,7 @@ if (!empty($_POST['savebtN']))
 							if ($row != 0)
 							{
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from"></input></div>';
-								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
+								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
 							else
@@ -80,7 +80,7 @@ if (!empty($_POST['savebtN']))
 								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" required></input></div>';
 								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" required></input></div>';
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" required></input></div>';
-								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea></div>';
+								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment"></textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
 							}
 						}

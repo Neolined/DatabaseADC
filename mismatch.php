@@ -49,7 +49,7 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" onfocus="this.value=\'\'"></textarea>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
