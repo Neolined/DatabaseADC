@@ -31,7 +31,7 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 			else if ($row[$option] == 'nocheck')
 			echo 'Не проверялось';
 			else if ($row[$option] == 'stock')
-			echo 'АДС';
+			echo 'Склад';
 			else if ($row[$option] == 'shipped')
 			echo 'Отправлено';
 			else echo $row[$option];
