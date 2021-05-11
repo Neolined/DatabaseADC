@@ -20,7 +20,7 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
-	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `owner`, `location`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', 'stock', 'АДС', NOW())";
+	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', 'stock', 'АДС', NOW())";
 	if (mysqli_query($link, $result))
 		$id = (mysqli_insert_id($link));
 	else 
