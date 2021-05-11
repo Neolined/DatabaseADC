@@ -14,11 +14,11 @@ if (!empty($_POST['savebtn']))
 	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
-	$result = "insert into history (`uid`, `worker`, `type_write`, `recipient`, `comment`, `date`) values";
+	$result = "insert into history (`uid`, `worker`, `type_write`, `whom_order`, `order_from`, `comment`, `date`) values";
 	$i = 0;
 	while (!empty($_SESSION['orderArr'][$i]))
 	{
-		$result = $result . " ((select uid from products where `serial` = '".$_SESSION['orderArr'][$i]."'), '".$_SESSION['worker']."', 'shipping', '".$_POST['recipient']."', '".$_POST['comment']."', NOW())";
+		$result = $result . " ((select uid from products where `serial` = '".$_SESSION['orderArr'][$i]."'), '".$_SESSION['worker']."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
 		$i++;
 		if (!empty($_SESSION['orderArr'][$i]))
 		$result = $result . ",";
