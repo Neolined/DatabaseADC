@@ -75,9 +75,9 @@ $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "
 				{
 					$result = mysqli_query($link, "select `type`, `name`, `serial` from products where `uid` = '".$_POST['history']."'");
 					$row = mysqli_fetch_row($result);
-					echo '<div id = "infoHist"><p>Тип: '.$row[0].'</p>';
-					echo '<p>Наименование: '.$row[1].'</p>';
-					echo '<p>Серийный номер: '.$row[2].'</p></div>';
+					echo '<div id = "infoHist"><p> '.$row[0].'</p>';
+					echo '<p> '.$row[1].'</p>';
+					echo '<p> '.$row[2].'</p></div>';
 				}
 				?>
 			<table class="table" align="center">
