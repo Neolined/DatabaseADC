@@ -90,7 +90,7 @@ $_SESSION['lot'] = $_POST['lot'];
 				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "filter[comment][]" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['filter']['comment'][0])) echo 'checked'; echo '>Наличие комментария</label></div>';
 				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_SESSION['filter']['date1'][0])) echo $_SESSION['filter']['date1'][0];
 				echo '" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_SESSION['filter']['date2'][0])) echo $_SESSION['filter']['date2'][0]; echo '"></input></label></div>';
-				echo '<div class = "filters"><label class = "filterName">Количественное отображение</label><label class="filterInput"><input class = "filter"  name = "lot" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['lot'])) echo 'checked'; echo '>Отобразить количественно</label></div>';
+				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input class = "filter"  name = "lot" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['lot'])) echo 'checked'; echo '>Отобразить количество</label></div>';
 				echo '</div>';
 				echo '</div>';
 				}
