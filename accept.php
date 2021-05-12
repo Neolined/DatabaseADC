@@ -104,7 +104,7 @@ if (!empty ($_POST['name']))
 		<form action="accept.php" method="post" align="left" class="form">
 			<label>Тип</label><input <?php if ($error_t1 == 0) echo "class=\"color_err1\"";?> type="text" id = "type" name="type"  value="<?php if (!empty($_POST['type'])) echo $_POST['type']; ?>" required/>
 			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name"  value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
-			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance"  value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>"required/>
+			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance"  value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>">
 			
 			<div class="serial_lot">
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" required/> </div>
