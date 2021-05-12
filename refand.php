@@ -54,7 +54,7 @@ if (!empty($_POST['savebtN']))
 		<form action="refand.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Возврат</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -71,16 +71,16 @@ if (!empty($_POST['savebtN']))
 							if ($row != 0)
 							{
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from"></input></div>';
-								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
+								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
 							else
 							{
-								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" required></input></div>';
-								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" required></input></div>';
-								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" required></input></div>';
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" required></input></div>';
-								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment"></textarea></div>';
+								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required></input></div>';
+								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required></input></div>';
+								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" required></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required></input></div>';
+								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
 							}
 						}

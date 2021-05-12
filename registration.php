@@ -57,10 +57,10 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 		<div id="forma">
 			<form action="registration.php" method="post" id="inp" align="center" class="form1">
 			<p id="priem_name" align="center">Регистрация</p>
-			<label>Логин:</label><input type="text" name="login" placeholder="ivanov" value="<?php if (!empty($_POST['login'])) echo $_POST['login']; ?>" required/>
-			<label>Пароль:</label><input type="password" name="password" placeholder="Qwerty123" value="<?php if (!empty($_POST['password'])) echo $_POST['password']; ?>" required/>
-			<label>Повторите пароль:</label><input type="password" name="password1" placeholder="Qwerty123" value="<?php if (!empty($_POST['password1'])) echo $_POST['password1']; ?>" required/>
-			<label>Введите фамилию и инициалы</label><input type="text" name="worker" placeholder="Иванов И. И." value="<?php if (!empty($_POST['worker'])) echo $_POST['worker']; ?>" required/>
+			<label>Логин:</label><input type="text" name="login" maxlength="20" placeholder="ivanov" value="<?php if (!empty($_POST['login'])) echo $_POST['login']; ?>" required/>
+			<label>Пароль:</label><input type="password" name="password" maxlength="32" placeholder="Qwerty123" value="<?php if (!empty($_POST['password'])) echo $_POST['password']; ?>" required/>
+			<label>Повторите пароль:</label><input type="password" name="password1" maxlength="32" placeholder="Qwerty123" value="<?php if (!empty($_POST['password1'])) echo $_POST['password1']; ?>" required/>
+			<label>Введите фамилию и инициалы</label><input type="text" name="worker" maxlength="20" placeholder="Иванов И. И." value="<?php if (!empty($_POST['worker'])) echo $_POST['worker']; ?>" required/>
 			<input type="submit" id="regdata" value="Зарегестрироваться" />
 			<?php
 			if ($err == 1)

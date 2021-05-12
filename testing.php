@@ -39,7 +39,7 @@ if (!empty($_POST['savebtn']))
 		<form action="testing.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Тестирование</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -75,8 +75,8 @@ if (!empty($_POST['savebtn']))
 							echo '<option value="ok">Тестирование прошло успешно</option>';
 							echo '<option value="fail">Выявлены ошибки</option>';
 							echo '</select>';
-							echo '<label>Протокол</label><input type = text name="protocol"></input>';
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
+							echo '<label>Протокол</label><input type = text name="protocol" maxlength="100"></input>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name="savebtn" value="Сохранить данные"/>';
 							echo '</div>';
 							

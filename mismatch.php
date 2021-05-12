@@ -36,7 +36,7 @@ if (!empty($_POST['savebtn']))
 		<form action="mismatch.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Несоответствия</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -49,7 +49,7 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"  maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";

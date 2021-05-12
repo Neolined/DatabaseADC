@@ -49,8 +49,8 @@ if (!empty($_POST['savebtn']))
 		<form action="shipment.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Отгрузка</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Год</label><input type="text" name="year"   form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_SESSION['year'])) echo $_SESSION['year']; else echo date ( 'Y' ) ; ?>" required/> </div>
-			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order"   form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_SESSION['number'])) echo $_SESSION['number']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Год</label><input type="text" name="year" maxlength="4" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_SESSION['year'])) echo $_SESSION['year']; else echo date ( 'Y' ) ; ?>" required/> </div>
+			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order" maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_SESSION['number'])) echo $_SESSION['number']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее"  form = "nextForm"/>
 			</div>
 			<div id = "contentOtk">
@@ -103,7 +103,7 @@ if (!empty($_POST['savebtn']))
 							else if (!empty($msgShip))
 							echo '<p class="msg">Заказ уже отгружен</p>';
 							echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" required></input></div>';
-							echo '<label>Примечание</label><textarea class="comment" type="text" name="comment"></textarea>';
+							echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
 							}
 							else echo '<p class="msg">В состав заказа не входит ни одно изделие</p>';

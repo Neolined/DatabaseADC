@@ -60,8 +60,8 @@ if (!empty($_POST['savebtn']))
   <title>ОТК</title>
  </head>
  <body>
- <div class="header">
- <?php createMenu() ?>
+ 	<div class="header">
+ 	<?php createMenu() ?>
 	<img id="adc" src="images/adc.png">
 	<div id="worker">
 	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
@@ -72,7 +72,7 @@ if (!empty($_POST['savebtn']))
 		<form action="otk.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">ОТК</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; elseif (!empty($_SESSION['serial'])) echo $_SESSION['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; elseif (!empty($_SESSION['serial'])) echo $_SESSION['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" form = "nextForm" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -123,7 +123,7 @@ if (!empty($_POST['savebtn']))
 							echo '<option value="ok">Проверка прошла успешно</option>';
 							echo '<option value="fail">Изделие не прошло проверку</option>';
 							echo '</select>';
-							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"></textarea>';
+							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 							
 						}

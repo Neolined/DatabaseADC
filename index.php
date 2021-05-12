@@ -52,8 +52,8 @@ if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 		<div id="forma">
 		<form action="index.php" method="post" id="inp" align="center" class="form1">
 			<p id="priem_name" align="center">Авторизация</p>
-			<label>Введите логин:</label><input type="text" name="login" placeholder="ivanov" required/>
-			<label>Введите пароль:</label><input type="password" name="password" placeholder="Qwerty123" required/>
+			<label>Введите логин:</label><input type="text" name="login"  maxlength="20" placeholder="ivanov" required/>
+			<label>Введите пароль:</label><input type="password" name="password"  maxlength="20" placeholder="Qwerty123" required/>
 			<input type="submit" value="Войти" id="savedata"/>
 			<a href="registration.php"><input type="button" id="regdata" value="Зарегистрироваться"/></a>
 			<?php
