@@ -7,10 +7,10 @@ mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['comment']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".$_POST['serial']."'), '".$_SESSION['worker']."', 'mismatch', '".$_POST['comment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
-	$result = "UPDATE products set `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
+	$result = "UPDATE products set `mismatch` = 'yes' where `serial` = '".$_POST['serial']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
