@@ -57,7 +57,7 @@ if (!empty($_POST['savebtn']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
-  <title>Интерфейс приемщика</title>
+  <title>ОТК</title>
  </head>
  <body>
  <div class="header">
@@ -101,11 +101,9 @@ if (!empty($_POST['savebtn']))
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
-							echo "<tr>";
-							echo '<td> '.$row['type'].'</td>';
-							echo '<td> '.$row['name'].'</td>';
-							echo '<td> '.$row['otk'].'</td>';
-							echo "</tr>";
+							$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_SESSION['serial']."'");
+							$columnName = array("type", "name", "otk");
+							paintRow($result, $columnName, false);
 							echo '</table>';
 							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
 							$num = mysqli_num_rows($result);
@@ -115,18 +113,9 @@ if (!empty($_POST['savebtn']))
 								echo '<table class="tableOtk" align="center" style = "margin: 0;">';
 								echo '<caption> История ОТК</caption>';
 								echo '<tr><td>UID</td><td>Сотрудник</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
-								while ($num > 0)
-								{
-									$row = mysqli_fetch_array($result);
-									echo "<tr>";
-									echo '<td> '.$row['uid'].'</td>';
-									echo '<td> '.$row['worker'].'</td>';
-									echo '<td> '.$row['date'].'</td>';
-									echo '<td> '.$row['status'].'</td>';
-									echo '<td> '.$row['comment'].'</td>';
-									echo "</tr>";
-									$num--;
-								}
+								$columnName = array("uid", "worker", "date", "status", "comment");
+								paintRow($result, $columnName, false);
+								
 								echo '</table>';
 							}
 							echo '<select class="select" name="status" required>';
@@ -144,7 +133,7 @@ if (!empty($_POST['savebtn']))
 				}
 				if ($succ == 1)
 				{
-					echo "<p class=\"msg1\">Данные успешно занесены в БД</p>";	
+					echo "<p class=\"msg1\">Данные сохранены</p>";	
 				}
 				?>
 				

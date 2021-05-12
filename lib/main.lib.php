@@ -1,5 +1,12 @@
 ﻿<?php
 ///////////////////////////////////////////
+$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
+"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
+"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
+
 function selectDB($link, $option_text, $option, $table_name) //create filters for table
 {	
 	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
@@ -42,11 +49,20 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 	echo '</div>';
 	echo '</div>';
 }
-function sortSelect($order, $name_disabled, $sorttag1, $sorttag2) //create sort for table
+function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 		{
-		echo '<td>';
-		echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$order.'\')"><select><option>'.$name_disabled.'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$order.'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$order.' desc ">'.$sorttag2.'</label></div></div>';
-		echo '</td>';
+			$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
+"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
+"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
+			for ($i = 0; !empty($columnName[$i]); $i++)
+			{
+			echo '<td>';
+			echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div>';
+			echo '</td>';
+			}
 		}
 function requestDB($index) //create request for DB from main
 {
@@ -183,8 +199,14 @@ function connect()//connect to DB
     }
     return($link);
 }
-function paintRow($result, $array, $replace, $posthist)
-{
+function paintRow($result, $array, $posthist)
+{	
+	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
+"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
+"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
 	if(mysqli_num_rows($result) != 0)
 	{
 	while ($row = mysqli_fetch_assoc($result))

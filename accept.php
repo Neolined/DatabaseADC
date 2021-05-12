@@ -123,7 +123,7 @@ if (!empty ($_POST['name']))
 			if ($error_t1 == 0)
 			echo "<p class=\"msg\"> Неккоректно введено название изделия</p>";
 			if ($suc == 1)
-			echo "<p class=\"msg1\"> Данные успешно занесены!</p>";
+			echo "<p class=\"msg1\"> Данные сохранены</p>";
 		?>
 	</div>
 	<div class="footer">

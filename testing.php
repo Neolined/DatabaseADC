@@ -58,12 +58,6 @@ if (!empty($_POST['savebtn']))
 							echo '<caption> Данные изделия</caption>';
 							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Вхождение', 'Дата', 'Владелец', 'ПО', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
 							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "testing", "otk", "comment");
-							$replace = array ("ok" => "Прошло успешно", "fail" => "Не успешно",
-							"notest" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "mismatch" => "Несоответствия", "testing" => "Испытания",
-							"shipment" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
-							"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-							"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-							"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "repair_possition" => "Позиция в ремонте", "repair_element" => "Ремонтируемый элемент", "protocol" => "Протокол");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
@@ -71,7 +65,7 @@ if (!empty($_POST['savebtn']))
 							}
 							echo '</tr>';
 							echo "<tr>";
-							paintRow($result ,$columnName, $replace, false);
+							paintRow($result ,$columnName, false);
 							echo "</tr>";
 							echo '</table>';
 							$_SESSION['uid'] = $row[0];
@@ -93,7 +87,7 @@ if (!empty($_POST['savebtn']))
 				}
 				if ($succ == 1)
 				{
-					echo "<p class=\"msg1\">Данные успешно занесены в БД</p>";	
+					echo "<p class=\"msg1\">Данные сохранены</p>";	
 				}
 				?>
 				

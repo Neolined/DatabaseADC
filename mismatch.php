@@ -22,7 +22,7 @@ if (!empty($_POST['savebtn']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
-  <title>Интерфейс испытателя</title>
+  <title>Несоответствия</title>
  </head>
  <body>
  <div class="header">
@@ -58,7 +58,7 @@ if (!empty($_POST['savebtn']))
 				}
 				if ($succ == 1)
 				{
-					echo "<p class=\"msg1\">Данные успешно занесены в БД</p>";	
+					echo "<p class=\"msg1\">Несоответствие создано</p>";	
 				}
 				?>
 				

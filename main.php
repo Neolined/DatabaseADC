@@ -21,12 +21,9 @@ $_SESSION['filter'] = $_POST['filter'];
 if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])) && (empty($_POST['lot'])))
 header('Location: clearmain.php');
 $columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "testing", "repair", "mismatch", "comment");
-$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
-"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
-"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+$replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
+"comment" => "Комментарий", "protocol" => "Протокол");
 //формирование Запроса чере SESSION
 if (empty($_SESSION['order']) && empty($_POST['order']))
 $_SESSION['order'] = '';
@@ -129,8 +126,8 @@ $_SESSION['lot'] = $_POST['lot'];
 						}
 						else
 						{
-							for ($i = 0; !empty($columnName[$i]); $i++)
-							sortSelect($columnName[$i], $replace[$columnName[$i]], "Прямая сортировка", "Обратная сортировка");
+							
+							sortSelect($columnName, "Прямая сортировка", "Обратная сортировка");
 						}
 						if (empty($_POST['history']))
 							echo "<td id=\"his\"> История </td>";
@@ -155,7 +152,7 @@ $_SESSION['lot'] = $_POST['lot'];
 							$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 						if(!$result)
 							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
-						paintRow($result, $columnName, $replace, empty($_POST['history']));
+						paintRow($result, $columnName, empty($_POST['history']));
 						mysqli_free_result($result);
 					}
 					else
