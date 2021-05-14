@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "refand");
+checkRoot($link, "refand");
 clearSESSION1('refand', array("serial"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');

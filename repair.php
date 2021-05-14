@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "repair");
+checkRoot($link, "repair");
 clearSESSION1('repairSES', array("serial", "uid", "repair", "diagnostic"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');

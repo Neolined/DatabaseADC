@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "shippment");
+checkRoot($link, "shipment");
 clearSESSION1('shipment', array("year", "number", "str", "orderArr"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');

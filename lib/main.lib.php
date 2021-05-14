@@ -1,5 +1,4 @@
 ﻿<?php
-///////////////////////////////////////////
 $replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
@@ -116,7 +115,7 @@ function checkRoot($link, $root) //check root from database
     error403();
     $result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
     $rootdb = mysqli_fetch_row($result);
-    if (strpos($_SERVER['SCRIPT_NAME'], "main.php"))
+    if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
     {
         if ($rootdb == "")
         error403();

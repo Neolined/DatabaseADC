@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "otk");
+checkRoot($link, "otk");
 clearSESSION1('otk', array("serial", "uid"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');
