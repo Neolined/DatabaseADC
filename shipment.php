@@ -102,7 +102,7 @@ if (!empty($_POST['savebtn']))
 							echo '<p class="msg1">Заказ отгружен</p>';
 							else if (!empty($msgShip))
 							echo '<p class="msg">Заказ уже отгружен</p>';
-							echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" required></input></div>';
+							echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
 							echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
 							}

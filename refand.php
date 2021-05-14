@@ -70,7 +70,7 @@ if (!empty($_POST['savebtN']))
 							$row = mysqli_num_rows($result);
 							if ($row != 0)
 							{
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from"></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100"></input></div>';
 								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
