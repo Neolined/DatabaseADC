@@ -9,35 +9,30 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 {
 	if (preg_match('/^[a-z0-9-_]{3,30}$/',$_POST["login"]))
 	{
-		if(preg_match('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,32}/',$_POST["password"]))
+		if ($_POST['password'] == $_POST['password1'])
 		{
-			if ($_POST['password'] == $_POST['password1'])
+			$link = connect();
+			if ($link)
 			{
-				$link = connect();
-				if ($link)
+				$log = mysqli_real_escape_string($link, $_POST["login"]);
+				$hash = password_hash(mysqli_real_escape_string($link, $_POST["password"]), PASSWORD_DEFAULT);
+				$result = mysqli_query($link, "SELECT user FROM users WHERE user = '".$log."'");
+				if (mysqli_num_rows($result) == 0)
 				{
-					$log = mysqli_real_escape_string($link, $_POST["login"]);
-					$hash = password_hash(mysqli_real_escape_string($link, $_POST["password"]), PASSWORD_DEFAULT);
-					$result = mysqli_query($link, "SELECT user FROM users WHERE user = '".$log."'");
-					if (mysqli_num_rows($result) == 0)
+					$query = "INSERT INTO users (`user`, `password`, `worker`, `root`) VALUE ('$log', '$hash', '".$_POST['worker']."', '')";
+					if (mysqli_query($link, $query))
+					$suc = 1;
+					else 
 					{
-						$query = "INSERT INTO users (`user`, `password`, `worker`, `root`) VALUE ('$log', '$hash', '".$_POST['worker']."', '')";
-						if (mysqli_query($link, $query))
-						$suc = 1;
-						else 
-						{
-						$err = 6;
-						}
+					$err = 6;
 					}
-					else
-					$err = 5;
 				}
+				else
+				$err = 5;
 			}
-			else
-			$err = 3;
 		}
 		else
-		$err = 2;
+		$err = 3;
 	}
 	else
 	$err = 1;
@@ -57,16 +52,14 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 		<div id="forma">
 			<form action="registration.php" method="post" id="inp" align="center" class="form1">
 			<p id="priem_name" align="center">Регистрация</p>
-			<label>Логин:</label><input type="text" name="login" maxlength="20" placeholder="ivanov" value="<?php if (!empty($_POST['login'])) echo $_POST['login']; ?>" required/>
-			<label>Пароль:</label><input type="password" name="password" maxlength="32" placeholder="Qwerty123" value="<?php if (!empty($_POST['password'])) echo $_POST['password']; ?>" required/>
+			<label>Логин:</label><input type="text" name="login" minlength="3" maxlength="30" placeholder="ivanov" value="<?php if (!empty($_POST['login'])) echo $_POST['login']; ?>" required/>
+			<label>Пароль:</label><input type="password" name="password" minlength="8" maxlength="32" placeholder="Qwerty123" value="<?php if (!empty($_POST['password'])) echo $_POST['password']; ?>" required/>
 			<label>Повторите пароль:</label><input type="password" name="password1" maxlength="32" placeholder="Qwerty123" value="<?php if (!empty($_POST['password1'])) echo $_POST['password1']; ?>" required/>
 			<label>Введите фамилию и инициалы</label><input type="text" name="worker" maxlength="20" placeholder="Иванов И. И." value="<?php if (!empty($_POST['worker'])) echo $_POST['worker']; ?>" required/>
 			<input type="submit" id="regdata" value="Зарегестрироваться" />
 			<?php
 			if ($err == 1)
 			echo "<p class=\"msg\">Ваш логин должен быть от 3-х до 30-и символов.<br>Допустимые символы только: a-z, 0-9, -, _</p>";
-			else if ($err == 2)
-			echo "<p class=\"msg\">Ваш пароль должен быть от 8-х до 32-и символов.<br>Содержать минимум: одну цифру, одну латинсукю <br> букву в нижнем регистре, одну в верхнем регистре</p>";
 			else if ($err == 3)
 			echo "<p class=\"msg\">Введенные пароли не совпадают</p>";
 			else if ($err == 5)
