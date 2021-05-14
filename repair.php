@@ -57,7 +57,6 @@ if (!empty($_POST['endRepair']))
 	unset ($_SESSION['diagnostic']);
 	unset ($_SESSION['repair']);
 }
-print_r ($_SESSION);
 ?>
 <!DOCTYPE html>
 <html>
