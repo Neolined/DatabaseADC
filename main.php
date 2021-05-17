@@ -18,7 +18,7 @@ if (empty($_SESSION['main']))
 }
 if (!empty($_POST['filter']))
 $_SESSION['filter'] = $_POST['filter'];
-if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])) && (empty($_POST['lot'])))
+if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])) && (empty($_POST['lot']) && (empty($_POST['order']))))
 header('Location: clearmain.php');
 $columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "otk", "testing", "repair", "mismatch", "comment");
 $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
@@ -132,8 +132,6 @@ $_SESSION['lot'] = $_POST['lot'];
 						if (empty($_POST['history']))
 							echo "<td id=\"his\"> История </td>";
 						echo "</tr>";
-						
-						
 						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']."");
 						if(!$result)
 							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
