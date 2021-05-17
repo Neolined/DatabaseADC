@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-//checkRoot($link, "accept");
+checkRoot($link, "accept");
 mysqli_set_charset($link, 'utf8');
 
 $error_s1 = 0;

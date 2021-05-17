@@ -117,7 +117,7 @@ function checkRoot($link, $root) //check root from database
     $rootdb = mysqli_fetch_row($result);
     if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
     {
-        if ($rootdb == "")
+        if ($rootdb[0] == "")
         error403();
     }
     else if (!(strpos($rootdb[0], $root)!==false))
