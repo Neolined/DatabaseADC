@@ -229,7 +229,7 @@ jQuery.autocomplete = function(input, options) {
 
 	function hideResults() {
 		if (timeout) clearTimeout(timeout);
-		timeout = setTimeout(hideResultsNow, 0);
+		timeout = setTimeout(hideResultsNow, 200);
 	};
 
 	function hideResultsNow() {
@@ -467,7 +467,7 @@ jQuery.fn.autocomplete = function(url, options, data) {
 	options.lineSeparator = options.lineSeparator || "\n";
 	options.cellSeparator = options.cellSeparator || "|";
 	options.minChars = options.minChars || 1;
-	options.delay = options.delay || 0;
+	options.delay = options.delay || 400;
 	options.matchCase = options.matchCase || 0;
 	options.matchSubset = options.matchSubset || 1;
 	options.matchContains = options.matchContains || 0;
