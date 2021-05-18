@@ -12,7 +12,7 @@ if (!empty($_POST['savebtY']))
 	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_SESSION['serial']."'), NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE `products` SET `location` = 'stock', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
+	$result = "UPDATE `products` SET `location` = '".$_POST['location']."', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		$succ = 1;
@@ -20,7 +20,7 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
-	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', 'stock', 'АДС', NOW())";
+	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', '".$_POST['location']."', 'АДС', NOW())";
 	if (mysqli_query($link, $result))
 		$id = (mysqli_insert_id($link));
 	else 
@@ -71,6 +71,13 @@ if (!empty($_POST['savebtN']))
 							if ($row != 0)
 							{
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100"></input></div>';
+								echo '<select class="select" name="location" required>';
+								echo '<option value = "">Выберите местоположение</option>';
+								echo '<option value="stock">Склад</option>';
+								echo '<option value="develop">Разработка</option>';
+								echo '<option value="isolator">Изолятор брака</option>';
+								echo '<option value="nelikvid">Неликвид</option>';
+								echo '</select>';
 								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
@@ -80,6 +87,13 @@ if (!empty($_POST['savebtN']))
 								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required></input></div>';
 								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" required></input></div>';
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required></input></div>';
+								echo '<select class="select" name="location" required>';
+								echo '<option value = "">Выберите местоположение</option>';
+								echo '<option value="stock">Склад</option>';
+								echo '<option value="develop">Разработка</option>';
+								echo '<option value="isolator">Изолятор брака</option>';
+								echo '<option value="nelikvid">Неликвид</option>';
+								echo '</select>';
 								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
 							}
@@ -161,5 +175,60 @@ if (!empty($_POST['savebtN']))
 			else $('#'+id).animate({ height: "show" }, "slow");
 		}
 </script>
+<script>
+				$('.select').each(function() {
+			const _this = $(this),
+				selectOption = _this.find('option'),
+				selectOptionLength = selectOption.length,
+				selectedOption = selectOption.filter(':selected'),
+				duration = 100; // длительность анимации 
+
+			_this.wrap('<div class="select"></div>');
+			$('<div>', {
+				class: 'new-select',
+				text: _this.children('option:first').text()
+			}).insertAfter(_this);
+
+			const selectHead = _this.next('.new-select');
+			$('<div>', {
+				class: 'new-select__list'
+			}).insertAfter(selectHead);
+
+			const selectList = selectHead.next('.new-select__list');
+			for (let i = 1; i < selectOptionLength; i++) {
+				$('<div>', {
+					class: 'new-select__item',
+					html: $('<span>', {
+						text: selectOption.eq(i).text()
+					})
+				})
+				.attr('data-value', selectOption.eq(i).val())
+				.appendTo(selectList);
+			}
+
+			const selectItem = selectList.find('.new-select__item');
+			selectList.slideUp(0);
+			selectHead.on('click', function() {
+				if ( !$(this).hasClass('on') ) {
+					$(this).addClass('on');
+					selectList.slideDown(duration);
+
+					selectItem.on('click', function() {
+						let chooseItem = $(this).data('value');
+
+						$('select').val(chooseItem).attr('selected', 'selected');
+						selectHead.text( $(this).find('span').text() );
+
+						selectList.slideUp(duration);
+						selectHead.removeClass('on');
+					});
+
+				} else {
+					$(this).removeClass('on');
+					selectList.slideUp(duration);
+				}
+			});
+		});
+	</script>
  </body>
 </html>
