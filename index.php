@@ -7,7 +7,7 @@ $link = connect();
 $err=0;
 if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 {
-	if (preg_match('/^[a-z0-9-_]{2,20}$/',$_POST["login"]))
+	if (preg_match('/^[A-Za-z0-9-_!@#$%^&*()?<>+=*]{3,30}$/',$_POST["login"]))
 	{
 		$log = mysqli_real_escape_string($link, $_POST["login"]);
 		$pass = mysqli_real_escape_string($link, $_POST["password"]);

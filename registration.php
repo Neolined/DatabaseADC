@@ -7,7 +7,7 @@ $err = 0;
 $suc = 0;
 if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST["password1"])))
 {
-	if (preg_match('/^[a-z0-9-_]{3,30}$/',$_POST["login"]))
+	if (preg_match('/^[A-Za-z0-9-_!@#$%^&*()?<>+=*]{3,30}$/',$_POST["login"]))
 	{
 		if ($_POST['password'] == $_POST['password1'])
 		{
