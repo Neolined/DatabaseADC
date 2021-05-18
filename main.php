@@ -37,8 +37,9 @@ $_SESSION['request'] = requestDB(array("type","name", "location", "owner", "otk"
 if (empty($_POST['order']))
 $_SESSION['order'] = '';
 }
-if (!empty($_POST['lot']))
+if (!empty($_POST['lot']) && !empty($_POST['applyFilter']))
 $_SESSION['lot'] = $_POST['lot'];
+else unset ($_SESSION['lot']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -78,7 +79,7 @@ $_SESSION['lot'] = $_POST['lot'];
 				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
 				echo '<div id="filterContent" style="display:none">';
 				selectDB($link, "Тип", "type", "products");	
-				selectDB($link, "Название", "name", "list_of_products");
+				selectDB($link, "Название", "name", "products");
 				selectDB($link, "Местоположение", "location", "products");
 				selectDB($link, "Владелец", "owner", "products");
 				selectDB($link, "ОТК", "otk", "products");
@@ -102,7 +103,7 @@ $_SESSION['lot'] = $_POST['lot'];
 				?>
 			<table class="table" align="center">
 				<?php
-					if (empty($_SESSION['lot']))
+					if (empty($_POST['lot']))
 					{
 						if (!empty($_POST['history']))
 						{
