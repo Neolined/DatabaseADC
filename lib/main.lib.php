@@ -1,11 +1,4 @@
 ﻿<?php
-$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
-"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
-"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
-"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
-
 function selectDB($link, $option_text, $option, $table_name) //create filters for table
 {	
 	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
@@ -55,7 +48,7 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
+"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 			echo '<td>';
@@ -205,7 +198,7 @@ function paintRow($result, $array, $posthist)
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"enter" => "Вхождение", "owner" => "Владелец", "software" => "Программное обеспечение", "location" => "Местоположение", "protocol" => "Протокол");
+"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол");
 	if(mysqli_num_rows($result) != 0)
 	{
 	while ($row = mysqli_fetch_assoc($result))
