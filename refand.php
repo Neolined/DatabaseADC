@@ -63,7 +63,7 @@ if (!empty($_POST['savebtN']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']))
+						if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']))
 						{
 							$_SESSION['serial'] = $_POST['serial'];
 							$result = mysqli_query($link, "select * from products where serial = '".$_SESSION['serial']."'");
