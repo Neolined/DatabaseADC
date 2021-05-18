@@ -521,6 +521,13 @@ margin: 0;
     background-color: #5c6f93;
     color: white;
 }
+.ac_over {
+	background-color: Highlight;
+	color: HighlightText;
+}
+.ac_loading {
+	background : Window url('/i/progress.gif') right center no-repeat;
+}
 #errAccess{
     height: 100vh;
     text-align: center;
