@@ -34,7 +34,7 @@ if (!empty($_POST['savebtn']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
-  <title>Интерфейс испытателя</title>
+  <title>Отгрузка</title>
  </head>
  <body>
  <div class="header">
