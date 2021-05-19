@@ -93,6 +93,8 @@ if (!empty($_POST['savebtN']))
 								echo '<option value="develop">Разработка</option>';
 								echo '<option value="isolator">Изолятор брака</option>';
 								echo '<option value="nelikvid">Неликвид</option>';
+								echo '<option value="repair">Ремонт</option>';
+								echo '<option value="work">Производство</option>';
 								echo '</select>';
 								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';

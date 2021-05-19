@@ -33,6 +33,16 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 			echo 'Склад';
 			else if ($row[$option] == 'shipped')
 			echo 'Отправлено';
+			else if ($row[$option] == 'nelikvid')
+			echo 'Неликвид';
+			else if ($row[$option] == 'isolator')
+			echo 'Изолятор брака';
+			else if ($row[$option] == 'develop')
+			echo 'Разработка';
+			else if ($row[$option] == 'repair')
+			echo 'Ремонт';
+			else if ($row[$option] == 'work')
+			echo 'Производство';
 			else echo $row[$option];
 			echo '</label>';
 			$num--;
@@ -48,7 +58,7 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол");
+"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 			echo '<td>';
@@ -198,7 +208,7 @@ function paintRow($result, $array, $posthist)
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол");
+"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид");
 	if(mysqli_num_rows($result) != 0)
 	{
 	while ($row = mysqli_fetch_assoc($result))
