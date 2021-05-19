@@ -11,7 +11,8 @@ $error_s3 = 0;
 $error_s4 = 0;
 $error_n1 = 1;
 $error_t1 = 1;
-$suc= 0;		
+$suc= 0;
+$decSer = 1;		
 
 if (!empty ($_POST['name']))
 {
@@ -25,27 +26,29 @@ if (!empty ($_POST['name']))
 		{
 			if ((!empty($_POST['lot'])) && (!empty($_POST['serial'])))
 			{
-				if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']))
+				if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
 					{
+						if (preg_match('/^\d{5}$/', $_POST['serial']))
+						$decSer = 1;
 						if ($_POST['lot']>=1)
 						{	
 							$str = $_POST['serial'];
 							$lot = (int) $_POST['lot'];
 							while($lot != 0)
 							{
-									if ((mb_substr($_POST['serial'], 0, 1)) != (mb_substr($str, 0, 1)))
-									{
-										$error_s2 = 1;//если первая буква внаименовании изделия изменилась 
-										break;
-									}
-									$serial = mysqli_query($link, "select `serial` from `products` where `serial` = '".$str."'");
-									$error_s3 = mysqli_num_rows($serial);
-									if ($error_s3 > 0)
-									{
-										break;//если во время цикла увидел, что такой серийный номер есть в бд
-									}
-									$str++;
-									$lot--;
+								if ($decSer == 0 && (mb_substr($_POST['serial'], 0, 1)) != (mb_substr($str, 0, 1)))
+								{
+									$error_s2 = 1;//если первая буква внаименовании изделия изменилась 
+									break;
+								}
+								$serial = mysqli_query($link, "select `serial` from `products` where `serial` = '".$str."'");
+								$error_s3 = mysqli_num_rows($serial);
+								if ($error_s3 > 0)
+								{
+									break;//если во время цикла увидел, что такой серийный номер есть в бд
+								}
+								$str++;
+								$lot--;
 							}
 							if (($error_s2 != 1) && ($error_s3 == 0)) //передача данных в бд дополнить!
 							{
