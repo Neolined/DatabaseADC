@@ -118,7 +118,7 @@ function checkRoot($link, $root) //check root from database
     error403();
     $result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
     $rootdb = mysqli_fetch_row($result);
-    if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
+    if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php") || strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
     {
         if ($rootdb[0] == "")
         error403();
@@ -154,6 +154,8 @@ function createMenu()
 			echo '<a href="refand.php">Возврат</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
 			echo '<a href="orders.php">Заказы</a>';
+		if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
+			echo '<a href="nomenclature.php">Номенклатура</a>';
         echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
     }
     echo '</div>';
@@ -265,6 +267,8 @@ function clearSESpage()
 		unset ($_SESSION['shipment']);
 	if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php"))
 		unset ($_SESSION['testing']);
+	if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
+		unset ($_SESSION['orderSort']);
 }
 function clearSESSION1($page, $index)
 {

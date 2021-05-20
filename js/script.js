@@ -60,38 +60,7 @@ function clearFilter()
     for (var i=0; i<check.length; i++) { //проходим по всем чекбоксам
       check[i].checked = false; //выключаем их
     }
-}
-
-$(document).ready(function(){
-  $("#name").autocompleteArray([
-  ' Братиславская,ул., д.22',
-  '1-й Курьяновский проезд',
-  'Абакан',
-  'Азамар'],
-      {
-        delay:10,
-        minChars:1,
-        matchSubset:1,
-        autoFill:true,
-        maxItemsToShow:10
-      }
-  );
-  $("#perfomance").autocompleteArray(
-  [' Братиславская,ул., д.22',
-  '1-й Курьяновский проезд',
-  'Асел',
-  'Аслан'],
-      {
-        delay:10,
-        minChars:1,
-        matchSubset:1,
-        autoFill:true,
-        maxItemsToShow:10
-      }
-    );
-  });
-  
-  
+}  
   function show_item(id, status)
   {
     if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
