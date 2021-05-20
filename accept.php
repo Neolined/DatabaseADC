@@ -12,8 +12,7 @@ $error_s4 = 0;
 $error_n1 = 1;
 $error_t1 = 1;
 $suc= 0;
-$decSer = 1;		
-
+$decSer = 1;
 if (!empty ($_POST['name']))
 {
 	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$_POST['type']."'");
