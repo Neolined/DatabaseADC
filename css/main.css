@@ -631,3 +631,8 @@ margin-top: -0.1em;
     border: 1px solid white;
     background-color: white;
 }
+#infoBoard{
+    background: #5C6F93;
+    color: white;
+    padding: 0.5em;
+}
