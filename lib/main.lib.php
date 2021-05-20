@@ -62,7 +62,7 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 			echo '<td>';
-			echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div>';
+			echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this)" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div>';
 			echo '</td>';
 			}
 		}
