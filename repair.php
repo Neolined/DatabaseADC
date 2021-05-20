@@ -64,7 +64,7 @@ if (!empty($_POST['endRepair']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
-  <title>Интерфейс приемщика</title>
+  <title>Ремонт</title>
  </head>
  <body>
  <div class="header">
