@@ -26,7 +26,7 @@ if (!empty($_POST['savebtn']))
  </head>
  <body>
  <div class="header">
- <?php createMenu() ?>
+ <?php createMenu($link) ?>
 	<img id="adc" src="images/adc.png">
 	<div id="worker">
 	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>

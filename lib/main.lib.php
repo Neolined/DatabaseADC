@@ -111,23 +111,23 @@ function requestDB($index) //create request for DB from main
 function checkRoot($link, $root) //check root from database
 {
     if (empty($_SESSION))
-    error403();
+    error403($link);
     $result = mysqli_query($link, "select `password` from `users` where `user` = '".$_SESSION['user']."'");
     $hash = mysqli_fetch_row($result);
     if (($hash[0] != $_SESSION['hash']) || (!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']))
-    error403();
+    error403($link);
     $result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
     $rootdb = mysqli_fetch_row($result);
     if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php") || strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
     {
         if ($rootdb[0] == "")
-        error403();
+        error403($link);
     }
     else if (!(strpos($rootdb[0], $root)!==false))
-        error403();
+        error403($link);
 }
 
-function createMenu()
+function createMenu($link)
 {
     echo '<div class="dropdown">';
     echo '<button class="dropbtn" align="center"><img id = "menu" src = "images/menu.png"></button>';
@@ -136,21 +136,23 @@ function createMenu()
         echo '<a href="index.php">Авторизоваться</a>';
     else
     {
+		$result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
+    	$rootdb = mysqli_fetch_row($result);
         if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
             echo '<a href="main.php">Главная</a>';
-        if (!strpos($_SERVER['SCRIPT_NAME'], "accept.php"))
+        if (!strpos($_SERVER['SCRIPT_NAME'], "accept.php") && (strpos($rootdb[0], "accept") !==false))
             echo '<a href="accept.php">Приемка</a>';
-        if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php"))
+        if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php") && (strpos($rootdb[0], "otk") !==false))
             echo '<a href="otk.php">ОТК</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php") && (strpos($rootdb[0], "testing") !==false))
 		echo '<a href="testing.php">Тестирование</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php") && (strpos($rootdb[0], "mismathc") !==false))
             echo '<a href="mismatch.php">Несоответствия</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php") && (strpos($rootdb[0], "repair") !==false))
             echo '<a href="repair.php">Ремонт</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php") && (strpos($rootdb[0], "shipment") !==false))
             echo '<a href="shipment.php">Отгрузка</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php"))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php") && (strpos($rootdb[0], "refand") !==false))
 			echo '<a href="refand.php">Возврат</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
 			echo '<a href="orders.php">Заказы</a>';
@@ -162,7 +164,7 @@ function createMenu()
     echo '</div>';
 }
 
-function error403(){
+function error403($link){
 	echo '<!DOCTYPE html>
 		<html>
 		<head>
@@ -172,7 +174,7 @@ function error403(){
 		</head>
 		<body>
 		<div class="header">';
-		createMenu();
+		createMenu($link);
 	if (!empty($_SESSION['worker']))
 	{
 		echo '<div id="worker"><p><img id="exit" src="images/worker.png">';

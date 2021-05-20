@@ -50,7 +50,7 @@ else unset ($_SESSION['lot']);
  </head>
  <body>
  <div class="header">
-	<?php createMenu() ?>
+	<?php createMenu($link) ?>
 	<img id="adc" src="images/adc.png" align="center">
 	<div id="worker">
 	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
