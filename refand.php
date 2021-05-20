@@ -85,7 +85,7 @@ if (!empty($_POST['savebtN']))
 							{
 								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required></input></div>';
 								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required></input></div>';
-								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" required></input></div>';
+								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100"></input></div>';
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
