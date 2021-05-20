@@ -36,10 +36,10 @@ function show(show, hide, cont) {
       }
     }
   
-function checkAddress(checkbox)
+function checkAddress(checkbox, sort)
 {
   if (checkbox.checked == true) { //если включаем чекбокс
-    var check = document.getElementsByClassName('sort');
+    var check = document.getElementsByClassName(sort);
     for (var i=0; i<check.length; i++) { //проходим по всем чекбоксам
       check[i].checked = false; //выключаем их
     }

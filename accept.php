@@ -1,4 +1,7 @@
 <?php
+ini_set('session.gc_maxlifetime', 1);
+ini_set('session.cookie_lifetime', 1);
+
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
@@ -13,7 +16,7 @@ $error_n1 = 1;
 $error_t1 = 1;
 $suc= 0;
 $decSer = 1;		
-
+print_r($_SESSION);
 if (!empty ($_POST['name']))
 {
 	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$_POST['type']."'");

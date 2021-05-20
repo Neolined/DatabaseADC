@@ -78,6 +78,8 @@ else unset ($_SESSION['lot']);
 				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
 				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
 				echo '<div id="filterContent" style="display:none">';
+				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input  class = "viewSort" onchange="checkAddress(this, \'viewSort\')" name = "lot" type="checkbox" form = "myform" value ="1"'; if (!empty($_SESSION['lot']) && $_SESSION['lot'] == 1) echo 'checked'; echo '>Количество</label>';
+				echo '<label class="filterInput"><input class = "viewSort" onchange="checkAddress(this, \'viewSort\')"  name = "lot" type="checkbox" form = "myform" value ="2"'; if (!empty($_SESSION['lot']) && $_SESSION['lot'] == 2 ) echo 'checked'; echo '>Склад</label></div>';
 				selectDB($link, "Тип", "type", "products");	
 				selectDB($link, "Название", "name", "products");
 				selectDB($link, "Местоположение", "location", "products");
@@ -85,10 +87,9 @@ else unset ($_SESSION['lot']);
 				selectDB($link, "ОТК", "otk", "products");
 				selectDB($link, "Тестирование", "testing", "products");
 				selectDB($link, "В ремонте", "repair", "products");
-				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input class = "filter"  name = "filter[comment][]" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['filter']['comment'][0])) echo 'checked'; echo '>Наличие комментария</label></div>';
+				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input  class = "sort" onchange="checkAddress(this, \'sort\')" name = "filter[comment][]" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['filter']['comment'][0])) echo 'checked'; echo '>Наличие комментария</label></div>';
 				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_SESSION['filter']['date1'][0])) echo $_SESSION['filter']['date1'][0];
 				echo '" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_SESSION['filter']['date2'][0])) echo $_SESSION['filter']['date2'][0]; echo '"></input></label></div>';
-				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input class = "filter"  name = "lot" type="checkbox" form = "myform" value =" "'; if (!empty($_SESSION['lot'])) echo 'checked'; echo '>Отобразить количество</label></div>';
 				echo '</div>';
 				echo '</div>';
 				}
@@ -156,6 +157,8 @@ else unset ($_SESSION['lot']);
 					}
 					else
 					{
+						if (($_POST['lot']) == 1)
+						{
 						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$_SESSION['request']." group by type, name");
 						echo '<tr><td>Тип</td><td>Наименование</td><td style="padding-right: 40em;">Кол-во</td></tr>';
 						while ($row = mysqli_fetch_row($result))
@@ -166,7 +169,36 @@ else unset ($_SESSION['lot']);
 						echo '<td> '.$row[2]. ' шт.</td>';
 						echo "</tr>";
 						}
-						echo '</table>';
+						}
+						if (($_POST['lot']) == 2)
+						{
+						$locatMass = array("stock", "develop", "nelikvid", "isolator", "work", "repair");
+						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$_SESSION['request']." group by type, name");
+						echo '<tr><td>Тип</td><td>Наименование</td><td>Склад</td><td>Разработка</td><td>Неликвид</td><td>Изолятор</td><td>Производство</td><td>В ремонте</td></tr>';
+						while ($row = mysqli_fetch_row($result))
+						{
+							echo "<tr>";
+							echo '<td> '.$row[0].'</td>';
+							echo '<td> '.$row[1].'</td>';
+							for ($i=0; !empty($locatMass[$i]); $i++)
+							{
+								$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."'");
+								$locat = mysqli_fetch_row($query);
+								echo '<td> '.$locat[0];
+								if ($locatMass[$i] == 'stock' || $locatMass[$i] == 'develop')
+								{
+									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'yes'");
+									$locat = mysqli_fetch_row($query);
+									{
+										if (!empty($locat[0]))
+											echo '('.$locat[0].')';
+									}
+								}
+								echo ' шт.</td>';
+							}
+							echo "</tr>";
+						}
+						}
 					}
 				?>
 			</table>
