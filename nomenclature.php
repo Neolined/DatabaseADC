@@ -29,7 +29,7 @@ clearSESpage();
 			else if (empty($_SESSION['orderSort']))
 				$_SESSION['orderSort'] = '';
 			$result = mysqli_query($link, 'select distinct `type` from list_of_products '.$_SESSION['orderSort'].'');
-			echo '<caption><div class="multiselect" style="width: -webkit-fill-available;"><div class="selectBox" onclick="showCheckboxesSort(\'order_by_type\')"><select style="background: center;color: white;font-size: initial;"><option>Номенклатура</option> </select> <div class="overSelect"></div></div><div id="order_by_type" style="color: black;margin-left: 11em;" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" this.form.submit();" type="checkbox" value ="order by `type` asc"';
+			echo '<caption><div class="multiselect" style="width: -webkit-fill-available;"><div class="selectBox" onclick="showCheckboxesSort(\'order_by_type\')"><select style="background: center;color: white;font-size: initial;"><option>Номенклатура</option> </select> <div class="overSelect"></div></div><div id="order_by_type" style="color: black;margin-left: 11em;" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\'); this.form.submit();" type="checkbox" value ="order by `type` asc"';
 			if (empty($_SESSION['orderSort']) || $_SESSION['orderSort'] == "order by `type` asc")
 				echo ' checked';
 			echo '>A-Z</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\'); this.form.submit();" type="checkbox" value ="order by `type` desc"';
