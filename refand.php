@@ -66,10 +66,12 @@ if (!empty($_POST['savebtN']))
 						if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
 						{
 							$_SESSION['serial'] = $_POST['serial'];
-							$result = mysqli_query($link, "select * from products where serial = '".$_SESSION['serial']."'");
-							$row = mysqli_num_rows($result);
-							if ($row != 0)
+							$result = mysqli_query($link, "select type, name from products where serial = '".$_SESSION['serial']."'");
+							$row = mysqli_fetch_row($result);
+							
+							if (!empty($row))
 							{
+								echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100"></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';

@@ -45,10 +45,11 @@ if (!empty($_POST['savebtn']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+						$result = mysqli_query($link, "select name, type from products where serial = '".$_POST['serial']."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
+							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"  maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 						}
