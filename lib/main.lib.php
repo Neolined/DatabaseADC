@@ -146,7 +146,7 @@ function createMenu($link)
             echo '<a href="otk.php">ОТК</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php") && (strpos($rootdb[0], "testing") !==false))
 		echo '<a href="testing.php">Тестирование</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php") && (strpos($rootdb[0], "mismathc") !==false))
+		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php") && (strpos($rootdb[0], "mismatch") !==false))
             echo '<a href="mismatch.php">Несоответствия</a>';
 		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php") && (strpos($rootdb[0], "repair") !==false))
             echo '<a href="repair.php">Ремонт</a>';
