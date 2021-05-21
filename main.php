@@ -187,7 +187,7 @@ else unset ($_SESSION['lot']);
 								echo '<td> '.$locat[0];
 								if ($locatMass[$i] == 'stock' || $locatMass[$i] == 'develop')
 								{
-									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'yes'");
+									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'no'");
 									$locat = mysqli_fetch_row($query);
 									{
 										if (!empty($locat[0]))
