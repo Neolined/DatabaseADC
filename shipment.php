@@ -8,6 +8,8 @@ clearSESpage();
 mysqli_set_charset($link, 'utf8');
 if (!empty($_POST['savebtn']))
 {
+	$_POST['recipient'] = mysqli_real_escape_string($link, $_POST['recipient']);
+	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
@@ -61,8 +63,8 @@ if (!empty($_POST['savebtn']))
 					{
 						if (!empty($_POST['order']) && !empty($_POST['year']))
 						{
-							$_SESSION['year'] = $_POST['year'];
-							$_SESSION['number'] = $_POST['order'];
+							$_SESSION['year'] = mysqli_real_escape_string($link, $_POST['year']);
+							$_SESSION['number'] = mysqli_real_escape_string($link, $_POST['order']);
 						}
 						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
 						$row = mysqli_num_rows($result);

@@ -9,6 +9,9 @@ mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtY']))
 {
+	$_POST['order_from'] = mysqli_real_escape_string($link, $_POST['order_from']);
+	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
+	$_POST['location'] = mysqli_real_escape_string($link, $_POST['location']);
 	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_SESSION['serial']."'), NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
@@ -20,6 +23,12 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
+	$_POST['type'] = mysqli_real_escape_string($link, $_POST['type']);
+	$_POST['name'] = mysqli_real_escape_string($link, $_POST['name']);
+	$_POST['perfomance'] = mysqli_real_escape_string($link, $_POST['perfomance']);
+	$_POST['location'] = mysqli_real_escape_string($link, $_POST['location']);
+	$_POST['order_from'] = mysqli_real_escape_string($link, $_POST['order_from']);
+	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', '".$_POST['location']."', 'АДС', NOW())";
 	if (mysqli_query($link, $result))
 		$id = (mysqli_insert_id($link));
@@ -65,7 +74,7 @@ if (!empty($_POST['savebtN']))
 					{
 						if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
 						{
-							$_SESSION['serial'] = $_POST['serial'];
+							$_SESSION['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
 							$result = mysqli_query($link, "select type, name from products where serial = '".$_SESSION['serial']."'");
 							$row = mysqli_fetch_row($result);
 							

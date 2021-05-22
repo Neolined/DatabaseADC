@@ -10,7 +10,7 @@ $succ = 0;
 $access = 0;
 if (!empty($_POST['acceptbtn']))
 {
-	$result = "UPDATE products set `repair` = '".$_SESSION['user']."' where `uid` = '".$_SESSION['uid']."'";
+	$result = "UPDATE products set `repair` = '".$_SESSION['user']."', `location` = 'repair' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', 'Изделие принято в ремонт', NOW())";
@@ -20,6 +20,7 @@ if (!empty($_POST['acceptbtn']))
 }
 if (!empty($_POST['diagBtn']))
 {
+	$_POST['diComment'] = mysqli_real_escape_string($link, $_POST["diComment"]);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['diComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
@@ -30,6 +31,7 @@ if (!empty($_POST['diagBtn']))
 }
 if (!empty($_POST['repairBtn']))
 {
+	$_POST['reComment'] = mysqli_real_escape_string($link, $_POST["reComment"]);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['reComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
@@ -39,7 +41,7 @@ if (!empty($_POST['endRepair']))
 {
 	if (!empty($_POST['status']))
 	{
-		$result = "UPDATE products set `repair` = 'no' where `uid` = '".$_SESSION['uid']."'";
+		$result = "UPDATE products set `repair` = 'no', `location` = 'stock' where `uid` = '".$_SESSION['uid']."'";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		if ($_POST['status'] == 'ok')
@@ -57,6 +59,15 @@ if (!empty($_POST['endRepair']))
 	unset ($_SESSION['diagnostic']);
 	unset ($_SESSION['repair']);
 }
+if (!empty($_POST['nextbtn']))
+	{
+		unset ($_SESSION['uid']);
+		unset ($_SESSION['serial']);
+		unset ($_SESSION['diagnostic']);
+		unset ($_SESSION['repair']);
+	}
+if (!empty($_POST['serial']))
+	$_SESSION['serial'] = mysqli_real_escape_string($link, $_POST["serial"]);
 ?>
 <!DOCTYPE html>
 <html>
@@ -82,21 +93,12 @@ if (!empty($_POST['endRepair']))
 			<p id="priem_name" align="center">Ремонт</p>
 			<div class="serial_lot">
 			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_SESSION['serial']) && empty($_POST['savebtn']) ) echo $_SESSION['serial']; elseif (empty($_SESSION['serial']) && empty($_POST['savebtn']) && !empty($_POST['serial'])) echo $_POST['serial']; ?>" required/> </div>
-			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
+			<input type="submit" id="nextbtn" name = "nextbtn"  value="Далее" />
 			</div>
 			<div id = "contentOtk">
 				<?php
 				if (!empty($_POST['nextbtn']) || !empty($_POST['acceptbtn']) || !empty($_POST['diagBtn']) || !empty($_POST['repairBtn']))
 				{
-					if (!empty($_POST['nextbtn']))
-					{
-						unset ($_SESSION['uid']);
-						unset ($_SESSION['serial']);
-						unset ($_SESSION['diagnostic']);
-						unset ($_SESSION['repair']);
-					}
-					if (!empty($_POST['serial']))
-					$_SESSION['serial'] = $_POST['serial'];
 					$result = mysqli_query($link, "select `uid`, `type`, `name`, `repair` from products where serial = '".$_SESSION['serial']."'");
 					$row = mysqli_fetch_array($result);
 					if (!empty($row))
@@ -147,7 +149,7 @@ if (!empty($_POST['endRepair']))
 						if ($access == 'no')
 						echo '<input type="submit" class = "buttons" id="acceptbtn" name = "acceptbtn" value="Принять в ремонт"/>';
 						else if ($access != $_SESSION['user'])
-						echo "<p class=\"msg\">Изделие уже в ремонте</p>";	
+						echo "<p class=\"msg\">Изделие уже в ремонте</p>";
 
 						if ((!empty($_POST['acceptbtn']) || !empty($_POST['diagBtn']) || !empty($_POST['repairBtn'])) || $access == $_SESSION['user'])
 						{

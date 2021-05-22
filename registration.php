@@ -14,6 +14,7 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 			$link = connect();
 			if ($link)
 			{
+				$_POST['worker'] = mysqli_real_escape_string($link, $_POST["worker"]);
 				$log = mysqli_real_escape_string($link, $_POST["login"]);
 				$hash = password_hash(mysqli_real_escape_string($link, $_POST["password"]), PASSWORD_DEFAULT);
 				$result = mysqli_query($link, "SELECT user FROM users WHERE user = '".$log."'");

@@ -15,11 +15,13 @@ $suc= 0;
 $decSer = 1;
 if (!empty ($_POST['name']))
 {
-	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$_POST['type']."'");
+	$typePost = mysqli_real_escape_string($link, $_POST['type']);
+	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$typePost."'");
 	$error_t1 = mysqli_num_rows($name);
 	if ($error_t1 > 0)
 	{
-		$name = mysqli_query($link, "select `name` from `list_of_products` where `name` = '".$_POST['name']."'");
+		$namePost = mysqli_real_escape_string($link, $_POST['name']);
+		$name = mysqli_query($link, "select `name` from `list_of_products` where `name` = '".$namePost."'");
 		$error_n1 = mysqli_num_rows($name);
 		if ($error_n1 > 0)
 		{
@@ -31,7 +33,7 @@ if (!empty ($_POST['name']))
 						$decSer = 1;
 						if ($_POST['lot']>=1)
 						{	
-							$str = $_POST['serial'];
+							$str = mysqli_real_escape_string($link, $_POST['serial']);
 							$lot = (int) $_POST['lot'];
 							while($lot != 0)
 							{
@@ -54,15 +56,16 @@ if (!empty ($_POST['name']))
 								$str = $_POST['serial'];
 								$lot = (int) $_POST['lot'];
 								$suc = 1;
+								$commPost = mysqli_real_escape_string($link, $_POST['comment']);
 								while ($lot > 0)
 								{
-									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
+									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$typePost."', '".$namePost."', '".$_POST['perfomance']."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
 									if (mysqli_query($link, $query))
 										$id = (mysqli_insert_id($link));
 									else 
 										die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 									
-									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
+									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$commPost."')";
 									if (!(mysqli_query($link, $query)))
 										die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 									$str++;
@@ -123,7 +126,7 @@ if (!empty ($_POST['name']))
 			if ($error_n1 == 0)
 			echo "<p class=\"msg\"> Неккоректно введено название изделия</p>";
 			if ($error_t1 == 0)
-			echo "<p class=\"msg\"> Неккоректно введено название изделия</p>";
+			echo "<p class=\"msg\"> Неккоректно введено название типа изделия</p>";
 			if ($suc == 1)
 			echo "<p class=\"msg1\"> Данные сохранены</p>";
 		?>

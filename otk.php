@@ -11,6 +11,7 @@ if (!empty($_POST['savebtn']))
 {
 	if (!empty($_POST['order']))
 	{
+		$_POST['order'] = mysqli_real_escape_string($link, $_POST['order']);
 		if (preg_match('[^\d{7}$]', $_POST['order']))
 		{
 			$result = mysqli_query($link, "select uid from orders where UID = '".$_POST['order']."'");
@@ -41,6 +42,7 @@ if (!empty($_POST['savebtn']))
 	}
 	if (empty($msgOrder2))
 	{
+		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
@@ -82,7 +84,7 @@ if (!empty($_POST['savebtn']))
 					if (!empty($_POST['serial']) || !empty($_SESSION['serial']))
 					{
 						if (!empty($_POST['serial']))
-							$_SESSION['serial'] = $_POST['serial'];
+							$_SESSION['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
 						$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_SESSION['serial']."'");
 						$row = mysqli_fetch_array($result);
 						if (!empty($row))

@@ -9,6 +9,8 @@ mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
+	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
+	$_POST['protocol'] = mysqli_real_escape_string($link, $_POST['protocol']);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'testing', '".$_POST['status']."', '".$_POST['comment']."', '".$_POST['protocol']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
@@ -48,6 +50,7 @@ if (!empty($_POST['savebtn']))
 				{
 					if (!empty($_POST['serial']))
 					{
+						$_POST['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
 						$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
@@ -56,8 +59,8 @@ if (!empty($_POST['savebtn']))
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
-							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Вхождение', 'Дата', 'Владелец', 'ПО', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
-							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "enter", "date", "owner", "software", "location", "testing", "otk", "comment");
+							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Дата', 'Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
+							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "date", "owner", "location", "testing", "otk", "comment");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
