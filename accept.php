@@ -27,7 +27,7 @@ if (!empty ($_POST['name']))
 		{
 			if ((!empty($_POST['lot'])) && (!empty($_POST['serial'])))
 			{
-				if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
+				if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[Р]\d{6}$/u', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
 					{
 						if (preg_match('/^\d{5}$/', $_POST['serial']))
 						$decSer = 1;
