@@ -183,14 +183,14 @@ else unset ($_SESSION['lot']);
 							for ($i=0; !empty($locatMass[$i]); $i++)
 							{
 								$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."'");
-								$locat = mysqli_fetch_row($query);
-								echo '<td> '.$locat[0];
+								$lotOkBrds = mysqli_fetch_row($query);
+								echo '<td> '.$lotOkBrds[0];
 								if ($locatMass[$i] == 'stock' || $locatMass[$i] == 'develop')
 								{
 									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'no'");
 									$locat = mysqli_fetch_row($query);
 									{
-										if (!empty($locat[0]))
+										if (!empty($locat[0]) && $locat[0] != $lotOkBrds[0])
 											echo '('.$locat[0].')';
 									}
 								}
