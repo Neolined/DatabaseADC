@@ -26,7 +26,7 @@ $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_
 "comment" => "Комментарий", "protocol" => "Протокол");
 //формирование Запроса чере SESSION
 if (empty($_SESSION['order']) && empty($_POST['order']))
-$_SESSION['order'] = '';
+$_SESSION['order'] = 'order by `uid` desc';
 else if (!empty($_POST['order']))
 $_SESSION['order'] = $_POST['order'];
 if (empty($_SESSION['request']) && empty($_POST['filter']))
