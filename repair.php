@@ -20,6 +20,7 @@ if (!empty($_POST['acceptbtn']))
 }
 if (!empty($_POST['diagBtn']))
 {
+	$_SESSION['diagnostic'] = $_POST['diComment'];
 	$_POST['diComment'] = mysqli_real_escape_string($link, $_POST["diComment"]);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['diComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
@@ -27,15 +28,14 @@ if (!empty($_POST['diagBtn']))
 	$result = "UPDATE products set `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
-	$_SESSION['diagnostic'] = $_POST['diComment'];
 }
 if (!empty($_POST['repairBtn']))
 {
+	$_SESSION['repair'] = $_POST['reComment'];
 	$_POST['reComment'] = mysqli_real_escape_string($link, $_POST["reComment"]);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['reComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$_SESSION['repair'] = $_POST['reComment'];
 }
 if (!empty($_POST['endRepair']))
 {
