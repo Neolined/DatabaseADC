@@ -3,19 +3,19 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "refand");
-clearSESSION1('refand', array("serial"));
+clearSESSION1('refand', array("serial", "rType", "rName", "rPerfomance", "rLocation", "rOrder_from", "rComment"));
 clearSESpage();
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtY']))
 {
-	$_POST['order_from'] = mysqli_real_escape_string($link, $_POST['order_from']);
-	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$_POST['location'] = mysqli_real_escape_string($link, $_POST['location']);
-	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_SESSION['serial']."'), NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
+	$_SESSION['rOrder_from'] = $_POST['order_from'];
+	$_SESSION['rComment'] = $_POST['comment'];
+	$_SESSION['rLocation'] = $_POST['location'];
+	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_SESSION['serial']."'), NOW(), '".$_SESSION['worker']."', 'record', '".mysqli_real_escape_string($link, $_SESSION['rOrder_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_SESSION['rComment'])."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE `products` SET `location` = '".$_POST['location']."', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
+	$result = "UPDATE `products` SET `location` = '".mysqli_real_escape_string($link, $_SESSION['rLocation'])."', `owner` = 'АДС' where `serial` = '".$_SESSION['serial']."'";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		$succ = 1;
@@ -23,18 +23,18 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
-	$_POST['type'] = mysqli_real_escape_string($link, $_POST['type']);
-	$_POST['name'] = mysqli_real_escape_string($link, $_POST['name']);
-	$_POST['perfomance'] = mysqli_real_escape_string($link, $_POST['perfomance']);
-	$_POST['location'] = mysqli_real_escape_string($link, $_POST['location']);
-	$_POST['order_from'] = mysqli_real_escape_string($link, $_POST['order_from']);
-	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$_POST['perfomance']."', '".$_SESSION['serial']."', '".$_POST['location']."', 'АДС', NOW())";
+	$_SESSION['rType'] = $_POST['type'];
+	$_SESSION['rName'] = $_POST['name'];
+	$_SESSION['rPerfomance'] = $_POST['perfomance'];
+	$_SESSION['rLocation'] = $_POST['location'];
+	$_SESSION['rOrder_from'] = $_POST['order_from'];
+	$_SESSION['rComment'] = $_POST['comment'];
+	$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_SESSION['rType'])."', '".mysqli_real_escape_string($link, $_SESSION['rName'])."', '".mysqli_real_escape_string($link, $_SESSION['rPerfomance'])."', '".$_SESSION['serial']."', '".mysqli_real_escape_string($link, $_SESSION['rLocation'])."', 'АДС', NOW())";
 	if (mysqli_query($link, $result))
 		$id = (mysqli_insert_id($link));
 	else 
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
-	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ($id, NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$_POST['comment']."')";
+	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ($id, NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_SESSION['rOrder_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_SESSION['rComment'])."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 		$succ = 2;
@@ -81,31 +81,33 @@ if (!empty($_POST['savebtN']))
 							if (!empty($row))
 							{
 								echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100"></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" '; if (!empty($_SESSION['rOrder_from'])) echo 'value = \''.$_SESSION['rOrder_from'].'\''; echo '></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
-								echo '<option value="stock">Склад</option>';
-								echo '<option value="develop">Разработка</option>';
-								echo '<option value="isolator">Изолятор брака</option>';
-								echo '<option value="nelikvid">Неликвид</option>';
+								echo '<option value="stock"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'stock') echo 'selected'; echo '>Склад</option>';
+								echo '<option value="develop"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'develop') echo 'selected'; echo '>Разработка</option>';
+								echo '<option value="isolator"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'isolator') echo 'selected'; echo '>Изолятор брака</option>';
+								echo '<option value="nelikvid"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'nelikvid') echo 'selected'; echo '>Неликвид</option>';
+								echo '<option value="repair"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'repair') echo 'selected'; echo '>Ремонт</option>';
+								echo '<option value="work"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'work') echo 'selected'; echo '>Производство</option>';
 								echo '</select>';
 								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
 							else
 							{
-								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required></input></div>';
-								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required></input></div>';
-								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100"></input></div>';
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required></input></div>';
+								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required '; if (!empty($_SESSION['rType'])) echo 'value = "'.$_SESSION['rType'].'"'; echo '></input></div>';
+								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required '; if (!empty($_SESSION['rName'])) echo 'value = "'.$_SESSION['rName'].'"'; echo '></input></div>';
+								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" '; if (!empty($_SESSION['rName'])) echo 'value = \''.$_SESSION['rName'].'\''; echo '></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required '; if (!empty($_SESSION['rOrder_from'])) echo 'value = \''.$_SESSION['rOrder_from'].'\''; echo '></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
-								echo '<option value="stock">Склад</option>';
-								echo '<option value="develop">Разработка</option>';
-								echo '<option value="isolator">Изолятор брака</option>';
-								echo '<option value="nelikvid">Неликвид</option>';
-								echo '<option value="repair">Ремонт</option>';
-								echo '<option value="work">Производство</option>';
+								echo '<option value="stock"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'stock') echo 'selected'; echo '>Склад</option>';
+								echo '<option value="develop"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'develop') echo 'selected'; echo '>Разработка</option>';
+								echo '<option value="isolator"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'isolator') echo 'selected'; echo '>Изолятор брака</option>';
+								echo '<option value="nelikvid"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'nelikvid') echo 'selected'; echo '>Неликвид</option>';
+								echo '<option value="repair"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'repair') echo 'selected'; echo '>Ремонт</option>';
+								echo '<option value="work"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'work') echo 'selected'; echo '>Производство</option>';
 								echo '</select>';
 								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
@@ -198,8 +200,8 @@ if (!empty($_POST['savebtN']))
 
 			_this.wrap('<div class="select"></div>');
 			$('<div>', {
-				class: 'new-select',
-				text: _this.children('option:first').text()
+				class: 'new-select',	
+				text: _this.children('option:<?php if (!empty($_SESSION['rLocation'])) echo "selected"; else echo "first";?>').text()
 			}).insertAfter(_this);
 
 			const selectHead = _this.next('.new-select');
@@ -242,6 +244,7 @@ if (!empty($_POST['savebtN']))
 				}
 			});
 		});
+		
 	</script>
  </body>
 </html>
