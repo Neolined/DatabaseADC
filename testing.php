@@ -51,7 +51,7 @@ if (!empty($_POST['savebtn']))
 					if (!empty($_POST['serial']))
 					{
 						$_POST['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
-						$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+						$result = mysqli_query($link, "select `uid` from products where serial = '".$_POST['serial']."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
