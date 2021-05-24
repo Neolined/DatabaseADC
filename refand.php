@@ -25,7 +25,6 @@ if (!empty($_POST['savebtY']))
 }
 if (!empty($_POST['savebtN']))
 {
-	echo 'lol1';
 	$_SESSION['rType'] = $_POST['type'];
 	$_SESSION['rName'] = $_POST['name'];
 	$_SESSION['rPerfomance'] = $_POST['perfomance'];
@@ -36,12 +35,10 @@ if (!empty($_POST['savebtN']))
 	$error_t1 = mysqli_num_rows($result);
 	if ($error_t1 > 0)
 	{
-		echo 'lol1';
 		$result = mysqli_query($link, "select `name` from `list_of_products` where `name` = '".mysqli_real_escape_string($link, $_SESSION['rName'])."'");
 		$error_n1 = mysqli_num_rows($result);
 		if ($error_n1 > 0)
 		{
-			echo 'lol2';
 			$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_SESSION['rType'])."', '".mysqli_real_escape_string($link, $_SESSION['rName'])."', '".mysqli_real_escape_string($link, $_SESSION['rPerfomance'])."', '".$_SESSION['serial']."', '".mysqli_real_escape_string($link, $_SESSION['rLocation'])."', 'АДС', NOW())";
 			if (mysqli_query($link, $result))
 				$id = (mysqli_insert_id($link));
@@ -106,7 +103,7 @@ if (!empty($_POST['savebtN']))
 								echo '<option value="repair"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'repair') echo 'selected'; echo '>Ремонт</option>';
 								echo '<option value="work"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'work') echo 'selected'; echo '>Производство</option>';
 								echo '</select>';
-								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
+								echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000">'; if (!empty($_SESSION['rComment'])) echo htmlspecialchars($_SESSION['rComment']); echo '</textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtY" value="Сохранить данные"/>';
 							}
 							else
@@ -124,7 +121,7 @@ if (!empty($_POST['savebtN']))
 								echo '<option value="repair"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'repair') echo 'selected'; echo '>Ремонт</option>';
 								echo '<option value="work"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'work') echo 'selected'; echo '>Производство</option>';
 								echo '</select>';
-								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
+								echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000">'; if (!empty($_SESSION['rComment'])) echo htmlspecialchars($_SESSION['rComment']); echo '</textarea></div>';
 								echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
 							}
 						}
@@ -147,7 +144,7 @@ if (!empty($_POST['savebtN']))
 					echo '<option value="repair"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'repair') echo 'selected'; echo '>Ремонт</option>';
 					echo '<option value="work"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'work') echo 'selected'; echo '>Производство</option>';
 					echo '</select>';
-					echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea></div>';
+					echo '<div id = "inp"><label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000">'; if (!empty($_SESSION['rComment'])) echo htmlspecialchars($_SESSION['rComment']); echo '</textarea></div>';
 					echo '<input type="submit" id="savedata" name = "savebtN" value="Сохранить данные"/>';
 					if ($error_n1 == 0)
 						echo "<p class=\"msg\"> Неккоректно введено название изделия</p>";
