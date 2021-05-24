@@ -5,10 +5,12 @@ $link = connect();
 checkRoot($link, "mismatch");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
+
+if (!empty($_POST['serial']))
+	$_POST['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
 if (!empty($_POST['savebtn']))
 {
-	$serialPost = mysqli_real_escape_string($link, $_POST['serial']);
-	$commentPost = mysqli_real_escape_string($link, $_POST['comment']);
+	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".$_POST['serial']."'), '".$_SESSION['worker']."', 'mismatch', '".$_POST['comment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
@@ -47,8 +49,7 @@ if (!empty($_POST['savebtn']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						$serialPost = mysqli_real_escape_string($link, $_POST['serial']);
-						$result = mysqli_query($link, "select name, type from products where serial = '".$serialPost."'");
+						$result = mysqli_query($link, "select name, type from products where serial = '".$_POST['serial']."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
@@ -61,9 +62,7 @@ if (!empty($_POST['savebtn']))
 					}
 				}
 				if ($succ == 1)
-				{
-					echo "<p class=\"msg1\">Несоответствие создано</p>";	
-				}
+					echo "<p class=\"msg1\">Несоответствие создано</p>";
 				?>
 				
 			</div>

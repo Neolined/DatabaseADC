@@ -12,15 +12,15 @@ $error_n1 = 1;
 $error_t1 = 1;
 $suc= 0;
 $decSer = 1;
-if (!empty ($_POST['name']))
+if (!empty ($_POST['sumb']))
 {
-	$typePost = mysqli_real_escape_string($link, $_POST['type']);
-	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$typePost."'");
+	$_POST['type'] = mysqli_real_escape_string($link, $_POST['type']);
+	$name = mysqli_query($link, "select `type` from `list_of_products` where `type` = '".$_POST['type']."'");
 	$error_t1 = mysqli_num_rows($name);
 	if ($error_t1 > 0)
 	{
-		$namePost = mysqli_real_escape_string($link, $_POST['name']);
-		$name = mysqli_query($link, "select `name` from `list_of_products` where `name` = '".$namePost."'");
+		$_POST['name'] = mysqli_real_escape_string($link, $_POST['name']);
+		$name = mysqli_query($link, "select `name` from `list_of_products` where `name` = '".$_POST['name']."'");
 		$error_n1 = mysqli_num_rows($name);
 		if ($error_n1 > 0)
 		{
@@ -52,19 +52,18 @@ if (!empty ($_POST['name']))
 							}
 							if (($error_s2 != 1) && ($error_s3 == 0)) //передача данных в бд дополнить!
 							{
-								$str = $_POST['serial'];
+								$str = mysqli_real_escape_string($link, $_POST['serial']);
 								$lot = (int) $_POST['lot'];
 								$suc = 1;
-								$commPost = mysqli_real_escape_string($link, $_POST['comment']);
 								while ($lot > 0)
 								{
-									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$typePost."', '".$namePost."', '".$_POST['perfomance']."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
+									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".mysqli_real_escape_string($link, $_POST['perfomance'])."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
 									if (mysqli_query($link, $query))
 										$id = (mysqli_insert_id($link));
 									else 
 										die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 									
-									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'record', '".$_POST['order_from']."', 'АДС', '".$commPost."')";
+									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
 									if (!(mysqli_query($link, $query)))
 										die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 									$str++;
@@ -106,17 +105,17 @@ if (!empty ($_POST['name']))
 		<input type="submit" name = "villy" value="Очистить данные формы"/>
 		</form>
 		<form action="accept.php" method="post" align="left" class="form">
-			<label>Тип</label><input <?php if ($error_t1 == 0) echo "class=\"color_err1\"";?> type="text" id = "type" name="type" maxlength="100" value="<?php if (!empty($_POST['type'])) echo $_POST['type']; ?>" required/>
-			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" maxlength="100" value="<?php if (!empty($_POST['name'])) echo $_POST['name']; ?>" required/>
-			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" maxlength="100" value="<?php if (!empty($_POST['perfomance'])) echo $_POST['perfomance']; ?>">
+			<label>Тип</label><input <?php if ($error_t1 == 0) echo "class=\"color_err1\"";?> type="text" id = "type" name="type" maxlength="100" value="<?php if (!empty($_POST['type'])) echo htmlspecialchars($_POST['type']); ?>" required/>
+			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" maxlength="100" value="<?php if (!empty($_POST['name'])) echo htmlspecialchars($_POST['name']); ?>" required/>
+			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" maxlength="100" value="<?php if (!empty($_POST['perfomance'])) echo htmlspecialchars($_POST['perfomance']); ?>">
 			
 			<div class="serial_lot">
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" maxlength="100" required/> </div>
 			<div><label>Количество</label><input class="lot" type="text" name="lot" maxlength="3" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>
 			</div>
-			<label>От кого</label><input type="text" name="order_from" maxlength="100" value='<?php if (!empty($_POST['order_from'])) echo $_POST['order_from']; ?>' required/>
-			<label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"> <?php if (!empty($_POST['comment'])) echo $_POST['comment']; ?></textarea>
-			<input type="submit" id="savedata" value="Сохранить данные" />
+			<label>От кого</label><input type="text" name="order_from" maxlength="100" value= "<?php if (!empty($_POST['order_from'])) echo htmlspecialchars($_POST['order_from']); ?>" required/>
+			<label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"><?php if (!empty($_POST['comment'])) echo htmlspecialchars($_POST['comment']); ?></textarea>
+			<input type="submit" id="savedata" name = "sumb" value="Сохранить данные" />
 			<?php
 			if (($error_s1>0) || ($error_s3>0))
 			echo "<p class=\"msg\"> Серийный номер уже зарегистрирован </p>";
