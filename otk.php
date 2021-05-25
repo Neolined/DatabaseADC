@@ -42,6 +42,7 @@ if (!empty($_POST['savebtn']))
 	}
 	if (empty($msgOrder2))
 	{
+		$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
 		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
 		if (!(mysqli_query($link, $result)))

@@ -66,7 +66,7 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 			echo '</td>';
 			}
 		}
-function requestDB($index) //create request for DB from main
+function requestDB($index, $link) //create request for DB from main
 {
 	$str = "where ";
 	$j = 0;
@@ -86,11 +86,11 @@ function requestDB($index) //create request for DB from main
 				else if ($index[$j] == "comment")
 				$str = $str. "`" .$index[$j]. "` != '" .$_POST['filter'][$index[$j]][$i]. "'";
 				else if ($index[$j] == "date1")
-				$str = $str . "`date` >= '" .$_POST['filter'][$index[$j]][$i]. "'";
+				$str = $str . "`date` >= '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date2")
-				$str = $str . "`date` <= '" .$_POST['filter'][$index[$j]][$i]. "'";
+				$str = $str . "`date` <= '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else
-				$str = $str. "`" .$index[$j]. "` = '" .$_POST['filter'][$index[$j]][$i]. "'";
+				$str = $str. "`" .$index[$j]. "` = '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				$i++;
 				if (!empty($_POST['filter'][$index[$j]][$i]))
 				$str = $str. " or ";

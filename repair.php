@@ -51,6 +51,7 @@ if (!empty($_POST['endRepair']))
 			die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		}
 	}
+	$_POST["status"] = mysqli_real_escape_string($link, $_POST["status"]);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['status']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));

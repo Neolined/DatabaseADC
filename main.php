@@ -28,14 +28,14 @@ $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_
 if (empty($_SESSION['order']) && empty($_POST['order']))
 $_SESSION['order'] = 'order by `uid` desc';
 else if (!empty($_POST['order']))
-$_SESSION['order'] = $_POST['order'];
+$_SESSION['order'] = mysqli_real_escape_string($link, $_POST['order']);
 if (empty($_SESSION['request']) && empty($_POST['filter']))
 $_SESSION['request'] = '';
 else if (!empty($_POST['filter']))
 {
-$_SESSION['request'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"));
+$_SESSION['request'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"), $link);
 if (empty($_POST['order']))
-$_SESSION['order'] = '';
+$_SESSION['order'] = 'order by `uid` desc';
 }
 if (!empty($_POST['lot']) && !empty($_POST['applyFilter']))
 $_SESSION['lot'] = $_POST['lot'];
@@ -95,7 +95,7 @@ else unset ($_SESSION['lot']);
 				}
 				else
 				{
-					$result = mysqli_query($link, "select `type`, `name`, `serial` from products where `uid` = '".$_POST['history']."'");
+					$result = mysqli_query($link, "select `type`, `name`, `serial` from products where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'");
 					$row = mysqli_fetch_row($result);
 					echo '<div id = "infoHist"><p> '.$row[0].'</p>';
 					echo '<p> '.$row[1].'</p>';

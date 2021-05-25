@@ -11,6 +11,7 @@ if (!empty($_POST['savebtn']))
 {
 	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 	$_POST['protocol'] = mysqli_real_escape_string($link, $_POST['protocol']);
+	$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'testing', '".$_POST['status']."', '".$_POST['comment']."', '".$_POST['protocol']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
