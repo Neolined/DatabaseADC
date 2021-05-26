@@ -2,7 +2,7 @@
 function selectDB($link, $option_text, $option, $table_name) //create filters for table
 {	
 	echo '<div class = "filters"><label class = "filterName">'.$option_text.'</label>';
-	$result = mysqli_query($link, "select distinct $option from $table_name where $option != ''");
+	$result = mysqli_query($link, "select distinct $option from $table_name where $option != '' order by $option asc");
 	$num = mysqli_num_rows($result);
 	echo '<div class = "overflowClass">';
 		while ($num > 0)
