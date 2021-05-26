@@ -76,10 +76,14 @@ function requestDB($index, $link) //create request for DB from main
 		if (!empty($_POST['filter'][$index[$j]]))
 		{
 			$i = 0;
+			if ($index[$j] == "serial" && strpos($_POST['filter'][$index[$j]][$i], ',') !== false)
+				$_POST['filter'][$index[$j]] = explode(',', $_POST['filter'][$index[$j]][$i]);
 			$str = $str . "(";
 			while(!empty($_POST['filter'][$index[$j]][$i]))
 			{
-				if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'no')
+				if ($index[$j] == "serial")
+					$str = $str. "`" .$index[$j]. "` LIKE '%" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "%'";
+				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'no')
 				$str = $str. "repair = 'no'";
 				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'yes')
 				$str = $str. "repair != 'no'";

@@ -4,10 +4,18 @@ require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
 clearSESpage();
+if (!empty($_POST['applyFilter']))
+{
+if (empty($_POST['filter']['serial'][0]))
+{
+unset($_POST['filter']['serial']);
+unset($_SESSION['filter']['serial']);
+}
 if (empty($_POST['filter']['date1'][0]))
 unset($_POST['filter']['date1']);
 if (empty($_POST['filter']['date2'][0]))
-unset($_POST['filter']['date2']);
+	unset($_POST['filter']['date2']);
+}
 if (empty($_SESSION['main']))
 {
 	unset($_SESSION['filter']);
@@ -29,13 +37,16 @@ if (empty($_SESSION['order']) && empty($_POST['order']))
 $_SESSION['order'] = 'order by `uid` desc';
 else if (!empty($_POST['order']))
 $_SESSION['order'] = mysqli_real_escape_string($link, $_POST['order']);
-if (empty($_SESSION['request']) && empty($_POST['filter']))
+if ((empty($_SESSION['request']) && empty($_POST['filter'])) || (empty($_POST['filter']) && !empty ($_POST['lot'])))
+{
 $_SESSION['request'] = '';
+unset($_SESSION['filter']);
+}
 else if (!empty($_POST['filter']))
 {
-$_SESSION['request'] = requestDB(array("type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"), $link);
-if (empty($_POST['order']))
-$_SESSION['order'] = 'order by `uid` desc';
+	$_SESSION['request'] = requestDB(array("serial", "type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "comment", "date1", "date2"), $link);
+	if (empty($_POST['order']))
+		$_SESSION['order'] = 'order by `uid` desc';
 }
 if (!empty($_POST['lot']) && !empty($_POST['applyFilter']))
 $_SESSION['lot'] = $_POST['lot'];
@@ -78,6 +89,7 @@ else unset ($_SESSION['lot']);
 				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
 				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
 				echo '<div id="filterContent" style="display:none">';
+				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="'; if (!empty($_SESSION['filter']['serial'][0])) echo $_SESSION['filter']['serial'][0]; echo '"></label></div>';
 				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input  class = "viewSort" onchange="checkAddress(this, \'viewSort\')" name = "lot" type="checkbox" form = "myform" value ="1"'; if (!empty($_SESSION['lot']) && $_SESSION['lot'] == 1) echo 'checked'; echo '>Количество</label>';
 				echo '<label class="filterInput"><input class = "viewSort" onchange="checkAddress(this, \'viewSort\')"  name = "lot" type="checkbox" form = "myform" value ="2"'; if (!empty($_SESSION['lot']) && $_SESSION['lot'] == 2 ) echo 'checked'; echo '>Склад</label></div>';
 				selectDB($link, "Тип", "type", "products");	
@@ -175,6 +187,20 @@ else unset ($_SESSION['lot']);
 						$locatMass = array("stock", "develop", "nelikvid", "isolator", "work", "repair");
 						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$_SESSION['request']." group by type, name");
 						echo '<tr><td>Тип</td><td>Наименование</td><td>Склад</td><td>Разработка</td><td>Неликвид</td><td>Изолятор</td><td>Производство</td><td>В ремонте</td></tr>';
+						$viewStockSer = '';
+						if (!empty($_SESSION['filter']['serial']))
+						{
+							$i = 0;
+							while (!empty($_POST['filter']['serial'][$i]))
+							{
+								if ($i == 0)
+								$viewStockSer = "and (";
+								else $viewStockSer = $viewStockSer . " or ";
+								$viewStockSer = $viewStockSer . "`serial` LIKE '%".$_POST['filter']['serial'][$i]."%'";
+								$i++;
+							}
+							$viewStockSer = $viewStockSer . ")";
+						}
 						while ($row = mysqli_fetch_row($result))
 						{
 							echo "<tr>";
@@ -182,12 +208,12 @@ else unset ($_SESSION['lot']);
 							echo '<td> '.$row[1].'</td>';
 							for ($i=0; !empty($locatMass[$i]); $i++)
 							{
-								$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."'");
+								$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."'".$viewStockSer."");
 								$lotOkBrds = mysqli_fetch_row($query);
 								echo '<td> '.$lotOkBrds[0];
 								if ($locatMass[$i] == 'stock' || $locatMass[$i] == 'develop')
 								{
-									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'no'");
+									$query = mysqli_query($link, "select count(location) as location from products where location = '".$locatMass[$i]."' and type = '".$row[0]."' and name = '".$row[1]."' and mismatch = 'no'".$viewStockSer."");
 									$locat = mysqli_fetch_row($query);
 									{
 										if (!empty($locat[0]) && $locat[0] != $lotOkBrds[0])
