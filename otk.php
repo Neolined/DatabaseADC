@@ -18,7 +18,7 @@ if (!empty($_POST['savebtn']))
 			$row = mysqli_num_rows($result);
 			if ($row == 0)
 			{
-				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,'".$_SESSION['serial'].",')";
+				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,' ".$_SESSION['serial'].",')";
 				if (!(mysqli_query($link, $result)))
 					die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 				$msgOrder = 1;
@@ -30,7 +30,7 @@ if (!empty($_POST['savebtn']))
 				$row = mysqli_fetch_row($result);
 				if (!(strpos($row[0], $_SESSION['serial']) !==false))
 				{
-					$result = "update orders set composition = concat (composition, '".$_SESSION['serial'].",') where uid = '".$_POST['order']."'";
+					$result = "update orders set composition = concat (composition, ' ".$_SESSION['serial'].",') where uid = '".$_POST['order']."'";
 					if (!(mysqli_query($link, $result)))
 						die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 					$msgCmpsn1 = 1;

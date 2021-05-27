@@ -636,3 +636,9 @@ margin-top: -0.1em;
     color: white;
     padding: 0.5em;
 }
+#form_submit:link {
+    color: blue;
+}
+#form_submit:visited {
+    color: blue;
+}

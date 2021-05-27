@@ -4,17 +4,24 @@ require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
 clearSESpage();
+if (!empty($_POST['postFromOrders']))
+{
+	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");
+	$row = mysqli_fetch_row($result);
+	if ($row[0]!= '')
+	$_POST['filter']['serial'][0] = $row[0];
+}
 if (!empty($_POST['applyFilter']))
 {
-if (empty($_POST['filter']['serial'][0]))
-{
-unset($_POST['filter']['serial']);
-unset($_SESSION['filter']['serial']);
-}
-if (empty($_POST['filter']['date1'][0]))
-unset($_POST['filter']['date1']);
-if (empty($_POST['filter']['date2'][0]))
-	unset($_POST['filter']['date2']);
+	if (empty($_POST['filter']['serial'][0]))
+	{
+		unset($_POST['filter']['serial']);
+		unset($_SESSION['filter']['serial']);
+	}
+	if (empty($_POST['filter']['date1'][0]))
+		unset($_POST['filter']['date1']);
+	if (empty($_POST['filter']['date2'][0]))
+		unset($_POST['filter']['date2']);
 }
 if (empty($_SESSION['main']))
 {

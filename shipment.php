@@ -70,13 +70,13 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_num_rows($result);
 						if ($row != 0)
 						{
-							$result = mysqli_query($link, "select shipped, replace (composition,',','')  from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
+							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
 							$row = mysqli_fetch_row($result);
 							if ($row[0] == 'yes')
 								$msgShip = 1;
 							if (!empty($row[1]))
 							{
-							$_SESSION['orderArr'] = str_split($row[1], 6);
+							$_SESSION['orderArr'] = explode(',', $row[1]);
 							$i = 0;
 							$str = " where";
 							while (!empty($_SESSION['orderArr'][$i]))

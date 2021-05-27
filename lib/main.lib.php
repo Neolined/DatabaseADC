@@ -219,23 +219,23 @@ function paintRow($result, $array, $posthist)
 "owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 	if(mysqli_num_rows($result) != 0)
 	{
-	while ($row = mysqli_fetch_assoc($result))
-	{
-		$i = 0;
-		echo "<tr>";
-		while (!empty($array[$i]))
+		while ($row = mysqli_fetch_assoc($result))
 		{
-			echo '<td>';
-			if (!empty($replace[$row[$array[$i]]]))
-			echo $replace[$row[$array[$i]]];
-			else echo $row[$array[$i]];
-			echo '</td>';
-			$i++;
+			$i = 0;
+			echo "<tr>";
+			while (!empty($array[$i]))
+			{
+				echo '<td>';
+				if (!empty($replace[$row[$array[$i]]]))
+				echo $replace[$row[$array[$i]]];
+				else echo $row[$array[$i]];
+				echo '</td>';
+				$i++;
+			}
+			if ($posthist == true)
+			echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
+			echo "</tr>";
 		}
-		if ($posthist == true)
-		echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
-		echo "</tr>";
-	}
 	}
 	else echo "<tr><td id = 'empty'>Пусто</td></tr>";
 }
@@ -253,6 +253,8 @@ function paintRowOrder($result, $array, $replace, $posthist)
 			echo mb_substr($row[$array[$i]], 0, -1);
 			else if (!empty($replace[$row[$array[$i]]]))
 			echo $replace[$row[$array[$i]]];
+			else if ($array[$i] == 'UID')
+				echo '<a href="#" id="form_submit" onclick = "rer(this.innerText)">'.$row[$array[$i]].'</a>';
 			else echo $row[$array[$i]];
 			echo '</td>';
 			$i++;
