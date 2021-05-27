@@ -278,17 +278,19 @@ function clearSESpage()
 	if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
 		unset ($_SESSION['orderSort']);
 }
-function clearSESSION1($page, $index)
+function sessStart($page)
 {
-	$i = 0;
-	if (empty($_SESSION[$page]))
-{
-	while(!empty($index[$i]))
-	{
-	unset($_SESSION[$index[$i]]);
-	$i++;
-	}
-	$_SESSION[$page] = 1;
-}
+	$user = $_SESSION['user'];
+	$ua = $_SESSION['ua'];
+	$hash = $_SESSION['hash'];
+	$worker = $_SESSION['worker'];
+	session_abort();
+	session_name($page);
+	session_id($page);
+	session_start();
+	$_SESSION['user'] = $user;
+	$_SESSION['ua'] = $ua;
+	$_SESSION['hash'] = $hash;
+	$_SESSION['worker'] = $worker;
 }
 ?>

@@ -3,7 +3,6 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
-clearSESpage();
 $columnName = array ( "UID", "composition", "recipient", "shipped", "comment");
 $columnNameRu = array ( "№ Заказа", "Состав", "Получатель", "Отправлено", "Комментарий");
 $replace = array ("no" => "Нет", "yes" => "Да");

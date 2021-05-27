@@ -3,8 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "otk");
-clearSESSION1('otk', array("serial", "uid"));
-clearSESpage();
+sessStart("otk");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))

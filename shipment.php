@@ -3,8 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "shipment");
-clearSESSION1('shipment', array("year", "number", "str", "orderArr"));
-clearSESpage();
+sessStart("shipment");
 mysqli_set_charset($link, 'utf8');
 if (!empty($_POST['savebtn']))
 {

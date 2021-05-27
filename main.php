@@ -3,7 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
-clearSESpage();
+sessStart("main");
 if (!empty($_POST['postFromOrders']))
 {
 	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");
@@ -11,8 +11,6 @@ if (!empty($_POST['postFromOrders']))
 	if ($row[0]!= '')
 	$_POST['filter']['serial'][0] = $row[0];
 }
-if (!empty($_POST['applyFilter']))
-{
 	if (empty($_POST['filter']['serial'][0]))
 	{
 		unset($_POST['filter']['serial']);
@@ -22,15 +20,6 @@ if (!empty($_POST['applyFilter']))
 		unset($_POST['filter']['date1']);
 	if (empty($_POST['filter']['date2'][0]))
 		unset($_POST['filter']['date2']);
-}
-if (empty($_SESSION['main']))
-{
-	unset($_SESSION['filter']);
-	unset($_SESSION['request']);
-	unset($_SESSION['order']);
-	unset($_SESSION['lot']);
-	$_SESSION['main'] = 1;
-}
 if (!empty($_POST['filter']))
 $_SESSION['filter'] = $_POST['filter'];
 if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])) && (empty($_POST['lot']) && (empty($_POST['order']))))
@@ -115,6 +104,8 @@ else unset ($_SESSION['lot']);
 				else
 				{
 					$result = mysqli_query($link, "select `type`, `name`, `serial` from products where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'");
+					if(!$result)
+						die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
 					$row = mysqli_fetch_row($result);
 					echo '<div id = "infoHist"><p> '.$row[0].'</p>';
 					echo '<p> '.$row[1].'</p>';
@@ -155,7 +146,7 @@ else unset ($_SESSION['lot']);
 						echo "</tr>";
 						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']."");
 						if(!$result)
-							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
+							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
 						$all_rows=mysqli_num_rows($result);
 						$max_rows = 20;
 						$pages = ((floor($all_rows/$max_rows)) + 1);
@@ -166,11 +157,15 @@ else unset ($_SESSION['lot']);
 						else 
 							$view_rows = ($_GET['page'] - 1) * $max_rows;
 						if (!empty($_POST['history']))
+						{
 							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$_POST['history']."'  order by date desc" );
+							if(!$result)
+								die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
+						}
 						else
 							$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 						if(!$result)
-							die ('Ошибка запроса: mysqli_query'.mysqli_error($link)) . '<br>';
+							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
 						paintRow($result, $columnName, empty($_POST['history']));
 						mysqli_free_result($result);
 					}
@@ -237,7 +232,7 @@ else unset ($_SESSION['lot']);
 			</table>
 			<div class= "pagination">
 			<?php
-				if (empty($_SESSION['lot']))
+				if(empty($_SESSION['lot']))
 				if(empty($_POST['history']))
 				{
 					for ($j = 1; $j <= $pages; $j++)
