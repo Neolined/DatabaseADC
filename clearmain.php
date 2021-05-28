@@ -1,7 +1,7 @@
 ﻿<?php
 session_start();
 require_once 'lib/main.lib.php';
-sessStart("main");
+sessStart($link, "main");
 unset($_SESSION['filter']);
 unset($_SESSION['request']);
 unset($_SESSION['order']);
