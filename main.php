@@ -14,7 +14,6 @@ if (!empty($_POST['postFromOrders']))
 	if (empty($_POST['filter']['serial'][0]))
 	{
 		unset($_POST['filter']['serial']);
-		unset($_SESSION['filter']['serial']);
 	}
 	if (empty($_POST['filter']['date1'][0]))
 		unset($_POST['filter']['date1']);
@@ -46,7 +45,6 @@ else if (!empty($_POST['filter']))
 }
 if (!empty($_POST['lot']) && !empty($_POST['applyFilter']))
 $_SESSION['lot'] = $_POST['lot'];
-else unset ($_SESSION['lot']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -118,7 +116,7 @@ else unset ($_SESSION['lot']);
 				?>
 			<table class="table" align="center">
 				<?php
-					if (empty($_POST['lot']))
+					if (empty($_SESSION['lot']))
 					{
 						if (!empty($_POST['history']))
 						{
@@ -175,7 +173,7 @@ else unset ($_SESSION['lot']);
 					}
 					else
 					{
-						if (($_POST['lot']) == 1)
+						if (($_SESSION['lot']) == 1)
 						{
 						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$_SESSION['request']." group by type, name");
 						echo '<tr><td>Тип</td><td>Наименование</td><td style="padding-right: 40em;">Кол-во</td></tr>';
@@ -188,7 +186,7 @@ else unset ($_SESSION['lot']);
 						echo "</tr>";
 						}
 						}
-						if (($_POST['lot']) == 2)
+						if (($_SESSION['lot']) == 2)
 						{
 						$locatMass = array("stock", "develop", "nelikvid", "isolator", "work", "repair");
 						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$_SESSION['request']." group by type, name");
@@ -197,12 +195,12 @@ else unset ($_SESSION['lot']);
 						if (!empty($_SESSION['filter']['serial']))
 						{
 							$i = 0;
-							while (!empty($_POST['filter']['serial'][$i]))
+							while (!empty($_SESSION['filter']['serial'][$i]))
 							{
 								if ($i == 0)
 								$viewStockSer = "and (";
 								else $viewStockSer = $viewStockSer . " or ";
-								$viewStockSer = $viewStockSer . "`serial` LIKE '%".$_POST['filter']['serial'][$i]."%'";
+								$viewStockSer = $viewStockSer . "`serial` LIKE '%".$_SESSION['filter']['serial'][$i]."%'";
 								$i++;
 							}
 							$viewStockSer = $viewStockSer . ")";
