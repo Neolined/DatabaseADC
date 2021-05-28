@@ -316,7 +316,7 @@ input {
     }
 
     .table td, .tableOtk td{
-        padding: 7px;
+        padding: 4px;
         border: none;
         border-bottom: 0.1em solid #5c6f93;
         font-size: 15px;
@@ -329,7 +329,6 @@ input {
         text-align:center;
     }
     #history {
-        height: 3em;
         border: 0;
         box-shadow: none;
         min-width:9em;

@@ -54,11 +54,11 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 		{
 			$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
-"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
+"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тест", "mismatch" => "Несоотв.",
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
-"owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Имя", "perfomance" => "Исп.", "serial" => "S/N",
+"owner" => "Владелец", "location" => "Местопол.", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 			echo '<td>';
