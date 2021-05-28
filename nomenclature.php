@@ -3,7 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
-sessStart("nomenclature");
+sessStart($link, "nomenclature");
 ?>
 <!DOCTYPE html>
 <html>

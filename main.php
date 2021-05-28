@@ -3,7 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
-sessStart("main");
+sessStart($link, "main");
 if (!empty($_POST['postFromOrders']))
 {
 	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");
@@ -158,7 +158,7 @@ else unset ($_SESSION['lot']);
 							$view_rows = ($_GET['page'] - 1) * $max_rows;
 						if (!empty($_POST['history']))
 						{
-							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".$_POST['history']."'  order by date desc" );
+							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'  order by date desc" );
 							if(!$result)
 								die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
 						}

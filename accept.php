@@ -63,7 +63,7 @@ if (!empty ($_POST['sumb']))
 									else 
 										die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 									
-									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".$_SESSION['worker']."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
 									if (!(mysqli_query($link, $query)))
 										die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 									$str++;

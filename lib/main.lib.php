@@ -116,11 +116,11 @@ function checkRoot($link, $root) //check root from database
 {
     if (empty($_SESSION))
     error403($link);
-    $result = mysqli_query($link, "select `password` from `users` where `user` = '".$_SESSION['user']."'");
+    $result = mysqli_query($link, "select `password` from `users` where `user` = '".mysqli_real_escape_string($link, $_SESSION['user'])."'");
     $hash = mysqli_fetch_row($result);
     if (($hash[0] != $_SESSION['hash']) || (!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']))
     error403($link);
-    $result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
+    $result = mysqli_query($link, "select `root` from `users` where `user` = '".mysqli_real_escape_string($link, $_SESSION['user'])."'");
     $rootdb = mysqli_fetch_row($result);
     if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php") || strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
     {
@@ -261,36 +261,17 @@ function paintRowOrder($result, $array, $replace, $posthist)
 		}
 	}
 }
-function clearSESpage()
-{
-	if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
-		unset ($_SESSION['main']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php"))
-		unset ($_SESSION['otk']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php"))
-		unset ($_SESSION['repairSES']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php"))
-		unset ($_SESSION['refand']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php"))
-		unset ($_SESSION['shipment']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php"))
-		unset ($_SESSION['testing']);
-	if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
-		unset ($_SESSION['orderSort']);
-}
-function sessStart($page)
+function sessStart($link, $page)
 {
 	$user = $_SESSION['user'];
 	$ua = $_SESSION['ua'];
-	$hash = $_SESSION['hash'];
 	$worker = $_SESSION['worker'];
 	session_abort();
 	session_name($page);
 	session_id($page);
 	session_start();
-	$_SESSION['user'] = $user;
-	$_SESSION['ua'] = $ua;
-	$_SESSION['hash'] = $hash;
-	$_SESSION['worker'] = $worker;
+	$_SESSION['user'] = mysqli_real_escape_string($link, $user);
+	$_SESSION['ua'] = mysqli_real_escape_string($link, $ua);
+	$_SESSION['worker'] = mysqli_real_escape_string($link, $worker);
 }
 ?>

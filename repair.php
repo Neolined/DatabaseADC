@@ -3,12 +3,13 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "repair");
-sessStart("repair");
+sessStart($link, "repair");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 $access = 0;
 if (!empty($_POST['acceptbtn']))
 {
+	$_SESSION['uid'] = mysqli_real_escape_string($link, $_SESSION['uid']);
 	$result = "UPDATE products set `repair` = '".$_SESSION['user']."', `location` = 'repair' where `uid` = '".$_SESSION['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
@@ -67,7 +68,7 @@ if (!empty($_POST['nextbtn']))
 		unset ($_SESSION['repair']);
 	}
 if (!empty($_POST['serial']))
-	$_SESSION['serial'] = mysqli_real_escape_string($link, $_POST["serial"]);
+	$_SESSION['serial'] = $_POST["serial"];
 ?>
 <!DOCTYPE html>
 <html>
@@ -99,7 +100,7 @@ if (!empty($_POST['serial']))
 				<?php
 				if (!empty($_POST['nextbtn']) || !empty($_POST['acceptbtn']) || !empty($_POST['diagBtn']) || !empty($_POST['repairBtn']))
 				{
-					$result = mysqli_query($link, "select `uid`, `type`, `name`, `repair` from products where serial = '".$_SESSION['serial']."'");
+					$result = mysqli_query($link, "select `uid`, `type`, `name`, `repair` from products where serial = '".mysqli_real_escape_string($link, $_SESSION['serial'])."'");
 					$row = mysqli_fetch_array($result);
 					if (!empty($row))
 					{
