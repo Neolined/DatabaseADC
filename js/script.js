@@ -61,8 +61,13 @@ function clearFilter()
       check[i].checked = false; //выключаем их
     }
 }  
-  function show_item(id, status)
-  {
-    if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
-    else $('#'+id).animate({ height: "show" }, "slow");
-  }
+function show_item(id, status)
+{
+  if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
+  else $('#'+id).animate({ height: "show" }, "slow");
+}
+function tranPost(idInp,ser,post) 
+{
+  document.getElementById(idInp).value = ser;
+  document.getElementById(post).submit();
+}

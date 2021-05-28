@@ -37,7 +37,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 				echo '</tr>';
 				echo "<tr>";
 				$result = mysqli_query($link, "select * from orders");
-				paintRowOrder($result, $columnName, $replace, false);
+				paintRowOrder($result, $columnName, $replace, false, false);
 				echo "</tr>";
 			?>	
 		</table>

@@ -63,9 +63,13 @@ else unset ($_SESSION['lot']);
 	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
 	</div>
 	</div>
-
 	<div id="forma">
 		<form action = "main.php" method = "post" id="myform"></form>
+		<form method="post" id="locationPost" action = "refand.php"><input type="hidden" id = "locationInp" name = "postFromMain"/></form>
+		<form method="post" id="otkPost" action = "otk.php"><input type="hidden" id = "otkInp" name = "postFromMain"/></form>
+		<form method="post" id="testingPost" action = "testing.php"><input type="hidden" id = "testingInp" name = "postFromMain"/></form>
+		<form method="post" id="repairPost" action = "repair.php"><input type="hidden" id = "repairInp" name = "postFromMain"/></form>
+		<form method="post" id="mismatchPost" action = "mismatch.php"><input type="hidden" id = "mismatchInp" name = "postFromMain"/></form>
 		<table class="table" align="center">
 				<?php
 					if (empty($_POST['history']))
@@ -166,7 +170,7 @@ else unset ($_SESSION['lot']);
 							$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
-						paintRow($result, $columnName, empty($_POST['history']));
+						paintRow($result, $columnName, empty($_POST['history']), true);
 						mysqli_free_result($result);
 					}
 					else

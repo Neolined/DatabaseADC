@@ -51,6 +51,11 @@ if (!empty($_POST['savebtN']))
 		}
 	}
 }
+if (!empty($_POST['postFromMain']))
+{
+	$_POST['nextbtn'] = 1;
+	$_POST['serial'] = $_POST['postFromMain'];
+}
 ?>
 <!DOCTYPE html>
 <html>

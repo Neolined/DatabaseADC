@@ -209,7 +209,7 @@ function connect()//connect to DB
     }
     return($link);
 }
-function paintRow($result, $array, $posthist)
+function paintRow($result, $array, $posthist, $href)
 {	
 	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
@@ -227,8 +227,19 @@ function paintRow($result, $array, $posthist)
 			{
 				echo '<td>';
 				if (!empty($replace[$row[$array[$i]]]))
-				echo $replace[$row[$array[$i]]];
-				else echo $row[$array[$i]];
+				{
+				if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+					echo '<a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
+				else
+					echo $replace[$row[$array[$i]]];
+				}
+				else 
+				{
+					if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+					echo '<a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
+					else
+					echo $row[$array[$i]];
+				}
 				echo '</td>';
 				$i++;
 			}
@@ -265,6 +276,7 @@ function sessStart($link, $page)
 {
 	$user = $_SESSION['user'];
 	$ua = $_SESSION['ua'];
+	$hash = $_SESSION['hash'];
 	$worker = $_SESSION['worker'];
 	session_abort();
 	session_name($page);
@@ -272,6 +284,7 @@ function sessStart($link, $page)
 	session_start();
 	$_SESSION['user'] = mysqli_real_escape_string($link, $user);
 	$_SESSION['ua'] = mysqli_real_escape_string($link, $ua);
+	$_SESSION['hash'] = mysqli_real_escape_string($link, $hash);
 	$_SESSION['worker'] = mysqli_real_escape_string($link, $worker);
 }
 ?>

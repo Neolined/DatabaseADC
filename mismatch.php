@@ -20,6 +20,11 @@ if (!empty($_POST['savebtn']))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
 }
+if (!empty($_POST['postFromMain']))
+{
+	$_POST['nextbtn'] = 1;
+	$_POST['serial'] = $_POST['postFromMain'];
+}
 ?>
 <!DOCTYPE html>
 <html>

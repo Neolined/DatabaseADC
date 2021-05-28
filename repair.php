@@ -69,6 +69,11 @@ if (!empty($_POST['nextbtn']))
 	}
 if (!empty($_POST['serial']))
 	$_SESSION['serial'] = $_POST["serial"];
+if (!empty($_POST['postFromMain']))
+{
+	$_POST['nextbtn'] = 1;
+	$_SESSION['serial'] = $_POST['postFromMain'];
+}
 ?>
 <!DOCTYPE html>
 <html>

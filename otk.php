@@ -55,6 +55,11 @@ if (!empty($_POST['savebtn']))
 		else $succ = 1;
 	}
 }
+if (!empty($_POST['postFromMain']))
+{
+	$_POST['nextbtn'] = 1;
+	$_POST['serial'] = $_POST['postFromMain'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -108,7 +113,7 @@ if (!empty($_POST['savebtn']))
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
 							$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_SESSION['serial']."'");
 							$columnName = array("type", "name", "otk");
-							paintRow($result, $columnName, false);
+							paintRow($result, $columnName, false, false);
 							echo '</table>';
 							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
 							$num = mysqli_num_rows($result);
@@ -119,7 +124,7 @@ if (!empty($_POST['savebtn']))
 								echo '<caption> История ОТК</caption>';
 								echo '<tr><td>UID</td><td>Сотрудник</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
 								$columnName = array("uid", "worker", "date", "status", "comment");
-								paintRow($result, $columnName, false);
+								paintRow($result, $columnName, false, false);
 								
 								echo '</table>';
 							}

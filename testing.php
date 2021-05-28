@@ -19,6 +19,11 @@ if (!empty($_POST['savebtn']))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
 }
+if (!empty($_POST['postFromMain']))
+{
+	$_POST['nextbtn'] = 1;
+	$_POST['serial'] = $_POST['postFromMain'];
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -68,7 +73,7 @@ if (!empty($_POST['savebtn']))
 							}
 							echo '</tr>';
 							echo "<tr>";
-							paintRow($result ,$columnName, false);
+							paintRow($result ,$columnName, false, false);
 							echo "</tr>";
 							echo '</table>';
 							$_SESSION['uid'] = $row[0];
