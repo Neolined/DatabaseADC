@@ -68,6 +68,7 @@ $_SESSION['lot'] = $_POST['lot'];
 		<form method="post" id="testingPost" action = "testing.php"><input type="hidden" id = "testingInp" name = "postFromMain"/></form>
 		<form method="post" id="repairPost" action = "repair.php"><input type="hidden" id = "repairInp" name = "postFromMain"/></form>
 		<form method="post" id="mismatchPost" action = "mismatch.php"><input type="hidden" id = "mismatchInp" name = "postFromMain"/></form>
+		<form method="post" id="maxrowsPost" action = "main.php"><input type="hidden" id = "maxrowsInp" name = "maxrows"/></form>
 		<table class="table" align="center">
 				<?php
 					if (empty($_POST['history']))
@@ -143,21 +144,22 @@ $_SESSION['lot'] = $_POST['lot'];
 							
 							sortSelect($columnName, "Прямая сортировка", "Обратная сортировка");
 						}
-						if (empty($_POST['history']))
-							echo "<td id=\"his\"> История </td>";
 						echo "</tr>";
 						$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']."");
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
 						$all_rows=mysqli_num_rows($result);
-						$max_rows = 20;
-						$pages = ((floor($all_rows/$max_rows)) + 1);
-						if($all_rows%$max_rows == 0)
-							$pages = floor($all_rows/$max_rows);
+						if (!empty($_POST['maxrows']))
+							$_SESSION['maxrows'] = $_POST['maxrows'];
+						else if (empty($_SESSION['maxrows']))
+							$_SESSION['maxrows'] = 30;
+						$pages = ((floor($all_rows/$_SESSION['maxrows'])) + 1);
+						if($all_rows%$_SESSION['maxrows'] == 0)
+							$pages = floor($all_rows/$_SESSION['maxrows']);
 						if ((empty($_GET['page'])) || ($_GET['page'] == 1))
 							$view_rows = 0;
 						else 
-							$view_rows = ($_GET['page'] - 1) * $max_rows;
+							$view_rows = ($_GET['page'] - 1) * $_SESSION['maxrows'];
 						if (!empty($_POST['history']))
 						{
 							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'  order by date desc" );
@@ -165,7 +167,7 @@ $_SESSION['lot'] = $_POST['lot'];
 								die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
 						}
 						else
-							$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, $max_rows");//выводим таблицу
+							$result = mysqli_query($link, "SELECT * FROM  `products` ".$_SESSION['request']." ".$_SESSION['order']." LIMIT $view_rows, ".mysqli_real_escape_string($link, $_SESSION['maxrows'])."");//выводим таблицу
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
 						paintRow($result, $columnName, empty($_POST['history']), true);
@@ -244,6 +246,12 @@ $_SESSION['lot'] = $_POST['lot'];
 						echo "class=\"active\"";
 					echo 'href='.$_SERVER['SCRIPT_NAME'].'?page='.$j.'>'.$j.'</a> ';
 					}
+					echo '<div id = "maxrows">';
+					echo '<a href="#" id="form_submit" onclick = "tranPost(\'maxrowsInp\', \'20\', \'maxrowsPost\')">20</a>|';
+					echo '<a href="#" id="form_submit" onclick = "tranPost(\'maxrowsInp\', \'30\', \'maxrowsPost\')">30</a>|';
+					echo '<a href="#" id="form_submit" onclick = "tranPost(\'maxrowsInp\', \'50\', \'maxrowsPost\')">50</a>|';
+					echo '<a href="#" id="form_submit" onclick = "tranPost(\'maxrowsInp\', \'100\', \'maxrowsPost\')">100</a>';
+					echo '</div>';
 				}
 				else 
 				echo '<a class="active" href='.$_SERVER['HTTP_REFERER'].'>Назад</a> ';

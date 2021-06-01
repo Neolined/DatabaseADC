@@ -61,9 +61,9 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 "owner" => "Владелец", "location" => "Местопол.", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
-			echo '<td>';
-			echo '<div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div>';
-			echo '</td>';
+				if (empty($_POST['history']) && $columnName[$i] == 'comment')
+					echo "<td id=\"his\"> История </td>";
+				echo '<td><div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div></td>';
 			}
 		}
 function requestDB($index, $link) //create request for DB from main
@@ -225,6 +225,8 @@ function paintRow($result, $array, $posthist, $href)
 			echo "<tr>";
 			while (!empty($array[$i]))
 			{
+				if ($posthist == true && $array[$i] == 'comment')
+					echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">История</button></td>';
 				echo '<td>';
 				if (!empty($replace[$row[$array[$i]]]))
 				{
@@ -243,8 +245,6 @@ function paintRow($result, $array, $posthist, $href)
 				echo '</td>';
 				$i++;
 			}
-			if ($posthist == true)
-			echo '<td id = "tdAlign"><button id = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">Показать историю изделия</button></td>';
 			echo "</tr>";
 		}
 	}
