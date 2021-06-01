@@ -43,8 +43,14 @@ else if (!empty($_POST['filter']))
 	if (empty($_POST['order']))
 		$_SESSION['order'] = 'order by `uid` desc';
 }
-if (!empty($_POST['lot']) && !empty($_POST['applyFilter']))
-$_SESSION['lot'] = $_POST['lot'];
+if (!empty($_POST['applyFilter']))
+{
+if (!empty($_POST['lot']))
+	$_SESSION['lot'] = $_POST['lot'];
+else 
+	unset ($_SESSION['lot']);
+}
+else 
 ?>
 <!DOCTYPE html>
 <html>
