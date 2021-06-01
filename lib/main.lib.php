@@ -280,7 +280,7 @@ function sessStart($link, $page)
 	$worker = $_SESSION['worker'];
 	session_abort();
 	session_name($page);
-	session_id($page);
+	session_id($page.uniqid());
 	session_start();
 	$_SESSION['user'] = mysqli_real_escape_string($link, $user);
 	$_SESSION['ua'] = mysqli_real_escape_string($link, $ua);
