@@ -45,13 +45,16 @@ if (!empty($_POST['savebtn']))
 		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
 		if (!(mysqli_query($link, $result)))
-		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+		die ('Ошибка записи в историю:'  .mysqli_error($link));
 		if ($_POST['status'] == 'fail')
 			$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
 		else
-			$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+			if ($_POST['status'] == 'ok')
+				$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'no' where `uid` = '".$_SESSION['uid']."'";
+			else			
+				$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
 		if (!(mysqli_query($link, $result)))
-			die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+			die ('Ошибка записи в продукты:'  .mysqli_error($link));
 		else $succ = 1;
 	}
 }
