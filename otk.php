@@ -43,7 +43,7 @@ if (!empty($_POST['savebtn']))
 	{
 		$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
 		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', NOW())";
+		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `number_order`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', '".$_POST['order']."', NOW())";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в историю:'  .mysqli_error($link));
 		if ($_POST['status'] == 'fail')
