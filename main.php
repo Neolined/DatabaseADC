@@ -245,12 +245,22 @@ else
 				if(empty($_SESSION['lot']))
 				if(empty($_POST['history']))
 				{
+				 	$activepage = 0;
 					for ($j = 1; $j <= $pages; $j++)
 					{
+						if (($_SERVER['REQUEST_URI'] == $_SERVER['SCRIPT_NAME'].'?page='.$j) || (empty($_GET['page']) && ($j == 1)))
+							$activepage = $j;
+					}
+
+					for ($j = 1; $j <= $pages; $j++)
+					{
+					if(($j!=1)&&($j!=$pages)&&(abs($activepage-$j) == 6)) echo '<a>...</a> ';
 					echo ' <a ';
-					if (($_SERVER['REQUEST_URI'] == $_SERVER['SCRIPT_NAME'].'?page='.$j) || (empty($_GET['page']) && ($j == 1)))
+					if ($activepage == $j)
+					{
 						echo "class=\"active\"";
-					echo 'href='.$_SERVER['SCRIPT_NAME'].'?page='.$j.'>'.$j.'</a> ';
+					}
+					if(($j==1)||($j==$pages)||(abs($activepage-$j) < 6)) echo 'href='.$_SERVER['SCRIPT_NAME'].'?page='.$j.'>'.$j.'</a> ';
 					}
 					echo '<div id = "maxrows">';
 					echo '<a href="#" id="form_submit" onclick = "tranPost(\'maxrowsInp\', \'20\', \'maxrowsPost\')">20</a>|';
