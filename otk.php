@@ -70,6 +70,7 @@ if (!empty($_POST['postFromMain']))
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
   <script src="js/jquery.js"></script>
+  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
   <title>ОТК</title>
  </head>
  <body>
@@ -100,7 +101,7 @@ if (!empty($_POST['postFromMain']))
 						$row = mysqli_fetch_array($result);
 						if (!empty($row))
 						{
-							echo '<div id = "inp"> <label>UID заказа</label><input type="text" name="order"></input></div>';
+							echo '<div id = "inp"> <label>UID заказа</label><input type="text" id ="order" name="order"></input></div>';
 							if (!empty($msgOrder))
 							echo "<p class=\"msg1\">Новый заказ создан</p>";
 							if (!empty($msgOrder2))
@@ -225,6 +226,25 @@ if (!empty($_POST['postFromMain']))
 				}
 			});
 		});
+	</script>
+	<script>
+	$(document).ready(function(){
+	$("#order").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select `uid` from `orders` where `uid` != ''");
+	$order = mysqli_fetch_all($result);
+	echo json_encode($order); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+	);
+	});
 	</script>
  </body>
 </html>

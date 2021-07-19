@@ -97,7 +97,7 @@ if (!empty($_POST['postFromMain']))
 							if (!empty($row))
 							{
 								echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" id = "order_from" maxlength="100" '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
 								echo '<option value="stock"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'stock') echo 'selected'; echo '>Склад</option>';
@@ -115,7 +115,7 @@ if (!empty($_POST['postFromMain']))
 								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required '; if (!empty($_SESSION['rType'])) echo 'value = "'.$_SESSION['rType'].'"'; echo '></input></div>';
 								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required '; if (!empty($_SESSION['rName'])) echo 'value = "'.$_SESSION['rName'].'"'; echo '></input></div>';
 								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" '; if (!empty($_SESSION['rPerfomance'])) echo 'value = "'.htmlspecialchars($_SESSION['rPerfomance']).'"'; echo '></input></div>';
-								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
+								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" id = "order_from" maxlength="100" required '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
 								echo '<select class="select" name="location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
 								echo '<option value="stock"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'stock') echo 'selected'; echo '>Склад</option>';
@@ -138,7 +138,7 @@ if (!empty($_POST['postFromMain']))
 					echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required '; if (!empty($_SESSION['rType'])) echo 'value = "'.$_SESSION['rType'].'"'; echo '></input></div>';
 					echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required '; if (!empty($_SESSION['rName'])) echo 'value = "'.$_SESSION['rName'].'"'; echo '></input></div>';
 					echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" maxlength="100" '; if (!empty($_SESSION['rPerfomance'])) echo 'value = "'.htmlspecialchars($_SESSION['rPerfomance']).'"'; echo '></input></div>';
-					echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" maxlength="100" required '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
+					echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" id = "order_from" maxlength="100" required '; if (!empty($_SESSION['rOrder_from'])) echo 'value = "'.htmlspecialchars($_SESSION['rOrder_from']).'"'; echo '></input></div>';
 					echo '<select class="select" name="location" required>';
 					echo '<option value = "">Выберите местоположение</option>';
 					echo '<option value="stock"'; if (!empty($_SESSION['rLocation']) && $_SESSION['rLocation'] == 'stock') echo 'selected'; echo '>Склад</option>';
@@ -184,46 +184,64 @@ if (!empty($_POST['postFromMain']))
     	}
 	</script>
 	<script>
-		$(document).ready(function(){
-		$("#type").autocompleteArray(
-			<?php
-			$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
-			$row = mysqli_fetch_all($result);
-			echo json_encode($row); 
-			?>
-			,
-				{
-					delay:10,
-					minChars:1,
-					matchSubset:1,
-					autoFill:true,
-					maxItemsToShow:10
-				}
-			);
-		});
-
-		$(document).ready(function(){
-		$("#name").autocompleteArray(
-			<?php
-			$result = mysqli_query($link, "select distinct `name` from `list_of_products`");
-			$ass = mysqli_fetch_all($result);
-			echo json_encode($ass); 
-			?>
-			,
-				{
-					delay:10,
-					minChars:1,
-					matchSubset:1,
-					autoFill:true,
-					maxItemsToShow:10
-				}
-		);
-		});
-		function show_item(id, status)
+$(document).ready(function(){
+$("#type").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `type` from `list_of_products` where `type` != ''");
+	$type = mysqli_fetch_all($result);
+	echo json_encode($type); 
+	?>
+	,
 		{
-			if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
-			else $('#'+id).animate({ height: "show" }, "slow");
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
 		}
+	);
+});
+
+$(document).ready(function(){
+$("#order_from").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `order_from` from `history` where `order_from` != ''");
+	$order_from = mysqli_fetch_all($result);
+	echo json_encode($order_from); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+	);
+});
+
+$(document).ready(function(){
+$("#name").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `name` from `list_of_products` where `name` != ''");
+	$name = mysqli_fetch_all($result);
+	echo json_encode($name); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+);
+});
+function show_item(id, status)
+{
+	if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
+	else $('#'+id).animate({ height: "show" }, "slow");
+}
 </script>
 <script>
 				$('.select').each(function() {

@@ -113,7 +113,7 @@ if (!empty ($_POST['sumb']))
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" maxlength="100" required/> </div>
 			<div><label>Количество</label><input class="lot" type="text" name="lot" maxlength="3" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>
 			</div>
-			<label>От кого</label><input type="text" name="order_from" maxlength="100" value= "<?php if (!empty($_POST['order_from'])) echo htmlspecialchars($_POST['order_from']); ?>" required/>
+			<label>От кого</label><input type="text" id = "order_from" name="order_from" maxlength="100" value= "<?php if (!empty($_POST['order_from'])) echo htmlspecialchars($_POST['order_from']); ?>" required/>
 			<label>Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"><?php if (!empty($_POST['comment'])) echo htmlspecialchars($_POST['comment']); ?></textarea>
 			<input type="submit" id="savedata" name = "sumb" value="Сохранить данные" />
 			<?php
@@ -136,9 +136,27 @@ if (!empty ($_POST['sumb']))
 $(document).ready(function(){
 $("#type").autocompleteArray(
 	<?php
-	$result = mysqli_query($link, "select distinct `type` from `list_of_products`");
-	$row = mysqli_fetch_all($result);
-	echo json_encode($row); 
+	$result = mysqli_query($link, "select distinct `type` from `list_of_products` where `type` != ''");
+	$type = mysqli_fetch_all($result);
+	echo json_encode($type); 
+	?>
+	,
+		{
+			delay:10,
+			minChars:1,
+			matchSubset:1,
+			autoFill:true,
+			maxItemsToShow:10
+		}
+	);
+});
+
+$(document).ready(function(){
+$("#order_from").autocompleteArray(
+	<?php
+	$result = mysqli_query($link, "select distinct `order_from` from `history` where `order_from` != ''");
+	$order_from = mysqli_fetch_all($result);
+	echo json_encode($order_from); 
 	?>
 	,
 		{
@@ -154,9 +172,9 @@ $("#type").autocompleteArray(
 $(document).ready(function(){
 $("#name").autocompleteArray(
 	<?php
-	$result = mysqli_query($link, "select distinct `name` from `list_of_products`");
-	$ass = mysqli_fetch_all($result);
-	echo json_encode($ass); 
+	$result = mysqli_query($link, "select distinct `name` from `list_of_products` where `name` != ''");
+	$name = mysqli_fetch_all($result);
+	echo json_encode($name); 
 	?>
 	,
 		{
