@@ -5,7 +5,6 @@ $link = connect();
 checkRoot($link, "otk");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
-print_r ($_POST);
 if (!empty($_POST['savebtn']))
 {
 	if (!empty($_POST['order']))
@@ -96,9 +95,9 @@ if (!empty($_POST['postFromMain']))
 					if (!empty($_POST['serial']) || !empty($_POST['serialHide']))
 					{
 						if (!empty($_POST['serial']))
-						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serial']."'");
-            if (!empty($_POST['serialHide']))
-              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serialHide']."'");
+						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
+						if (!empty($_POST['serialHide']))
+						$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
 						$row = mysqli_fetch_array($result);
 						if (!empty($row))
 						{
@@ -117,9 +116,9 @@ if (!empty($_POST['postFromMain']))
 							echo '<caption> Данные изделия</caption>';
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
 							if (!empty($_POST['serial']))
-						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serial']."'");
+						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
               if (!empty($_POST['serialHide']))
-              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serialHide']."'");
+              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
 							$columnName = array("type", "name", "otk");
 							paintRow($result, $columnName, false, false);
 							echo '</table>';
@@ -144,8 +143,8 @@ if (!empty($_POST['postFromMain']))
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 							echo '<input type="hidden" name="serialHide" value ="';
-              if (!empty($_POST['serial'])) echo $_POST['serial'];
-              else echo $_POST['serialHide'];
+              if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']);
+              else echo htmlspecialchars($_POST['serialHide']);
               echo '">';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
