@@ -3,9 +3,9 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "otk");
-sessStart($link, "otk");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
+print_r ($_POST);
 if (!empty($_POST['savebtn']))
 {
 	if (!empty($_POST['order']))
@@ -17,7 +17,7 @@ if (!empty($_POST['savebtn']))
 			$row = mysqli_num_rows($result);
 			if ($row == 0)
 			{
-				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_SESSION['serial'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,' ".$_SESSION['serial'].",')";
+				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_POST['serialHide'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,' ".$_POST['serialHide'].",')";
 				if (!(mysqli_query($link, $result)))
 					die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 				$msgOrder = 1;
@@ -27,9 +27,9 @@ if (!empty($_POST['savebtn']))
 			{
 				$result = mysqli_query($link, "select composition from orders where UID = '".$_POST['order']."'");
 				$row = mysqli_fetch_row($result);
-				if (!(strpos($row[0], $_SESSION['serial']) !==false))
+				if (!(strpos($row[0], $_POST['serialHide']) !==false))
 				{
-					$result = "update orders set composition = concat (composition, ' ".$_SESSION['serial'].",') where uid = '".$_POST['order']."'";
+					$result = "update orders set composition = concat (composition, ' ".$_POST['serialHide'].",') where uid = '".$_POST['order']."'";
 					if (!(mysqli_query($link, $result)))
 						die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 					$msgCmpsn1 = 1;
@@ -43,16 +43,16 @@ if (!empty($_POST['savebtn']))
 	{
 		$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
 		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `number_order`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', '".$_POST['order']."', NOW())";
+		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `number_order`, `date`) values ('".$_POST['uidHide']."', '".$_SESSION['worker']."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', '".$_POST['order']."', NOW())";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в историю:'  .mysqli_error($link));
 		if ($_POST['status'] == 'fail')
-			$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
+			$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'yes' where `uid` = '".$_POST['uidHide']."'";
 		else
 			if ($_POST['status'] == 'ok')
-				$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'no' where `uid` = '".$_SESSION['uid']."'";
+				$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'no' where `uid` = '".$_POST['uidHide']."'";
 			else			
-				$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+				$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_POST['uidHide']."'";
 		if (!(mysqli_query($link, $result)))
 			die ('Ошибка записи в продукты:'  .mysqli_error($link));
 		else $succ = 1;
@@ -86,18 +86,19 @@ if (!empty($_POST['postFromMain']))
 		<form action="otk.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">ОТК</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; elseif (!empty($_SESSION['serial'])) echo $_SESSION['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; elseif (!empty($_POST['serialHide'])) echo $_POST['serialHide']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" form = "nextForm" value="Далее" />
 			</div>
 			<div id = "contentOtk">
 				<?php
 				if (!empty($_POST['nextbtn']) || !empty($_POST['savebtn']))
 				{
-					if (!empty($_POST['serial']) || !empty($_SESSION['serial']))
+					if (!empty($_POST['serial']) || !empty($_POST['serialHide']))
 					{
 						if (!empty($_POST['serial']))
-							$_SESSION['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
-						$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_SESSION['serial']."'");
+						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serial']."'");
+            if (!empty($_POST['serialHide']))
+              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serialHide']."'");
 						$row = mysqli_fetch_array($result);
 						if (!empty($row))
 						{
@@ -110,12 +111,15 @@ if (!empty($_POST['postFromMain']))
 							echo "<p class=\"msg1\">Изделие добавлено в состав заказа</p>";
 							if (!empty($msgCmpsn))
 							echo "<p class=\"msg\">Данное изделие уже есть составе заказа</p>";
-							$_SESSION['uid'] = $row['uid'];
+              echo '<input type="hidden" name="uidHide" value = "'.$row['uid'].'">';
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
-							$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_SESSION['serial']."'");
+							if (!empty($_POST['serial']))
+						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serial']."'");
+              if (!empty($_POST['serialHide']))
+              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".$_POST['serialHide']."'");
 							$columnName = array("type", "name", "otk");
 							paintRow($result, $columnName, false, false);
 							echo '</table>';
@@ -139,7 +143,10 @@ if (!empty($_POST['postFromMain']))
 							echo '</select>';
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
-							
+							echo '<input type="hidden" name="serialHide" value ="';
+              if (!empty($_POST['serial'])) echo $_POST['serial'];
+              else echo $_POST['serialHide'];
+              echo '">';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						
