@@ -161,6 +161,7 @@ input {
     padding: 3px;
     background-color: white;
     color: green;
+    margin-bottom: 0em;
 }
 .msg2{
     margin-top: 0.1em;
@@ -649,4 +650,12 @@ margin-top: -0.1em;
     margin: 0em 0.5em;
     float: none;
     padding: 0em;
+}
+#clearForm{
+    border-color: gold;
+    border-radius: 0.8em;
+}
+#clearForm:hover{
+    cursor:pointer;
+    background: rgba(0,0,0,.01);
 }

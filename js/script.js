@@ -71,3 +71,9 @@ function tranPost(idInp,ser,post)
   document.getElementById(idInp).value = ser;
   document.getElementById(post).submit();
 }
+function clearInp(arr) {
+  for( i = 0; i < arr.length; ++i) {
+  if (document.getElementById(arr[i]))
+  document.getElementById(arr[i]).value = '';
+}
+}
