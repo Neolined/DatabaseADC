@@ -3,25 +3,24 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "shipment");
-sessStart($link, "shipment");
 mysqli_set_charset($link, 'utf8');
 if (!empty($_POST['savebtn']))
 {
 	$_POST['recipient'] = mysqli_real_escape_string($link, $_POST['recipient']);
 	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'";
+	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_POST['yearHide']."".$_POST['orderHide']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
-	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_SESSION['str']."";
+	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_POST['str']."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
 	$result = "insert into history (`uid`, `worker`, `type_write`, `whom_order`, `order_from`, `comment`, `date`) values";
 	$i = 0;
-	while (!empty($_SESSION['orderArr'][$i]))
+	while (!empty($_POST['orderArrHide'][$i]))
 	{
-		$result = $result . " ((select uid from products where `serial` = '".$_SESSION['orderArr'][$i]."'), '".$_SESSION['worker']."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
+		$result = $result . " ((select uid from products where `serial` = '".$_POST['orderArrHide'][$i]."'), '".$_SESSION['worker']."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
 		$i++;
-		if (!empty($_SESSION['orderArr'][$i]))
+		if (!empty($_POST['orderArrHide'][$i]))
 		$result = $result . ",";
 	}
 	if (!(mysqli_query($link, $result)))
@@ -50,62 +49,73 @@ if (!empty($_POST['savebtn']))
 		<form action="shipment.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Отгрузка</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Год</label><input type="text" name="year" maxlength="4" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_SESSION['year'])) echo $_SESSION['year']; else echo date ( 'Y' ) ; ?>" required/> </div>
-			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order" maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_SESSION['number'])) echo $_SESSION['number']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Год</label><input type="text" name="year" maxlength="4" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_POST['yearHide'])) echo $_POST['yearHide']; else echo date ( 'Y' ) ; ?>" required/> </div>
+			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order" maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_POST['orderHide'])) echo $_POST['orderHide']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее"  form = "nextForm"/>
 			</div>
 			<div id = "contentOtk">
 				<?php
 				if (!empty($_POST['nextbtn']) || !empty($_POST['savebtn']))
 				{
-					if ((!empty($_SESSION['year']) && !empty($_SESSION['number'])) || (!empty($_POST['year']) && !empty($_POST['order'])))
+					if ((!empty($_POST['yearHide']) && !empty($_POST['orderHide'])) || (!empty($_POST['year']) && !empty($_POST['order'])))
 					{
 						if (!empty($_POST['order']) && !empty($_POST['year']))
 						{
-							$_SESSION['year'] = mysqli_real_escape_string($link, $_POST['year']);
-							$_SESSION['number'] = mysqli_real_escape_string($link, $_POST['order']);
+							echo '<input type = "hidden" name = "orderHide" value = "'.$_POST['order'].'">';
+							echo '<input type = "hidden" name = "yearHide" value = "'.$_POST['year'].'">';
 						}
-						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
+						else if (!empty($_POST['yearHide']) && !empty($_POST['orderHide']))
+						{
+							$_POST['year'] = $_POST['yearHide'];
+							$_POST['order'] = $_POST['orderHide'];
+						}
+						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_POST['year']."".$_POST['order']."'");
 						$row = mysqli_num_rows($result);
 						if ($row != 0)
 						{
-							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".$_SESSION['year']."".$_SESSION['number']."'");
+							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".$_POST['year']."".$_POST['order']."'");
 							$row = mysqli_fetch_row($result);
 							if ($row[0] == 'yes')
 								$msgShip = 1;
 							if (!empty($row[1]))
 							{
-							$_SESSION['orderArr'] = explode(',', $row[1]);
-							$i = 0;
-							$str = " where";
-							while (!empty($_SESSION['orderArr'][$i]))
-							{
-								$str = $str . " `serial` = '".$_SESSION['orderArr'][$i]."'";
-								$i++;
-								if (!empty($_SESSION['orderArr'][$i]))
-								$str = $str . " or ";
-							}
-							$_SESSION['str'] = $str;
-							$result = mysqli_query($link, "select type, name, count(type) as duplicates from products $str group by type, name");
-							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
-							echo '<caption> Данные о заказе</caption>';
-							echo '<tr><td>Тип</td><td>Наименование</td><td>Кол-во</td></tr>';
-							while ($row = mysqli_fetch_row($result))
-							{
-							echo "<tr>";
-							echo '<td> '.$row[0].'</td>';
-							echo '<td> '.$row[1].'</td>';
-							echo '<td> '.$row[2]. ' шт.</td>';
-							echo "</tr>";
-							}
-							echo '</table>';
-							if (!empty($succ))
-							echo '<p class="msg1">Заказ отгружен</p>';
-							else if (!empty($msgShip))
-							echo '<p class="msg">Заказ уже отгружен</p>';
-							echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
-							echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
-							echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
+								$orderArr = explode(',', $row[1]);
+								$i = 0;
+								while($orderArr[$i])
+								{
+									echo '<input type = "hidden" name = "orderArrHide['.$i.']" value = "'.$orderArr[$i].'">';
+									$i++;
+								}
+								$i = 0;
+								$str = " where";
+								while (!empty($orderArr[$i]))
+								{
+									$str = $str . " `serial` = '".$orderArr[$i]."'";
+									$i++;
+									if (!empty($orderArr[$i]))
+									$str = $str . " or ";
+								}
+								echo '<input type = "hidden" name = "str" value = "'.$str.'">';
+								$result = mysqli_query($link, "select type, name, count(type) as duplicates from products $str group by type, name");
+								echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
+								echo '<caption> Данные о заказе</caption>';
+								echo '<tr><td>Тип</td><td>Наименование</td><td>Кол-во</td></tr>';
+								while ($row = mysqli_fetch_row($result))
+								{
+								echo "<tr>";
+								echo '<td> '.$row[0].'</td>';
+								echo '<td> '.$row[1].'</td>';
+								echo '<td> '.$row[2]. ' шт.</td>';
+								echo "</tr>";
+								}
+								echo '</table>';
+								if (!empty($succ))
+								echo '<p class="msg1">Заказ отгружен</p>';
+								else if (!empty($msgShip))
+								echo '<p class="msg">Заказ уже отгружен</p>';
+								echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
+								echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
+								echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
 							}
 							else echo '<p class="msg">В состав заказа не входит ни одно изделие</p>';
 
