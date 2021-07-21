@@ -3,76 +3,64 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "repair");
-sessStart($link, "repair");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 $access = 0;
 if (!empty($_POST['acceptbtn']))
 {
-	$_SESSION['uid'] = mysqli_real_escape_string($link, $_SESSION['uid']);
-	$result = "UPDATE products set `repair` = '".$_SESSION['user']."', `location` = 'repair' where `uid` = '".$_SESSION['uid']."'";
+	$_POST['uid'] = mysqli_real_escape_string($link, $_POST['uid']);
+	$result = "UPDATE products set `repair` = '".$_SESSION['user']."', `location` = 'repair' where `uid` = '".$_POST['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', 'Изделие принято в ремонт', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_POST['uid']."', '".$_SESSION['worker']."', 'repair', 'Изделие принято в ремонт', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	$acceptBtn = 1;
 }
 if (!empty($_POST['diagBtn']))
 {
-	$_SESSION['diagnostic'] = $_POST['diComment'];
 	$_POST['diComment'] = mysqli_real_escape_string($link, $_POST["diComment"]);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['diComment']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_POST['uid']."', '".$_SESSION['worker']."', 'mismatch', '".$_POST['diComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE products set `mismatch` = 'yes' where `uid` = '".$_SESSION['uid']."'";
+	$result = "UPDATE products set `mismatch` = 'yes' where `uid` = '".$_POST['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
+	$_POST['diMsg'] = 1;
 }
 if (!empty($_POST['repairBtn']))
 {
-	$_SESSION['repair'] = $_POST['reComment'];
 	$_POST['reComment'] = mysqli_real_escape_string($link, $_POST["reComment"]);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['reComment']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ('".$_POST['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['reComment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+	$_POST['reMsg'] = 1;
 }
 if (!empty($_POST['endRepair']))
 {
 	if (!empty($_POST['status']))
 	{
-		$result = "UPDATE products set `repair` = 'no', `location` = 'stock' where `uid` = '".$_SESSION['uid']."'";
+		$result = "UPDATE products set `repair` = 'no', `location` = 'stock' where `uid` = '".$_POST['uid']."'";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		if ($_POST['status'] == 'ok')
 		{
-			$result = "UPDATE products set `mismatch` = 'no' where `uid` = '".$_SESSION['uid']."'";
+			$result = "UPDATE products set `mismatch` = 'no' where `uid` = '".$_POST['uid']."'";
 			if (!(mysqli_query($link, $result)))
 			die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		}
+		$_POST["status"] = mysqli_real_escape_string($link, $_POST["status"]);
+		$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `date`) values ('".$_POST['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['status']."', NOW())";
+		if (!(mysqli_query($link, $result)))
+		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
+		$succ = 1;
+		$_POST['nextbtn'] = 1;
 	}
-	$_POST["status"] = mysqli_real_escape_string($link, $_POST["status"]);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'repair', '".$_POST['status']."', NOW())";
-	if (!(mysqli_query($link, $result)))
-	die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	unset ($_SESSION['uid']);
-	unset ($_SESSION['serial']);
-	unset ($_SESSION['diagnostic']);
-	unset ($_SESSION['repair']);
 }
-if (!empty($_POST['nextbtn']))
-	{
-		unset ($_SESSION['uid']);
-		unset ($_SESSION['serial']);
-		unset ($_SESSION['diagnostic']);
-		unset ($_SESSION['repair']);
-	}
-if (!empty($_POST['serial']))
-	$_SESSION['serial'] = $_POST["serial"];
 if (!empty($_POST['postFromMain']))
 {
 	$_POST['nextbtn'] = 1;
-	$_SESSION['serial'] = $_POST['postFromMain'];
+	$_POST['serial'] = $_POST['postFromMain'];
 }
 ?>
 <!DOCTYPE html>
@@ -98,19 +86,31 @@ if (!empty($_POST['postFromMain']))
 		<form action="repair.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Ремонт</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_SESSION['serial']) && empty($_POST['savebtn']) ) echo $_SESSION['serial']; elseif (empty($_SESSION['serial']) && empty($_POST['savebtn']) && !empty($_POST['serial'])) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn"  value="Далее" />
 			</div>
 			<div id = "contentOtk">
 				<?php
+				if ($succ == 1)
+					echo "<p class=\"msg1\">Данные сохранены</p>";
 				if (!empty($_POST['nextbtn']) || !empty($_POST['acceptbtn']) || !empty($_POST['diagBtn']) || !empty($_POST['repairBtn']))
 				{
-					$result = mysqli_query($link, "select `uid`, `type`, `name`, `repair` from products where serial = '".mysqli_real_escape_string($link, $_SESSION['serial'])."'");
+					$result = mysqli_query($link, "select `uid`, `type`, `name`, `repair` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 					$row = mysqli_fetch_array($result);
 					if (!empty($row))
 					{
-						$_SESSION['uid'] = $row['uid'];
-						//Рисую таблицу с информацией о типе, имени, ОТК
+						echo '<input type = "hidden" name = "serial" form = "diagForm" value = "'.$_POST['serial'].'">';
+						echo '<input type = "hidden" name = "serial" form = "repairForm" value = "'.$_POST['serial'].'">';
+						echo '<input type = "hidden" name = "serial" form = "endRepairForm" value = "'.$_POST['serial'].'">';
+						echo '<input type = "hidden" name = "uid" value = "'.$row['uid'].'">';
+						echo '<input type = "hidden" name = "uid" form = "diagForm" value = "'.$row['uid'].'">';
+						echo '<input type = "hidden" name = "uid" form = "repairForm" value = "'.$row['uid'].'">';
+						echo '<input type = "hidden" name = "uid" form = "endRepairForm" value = "'.$row['uid'].'">';
+						if (!empty($_POST['diComment']))
+							echo '<input type = "hidden" name = "diComment" form = "repairForm" value = "'.$_POST['diComment'].'">';
+						if (!empty($_POST['reComment']))
+							echo '<input type = "hidden" name = "reComment" form = "diagForm" value = "'.$_POST['reComment'].'">';
+						
 						echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 						echo '<caption> Данные изделия</caption>';
 						echo '<tr><td>Тип</td><td>Наименование</td><td>Ответственный за ремонт</td></tr>';
@@ -134,7 +134,7 @@ if (!empty($_POST['postFromMain']))
 						$num = mysqli_num_rows($result);
 						if (!empty($num))
 						{
-							//Рисую таблицу с историей
+							
 							echo '<table class="tableOtk" align="center" style = "margin: 0;">';
 							echo '<caption> История ОТК</caption>';
 							echo '<tr><td>UID</td><td>Сотрудник</td><td>Тип записи</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
@@ -161,15 +161,15 @@ if (!empty($_POST['postFromMain']))
 						{
 							
 							echo '<div id = "downContentrepair">';
-							echo '<label style = "margin-top: 1em" >Дагностика</label><textarea class="comment" type="text" name="diComment" maxlength="1000" form = "diagForm" required>'; if (!empty($_SESSION['diagnostic'])) echo htmlspecialchars($_SESSION['diagnostic']); echo '</textarea>';
+							echo '<label style = "margin-top: 1em" >Дагностика</label><textarea class="comment" type="text" name="diComment" maxlength="1000" form = "diagForm" required>'; if (!empty($_POST['diComment'])) echo htmlspecialchars($_POST['diComment']); echo '</textarea>';
 							echo '<input type="submit" class = "buttons" id="savedata" name = "diagBtn" form = "diagForm" value="Записать диагностику"/>';
-							if (!empty($_SESSION['diagnostic']))
+							if (!empty($_POST['diMsg']))
 							echo "<p class=\"msg2\">Данные сохранены</p>";	
 							echo '</div>';
 							echo '<div id = "downContentrepair">';
-							echo '<label style = "margin-top: 1em" >Ремонт</label><textarea class="comment" type="text" name="reComment" maxlength="1000" form = "repairForm" required>'; if (!empty($_SESSION['repair'])) echo htmlspecialchars($_SESSION['repair']); echo '</textarea>';
+							echo '<label style = "margin-top: 1em" >Ремонт</label><textarea class="comment" type="text" name="reComment" maxlength="1000" form = "repairForm" required>'; if (!empty($_POST['reComment'])) echo htmlspecialchars($_POST['reComment']); echo '</textarea>';
 							echo '<input type="submit" class = "buttons" id="savedata" name = "repairBtn" form = "repairForm" value="Записать ремонт"/>';
-							if (!empty($_SESSION['repair']))
+							if (!empty($_POST['reMsg']))
 							echo "<p class=\"msg2\">Данные сохранены</p>";
 							echo '</div>';
 							echo '<div id = "downContentrepair">';
@@ -183,10 +183,6 @@ if (!empty($_POST['postFromMain']))
 						}
 					}
 					else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
-				}
-				if ($succ == 1)
-				{
-					echo "<p class=\"msg1\">Данные сохранены</p>";	
 				}
 				?>
 				
@@ -217,7 +213,7 @@ if (!empty($_POST['postFromMain']))
 				selectOption = _this.find('option'),
 				selectOptionLength = selectOption.length,
 				selectedOption = selectOption.filter(':selected'),
-				duration = 100; // длительность анимации 
+				duration = 100; 
 
 			_this.wrap('<div class="select"></div>');
 			$('<div>', {
