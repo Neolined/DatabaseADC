@@ -3,7 +3,6 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "mismatch");
-sessStart($link, "mismatch");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 

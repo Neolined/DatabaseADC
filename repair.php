@@ -99,18 +99,17 @@ if (!empty($_POST['postFromMain']))
 					$row = mysqli_fetch_array($result);
 					if (!empty($row))
 					{
-						echo '<input type = "hidden" name = "serial" form = "diagForm" value = "'.$_POST['serial'].'">';
-						echo '<input type = "hidden" name = "serial" form = "repairForm" value = "'.$_POST['serial'].'">';
-						echo '<input type = "hidden" name = "serial" form = "endRepairForm" value = "'.$_POST['serial'].'">';
-						echo '<input type = "hidden" name = "uid" value = "'.$row['uid'].'">';
-						echo '<input type = "hidden" name = "uid" form = "diagForm" value = "'.$row['uid'].'">';
-						echo '<input type = "hidden" name = "uid" form = "repairForm" value = "'.$row['uid'].'">';
-						echo '<input type = "hidden" name = "uid" form = "endRepairForm" value = "'.$row['uid'].'">';
+						echo '<input type = "hidden" name = "serial" form = "diagForm" value = "'.htmlspecialchars($_POST['serial']).'">';
+						echo '<input type = "hidden" name = "serial" form = "repairForm" value = "'.htmlspecialchars($_POST['serial']).'">';
+						echo '<input type = "hidden" name = "serial" form = "endRepairForm" value = "'.htmlspecialchars($_POST['serial']).'">';
+						echo '<input type = "hidden" name = "uid" value = "'.htmlspecialchars($row['uid']).'">';
+						echo '<input type = "hidden" name = "uid" form = "diagForm" value = "'.htmlspecialchars($row['uid']).'">';
+						echo '<input type = "hidden" name = "uid" form = "repairForm" value = "'.htmlspecialchars($row['uid']).'">';
+						echo '<input type = "hidden" name = "uid" form = "endRepairForm" value = "'.htmlspecialchars($row['uid']).'">';
 						if (!empty($_POST['diComment']))
-							echo '<input type = "hidden" name = "diComment" form = "repairForm" value = "'.$_POST['diComment'].'">';
+							echo '<input type = "hidden" name = "diComment" form = "repairForm" value = "'.htmlspecialchars($_POST['diComment']).'">';
 						if (!empty($_POST['reComment']))
-							echo '<input type = "hidden" name = "reComment" form = "diagForm" value = "'.$_POST['reComment'].'">';
-						
+							echo '<input type = "hidden" name = "reComment" form = "diagForm" value = "'.htmlspecialchars($_POST['reComment']).'">';
 						echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 						echo '<caption> Данные изделия</caption>';
 						echo '<tr><td>Тип</td><td>Наименование</td><td>Ответственный за ремонт</td></tr>';

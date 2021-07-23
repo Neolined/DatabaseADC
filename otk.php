@@ -110,7 +110,7 @@ if (!empty($_POST['postFromMain']))
 							echo "<p class=\"msg1\">Изделие добавлено в состав заказа</p>";
 							if (!empty($msgCmpsn))
 							echo "<p class=\"msg\">Данное изделие уже есть составе заказа</p>";
-              echo '<input type="hidden" name="uidHide" value = "'.$row['uid'].'">';
+             				 echo '<input type="hidden" name="uidHide" value = "'.htmlspecialchars($row['uid']).'">';
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';

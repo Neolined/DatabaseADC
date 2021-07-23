@@ -1,4 +1,4 @@
-﻿html, body {
+html, body {
     height: 100%;
     min-width: max-content;
 }
@@ -71,7 +71,7 @@ button{
     margin-bottom: 100px;
     padding: 1.3em;
     background: #f0f0f0;
-    border-radius: 0em 0em 1.9em 1.9em;
+    border-radius: 1.9em 1.9em 1.9em 1.9em;
 }
 .form1 {
     margin-top: 10%;
@@ -127,7 +127,7 @@ option{
 }
 select, input, textarea {
     background-color: white;
-    border:1px solid #ced4da;;
+    border:1px solid #ced4da;
 
 }
 select {
@@ -295,36 +295,41 @@ input {
 }
 
 /*Table*/
-.table, .tableOtk {
+.table, .table1, .tableOtk {
     width: 100%;
-    border: 5px solid #fff;
-    border-bottom: 0.1em solid #5c6f93;
+    border-right: 5px solid #fff;
+    border-left: 5px solid #fff;
     font-size: 1em;
     background: #fff !important;
     box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
     border-collapse: collapse;
     margin-bottom: 0;
 }
-
-    .table th, .tableOtk th{
+    .table th, .table1 th, .tableOtk th{
         font-weight: bold;
         padding: 7px;
         background: #ffd300;
         border: none;
         font-size: 15px;
         border-top: 3px solid #fff;
-        border-bottom: 0.2em solid #ffd300;
+        
     }
 
-    .table td, .tableOtk td{
-        padding: 4px;
+    .table td, .table1 td, .tableOtk td{
+        padding: 0.5em;
         border: none;
-        border-bottom: 0.1em solid #5c6f93;
         font-size: 15px;
         min-width: 3em;
         max-width: 25em;
-        border-bottom: 0.1em solid #ced4da;;
+        border-bottom: 2px solid #ced4da;
+        
         height: auto;
+    }
+    .table1 td{
+        border:none;
+    }
+    .table1{
+        border: 5px solid #fff;
     }
     .table #his{
         text-align:center;
@@ -332,11 +337,16 @@ input {
     #history {
         border: 0;
         box-shadow: none;
-        min-width:9em;
+        min-width: 8em;
+        min-height: 2em;
         color: white;
+        border-radius: 0.5em;
+    }
+    #history:hover{
+        opacity: 0.7;
     }
     #tdAlign{
-        text-align: center;
+        padding: 0em;
     }
     .table caption, .tableOtk caption {
         border: 0.2em solid #fff;
@@ -346,31 +356,45 @@ input {
         padding: 0.4em 0;
         box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
     }
-
-    .table tbody tr:nth-child(even) {
-        background: #f8f8f8 !important;
+    .table caption, .table1 caption, .tableOtk caption {
+        background-color: #5c6f93;
+        box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
     }
-.pagination {
+    .table tbody tr:nth-child(even) {
+        background: #fff7d3 !important;
+    }
+.allPagination {
     display: inline-block;
     padding: 0.5em 0em;
     margin-bottom: 4em;
     background-color: white;
     min-width: 55em;
     width: 100%;
-    box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
+    box-shadow: 0px 3px 6px -1px rgb(255 255 255);
 }
-    .pagination a  {
-        color: black;
-        float: left;
-        padding: 8px 16px;
-        text-decoration: none;
-        margin-left: 0.5em;
-    }
-
-        .pagination a.active {
-            background-color: #5c6f93;
-            color: white;
-        }
+.pagination {
+    float: left;
+    padding-left: 1em;
+}
+.pagBtn{
+    color:black;
+    padding: 0em 0.7em;
+    height: 2.5em;
+    border: none;
+}
+.pagBtn:hover{
+    cursor: pointer;
+    opacity: 0.6;
+    background-color: #fff7d3;
+    border-radius: 2em;
+}
+#pagBtnActive {
+    background-color: #fff7d3;
+    border-radius: 2em;
+}
+#pagBtnActive:hover{
+    opacity: 1;
+}
 .multiselect {
     float: left;
     cursor: pointer;
@@ -389,6 +413,9 @@ input {
     top: 0;
     bottom: 0;
   }
+.overSelect:hover{
+    cursor: pointer;
+}
 .optionClassOrder {
     display:none;
   position: absolute;
@@ -411,8 +438,7 @@ input {
   }
   
   .multiselect label:hover {
-    background-color: #5c6f93;
-    color: white;
+    opacity: 0.6;
     cursor: pointer;
   }
   .filterAndSort{
@@ -436,6 +462,7 @@ input {
     background: #5c6f93;
     border: none;
     margin-right: 0.2em;
+    border-radius: 0.3em;
  }
 #showFilter:hover, #hideFilter:hover{
 opacity: 0.8;
@@ -482,6 +509,7 @@ cursor: pointer;
 }
 .filterInput:hover{
   cursor: pointer;
+  opacity: 0.6;
 }
 .filterName{
   text-align: center;
@@ -642,20 +670,44 @@ margin-top: -0.1em;
 #form_submit:visited {
     color: blue;
 }
+#form_submit:link:hover {
+    opacity: 0.6;
+}
 #maxrows{
     float: right;
+    margin: 0.3em 1em 0em 0em;
 }
-#maxrows a{
-    text-decoration: none;
-    margin: 0em 0.5em;
-    float: none;
+.maxrowsBtn{
+    margin: 0.5em 0.2em 0.3em 0.2em;
     padding: 0em;
+    background: none;
+    border: none;
+    color: black;
 }
-#clearForm{
+.maxrowsBtn:hover{
+    opacity: 0.6;
+}
+#clearForm, #clearFormAccept{
     border-color: gold;
     border-radius: 0.8em;
 }
-#clearForm:hover{
+#clearForm:hover, #clearFormAccept:hover{
     cursor:pointer;
-    background: rgba(0,0,0,.01);
+    opacity: 0.7;
+}
+#clearFormAccept{
+    margin-bottom: 0.7em;
+}
+#activeMaxRows{
+    color: #d1c89d;
+}
+#returnBtn{
+    background-color: #fff7d3;
+    margin-left: 1em;
+    padding: 0.4em 0.6em;
+    border: 1px solid lightgrey;
+    border-radius: 0.4em;
+}
+#returnBtn:hover{
+    opacity: 0.6;
 }

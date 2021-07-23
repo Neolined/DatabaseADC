@@ -100,11 +100,9 @@ if (!empty ($_POST['sumb']))
 	</div>
 </div>
  <div id="forma">
-		<form action="accept.php" position= "bottom" method="post" id="cleardata" class = "form">
-		<p id="priem_name" align="center">Первичный прием </p>
-		<input type="submit" name = "villy" value="Очистить данные формы"/>
-		</form>
 		<form action="accept.php" method="post" align="left" class="form">
+			<p id="priem_name" align="center">Первичный прием </p>
+			<input type="reset" id = "clearFormAccept" position= "bottom" value="Очистить данные формы"/>
 			<label>Тип</label><input <?php if ($error_t1 == 0) echo "class=\"color_err1\"";?> type="text" id = "type" name="type" maxlength="100" value="<?php if (!empty($_POST['type'])) echo htmlspecialchars($_POST['type']); ?>" required/>
 			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" maxlength="100" value="<?php if (!empty($_POST['name'])) echo htmlspecialchars($_POST['name']); ?>" required/>
 			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" maxlength="100" value="<?php if (!empty($_POST['perfomance'])) echo htmlspecialchars($_POST['perfomance']); ?>">

@@ -3,7 +3,6 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "testing");
-sessStart($link, "testing");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
@@ -11,10 +10,10 @@ if (!empty($_POST['savebtn']))
 	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
 	$_POST['protocol'] = mysqli_real_escape_string($link, $_POST['protocol']);
 	$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".$_SESSION['uid']."', '".$_SESSION['worker']."', 'testing', '".$_POST['status']."', '".$_POST['comment']."', '".$_POST['protocol']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".$_POST['uid']."', '".$_SESSION['worker']."', 'testing', '".$_POST['status']."', '".$_POST['comment']."', '".$_POST['protocol']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
-	$result = "UPDATE products set `testing` = '".$_POST['status']."' where `uid` = '".$_SESSION['uid']."'";
+	$result = "UPDATE products set `testing` = '".$_POST['status']."' where `uid` = '".$_POST['uid']."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
@@ -64,8 +63,8 @@ if (!empty($_POST['postFromMain']))
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
-							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Дата', 'Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
-							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "date", "owner", "location", "testing", "otk", "comment");
+							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Дата');
+							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "date");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
@@ -76,7 +75,22 @@ if (!empty($_POST['postFromMain']))
 							paintRow($result ,$columnName, false, false);
 							echo "</tr>";
 							echo '</table>';
-							$_SESSION['uid'] = $row[0];
+							$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
+							echo '<caption> Данные изделия</caption>';
+							$mass = array('Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
+							$columnName = array ("owner", "location", "testing", "otk", "comment");
+							echo '<tr>';
+							for ($i = 0; (!empty($mass[$i])); $i++)
+							{
+							echo '<td>'.$mass[$i].'</td>';
+							}
+							echo '</tr>';
+							echo "<tr>";
+							paintRow($result ,$columnName, false, false);
+							echo "</tr>";
+							echo '</table>';
+							echo '<input type = "hidden" name = "uid" value = "'.htmlspecialchars($row[0]).'">';
 							echo '<div id = "downContentTesting">';
 							echo '<select class="select" name="status" required>';
 							echo '<option value = "">Выберите статус тестирования</option>';

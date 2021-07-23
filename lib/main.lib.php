@@ -10,9 +10,9 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 			$row = mysqli_fetch_array($result);
 			echo '<label class = "filterInput"><input class = "filter" type = "checkbox" form = "myform" name="filter['.$option.'][]" value ="'.$row[$option].'"';
 			$j = 0;
-			while (!empty($_SESSION['filter'][$option][$j]))
+			while (!empty($_POST['filterHide'][$option][$j]))
 			{
-				if ($row[$option] == $_SESSION['filter'][$option][$j])
+				if ($row[$option] == $_POST['filterHide'][$option][$j])
 				echo 'checked';
 				$j++;
 			}
@@ -61,9 +61,14 @@ function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
 "owner" => "Владелец", "location" => "Местопол.", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
-				if (empty($_POST['history']) && $columnName[$i] == 'comment')
-					echo "<td id=\"his\"> История </td>";
-				echo '<td><div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\')"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' asc ">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" onchange="checkAddress(this, \'sort\')" type="checkbox" value ="order by '.$columnName[$i].' desc ">'.$sorttag2.'</label></div></div></td>';
+				echo '<td><div class="multiselect"><div class="selectBox" onclick="showCheckboxesSort(\'order_by'.$columnName[$i].'\');"><select><option>'.$replace[$columnName[$i]].'</option> </select> <div class="overSelect"></div></div><div id="order_by'.$columnName[$i].'" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="order" form = "myform" class = "sort" type="checkbox" value ="order by '.$columnName[$i].' asc" ';
+				if (isset($_POST['orderHide']) && $_POST['orderHide'] == 'order by '.$columnName[$i].' asc')
+					echo "checked ";
+				echo 'onclick = "checkAddress(this, \'sort\'); this.form.submit();">'.$sorttag1.'</label><label class="selectLabel"><input name="order" form = "myform" class = "sort" type="checkbox" value ="order by '.$columnName[$i].' desc" ';
+				if (isset($_POST['orderHide']) && $_POST['orderHide'] == 'order by '.$columnName[$i].' desc')
+					echo "checked ";
+				echo 'onclick = "checkAddress(this, \'sort\'); this.form.submit();">'.$sorttag2.'</label></div></div></td>';
+				
 			}
 		}
 function requestDB($index, $link) //create request for DB from main
@@ -213,7 +218,7 @@ function paintRow($result, $array, $posthist, $href)
 {	
 	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
-"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
+"shipment" => "Отгрузка", "shipping" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
 "owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
@@ -272,19 +277,19 @@ function paintRowOrder($result, $array, $replace, $posthist)
 		}
 	}
 }
-function sessStart($link, $page)
+function crHiddenInpPostFilters($postFilters)
 {
-	$user = $_SESSION['user'];
-	$ua = $_SESSION['ua'];
-	$hash = $_SESSION['hash'];
-	$worker = $_SESSION['worker'];
-	session_abort();
-	session_name($page);
-	session_id($page);
-	session_start();
-	$_SESSION['user'] = mysqli_real_escape_string($link, $user);
-	$_SESSION['ua'] = mysqli_real_escape_string($link, $ua);
-	$_SESSION['hash'] = mysqli_real_escape_string($link, $hash);
-	$_SESSION['worker'] = mysqli_real_escape_string($link, $worker);
+	$indexFilters = array_keys($postFilters);
+	$i = 0;
+	while (!empty($indexFilters[$i]))
+	{
+		$x = 0;
+		while (isset($postFilters[$indexFilters[$i]][$x]))
+		{
+			echo '<input type = "hidden" name = "filterHide['.htmlspecialchars($indexFilters[$i]).']['.htmlspecialchars($x).']" form = "myform" value = "'.htmlspecialchars($postFilters[$indexFilters[$i]][$x]).'">';
+			$x++;
+		}
+		$i++;
+	}
 }
 ?>

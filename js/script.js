@@ -71,9 +71,12 @@ function tranPost(idInp,ser,post)
   document.getElementById(idInp).value = ser;
   document.getElementById(post).submit();
 }
-function clearInp(arr) {
-  for( i = 0; i < arr.length; ++i) {
-  if (document.getElementById(arr[i]))
-  document.getElementById(arr[i]).value = '';
-}
-}
+jQuery(function($){
+  $(document).mouseup(function (e){ // отслеживаем событие клика по веб-документу
+    var block = $(".optionClassOrder"); // определяем элемент, к которому будем применять условия (можем указывать ID, класс либо любой другой идентификатор элемента)
+    if (!block.is(e.target) // проверка условия если клик был не по нашему блоку
+      && !$(".overSelect").is(e.target)) { // проверка условия если клик не по его дочерним элементам
+      block.css("display","none"); // если условия выполняются - скрываем наш элемент
+    }
+  });
+});

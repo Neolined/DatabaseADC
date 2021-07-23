@@ -9,6 +9,7 @@ checkRoot($link, NULL);
  <head>
   <meta charset=utf-8">
   <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
+  <script src="js/jquery.js"></script>
   <title>Номенклатура</title>
  </head>
  <body>
@@ -20,21 +21,21 @@ checkRoot($link, NULL);
 	</div>
 	</div>
 	<div id="forma">
-		<table class="table" align="center" style = "width: 30em;">
+		<table class="table1" align="center" style = "width: 30em;">
 		<form action = "nomenclature.php" method = "post" >
 			<?php
 			echo '<input type = "hidden" name = "hiddenOrder" value = "';
 			if (isset($_POST['hiddenOrder']))
-				echo $_POST['hiddenOrder'];
+				echo htmlspecialchars($_POST['hiddenOrder']);
 			else
-				$_POST['hiddenOrder'] = 'order by `type` asc';
+				$_POST['hiddenOrder'] = htmlspecialchars('order by `type` asc');
 			echo '">';
 			$result = mysqli_query($link, 'select distinct `type` from list_of_products '.$_POST['hiddenOrder'].'');
 			echo '<caption><div class="multiselect" style="width: -webkit-fill-available;"><div class="selectBox" onclick="showCheckboxesSort(\'order_by_type\')"><select style="background: center;color: white;font-size: initial;"><option>Номенклатура</option> </select> <div class="overSelect"></div></div><div id="order_by_type" style="color: black;margin-left: 11em;" class="optionClassOrder" style="display:none;"><label class="selectLabel"><input name="hiddenOrder" class = "sort" onchange="checkAddress(this, \'sort\'); this.form.submit();" type="checkbox" value ="order by `type` asc"';
 			if (empty($_POST['hiddenOrder']) || $_POST['hiddenOrder'] == "order by `type` asc")
 				echo ' checked';
 			echo '>A-Z</label><label class="selectLabel"><input name="hiddenOrder" class = "sort" onchange="checkAddress(this, \'sort\'); this.form.submit();" type="checkbox" value ="order by `type` desc"';
-			if (!empty($_POST['hiddenOrder']) && $_POST['hiddenOrder'] == "order by `type` desc")
+			if ($_POST['hiddenOrder'] == "order by `type` desc")
 				echo 'checked';
 			echo '>Z-A</label></div></div></caption>';
 			$columnName = mysqli_fetch_all ($result);
@@ -43,7 +44,7 @@ checkRoot($link, NULL);
 			{
 				if (!empty($_POST[$columnName[$i][0]]))
 				{
-					echo '<input type = "hidden" name = "'.$columnName[$i][0].'" value = "'.$_POST[$columnName[$i][0]].'" >';//для того, чтобы сохранять выбранную сортировку в массиве пост после обновления страницы
+					echo '<input type = "hidden" name = "'.$columnName[$i][0].'" value = "'.htmlspecialchars($_POST[$columnName[$i][0]]).'" >';//для того, чтобы сохранять выбранную сортировку в массиве пост после обновления страницы
 				}
 				else
 					$_POST[$columnName[$i][0]] = "order by `name` asc";//сортировка по-умолчанию

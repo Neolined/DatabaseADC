@@ -94,7 +94,7 @@ if (!empty($_POST['postFromMain']))
 					{
 						if (preg_match('/^[A-Z]\d{5}$/', $_POST['serial']) || preg_match('/^[Р]\d{6}$/u', $_POST['serial']) || preg_match('/^[А-Я]\d{4}$/u', $_POST['serial']) || preg_match('/^\d{5}$/', $_POST['serial']))
 						{
-							echo '<div id = "inp"><input type="button" id = "clearForm" onclick = clearInp(JSON.parse(\''.json_encode($arrInput).'\')) value="Очистить данные формы"/></div>';
+							echo '<div id = "inp"><input type="reset" id = "clearForm" value="Очистить данные формы"/></div>';
 							$result = mysqli_query($link, "select type, name from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 							$row = mysqli_fetch_row($result);
 							if (!empty($row))
@@ -300,7 +300,7 @@ function show_item(id, status)
 				}
 			});
 		});
-		$(document).ready(function(){//сброс данных на странице через jquery
+		$(document).ready(function(){//сброс данных на странице через jquery по кнопке
 		$('#clearForm').click(function(){
 			$('.select').prop('selectedIndex',0);
 			$(".new-select").text(function(){

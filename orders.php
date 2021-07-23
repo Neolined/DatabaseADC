@@ -25,9 +25,6 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 	<div id="forma">
 		<table class="table" align="center" style = "width:fit-content">
 			<caption>Таблица заказов</caption>
-			<form method="post" id="form2" action = "main.php">
-			<input type="hidden" id = "seb" name = "postFromOrders"/>
-			</form>
 			<?php
 				echo '<tr>';
 				for ($i = 0; (!empty($columnNameRu[$i])); $i++)
@@ -39,6 +36,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 				$result = mysqli_query($link, "select * from orders");
 				paintRowOrder($result, $columnName, $replace, false, false);
 				echo "</tr>";
+				echo "<tr style = 'height: 0.5em;' ></tr>";
 			?>	
 		</table>
 	</div>

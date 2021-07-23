@@ -61,8 +61,8 @@ if (!empty($_POST['savebtn']))
 					{
 						if (!empty($_POST['order']) && !empty($_POST['year']))
 						{
-							echo '<input type = "hidden" name = "orderHide" value = "'.$_POST['order'].'">';
-							echo '<input type = "hidden" name = "yearHide" value = "'.$_POST['year'].'">';
+							echo '<input type = "hidden" name = "orderHide" value = "'.htmlspecialchars($_POST['order']).'">';
+							echo '<input type = "hidden" name = "yearHide" value = "'.htmlspecialchars($_POST['year']).'">';
 						}
 						else if (!empty($_POST['yearHide']) && !empty($_POST['orderHide']))
 						{
@@ -83,7 +83,7 @@ if (!empty($_POST['savebtn']))
 								$i = 0;
 								while($orderArr[$i])
 								{
-									echo '<input type = "hidden" name = "orderArrHide['.$i.']" value = "'.$orderArr[$i].'">';
+									echo '<input type = "hidden" name = "orderArrHide['.$i.']" value = "'.htmlspecialchars($orderArr[$i]).'">';
 									$i++;
 								}
 								$i = 0;
@@ -95,7 +95,7 @@ if (!empty($_POST['savebtn']))
 									if (!empty($orderArr[$i]))
 									$str = $str . " or ";
 								}
-								echo '<input type = "hidden" name = "str" value = "'.$str.'">';
+								echo '<input type = "hidden" name = "str" value = "'.htmlspecialchars($str).'">';
 								$result = mysqli_query($link, "select type, name, count(type) as duplicates from products $str group by type, name");
 								echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 								echo '<caption> Данные о заказе</caption>';
