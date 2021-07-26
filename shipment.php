@@ -18,7 +18,7 @@ if (!empty($_POST['savebtn']))
 	$i = 0;
 	while (!empty($_POST['orderArrHide'][$i]))
 	{
-		$result = $result . " ((select uid from products where `serial` = '".$_POST['orderArrHide'][$i]."'), '".$_SESSION['worker']."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
+		$result = $result . " ((select uid from products where `serial` = '".$_POST['orderArrHide'][$i]."'), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
 		$i++;
 		if (!empty($_POST['orderArrHide'][$i]))
 		$result = $result . ",";

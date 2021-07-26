@@ -9,7 +9,7 @@ $error_n1 = 1;
 $error_t1 = 1;
 if (!empty($_POST['savebtY']))
 {
-	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_POST['serialHide']."'), NOW(), '".$_SESSION['worker']."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_POST['serialHide']."'), NOW(), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	$result = "UPDATE `products` SET `location` = '".mysqli_real_escape_string($link, $_POST['location'])."', `owner` = 'АДС' where `serial` = '".$_POST['serialHide']."'";

@@ -11,7 +11,7 @@ if (!empty($_POST['serial']))
 if (!empty($_POST['savebtn']))
 {
 	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".$_POST['serial']."'), '".$_SESSION['worker']."', 'mismatch', '".$_POST['comment']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".$_POST['serial']."'), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'mismatch', '".$_POST['comment']."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
 	$result = "UPDATE products set `mismatch` = 'yes' where `serial` = '".$_POST['serial']."'";
