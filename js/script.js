@@ -20,22 +20,6 @@ function show(show, hide, cont) {
         checkboxes.style.display = "none";
       }
     }
-    function showCheckboxesSort(obj) {
-      var checkboxes = document.getElementById(obj);
-      if(getComputedStyle(checkboxes).display == 'none')
-      {
-        var arr = document.getElementsByClassName("optionClassOrder");
-        for(var i=0; i<arr.length; i++){
-        arr[i].style.display = "none";
-        }
-        checkboxes.style.display = "block";
-      }
-      else
-      {
-        checkboxes.style.display = "none";
-      }
-    }
-  
 function checkAddress(checkbox, sort)
 {
   if (checkbox.checked == true) { //если включаем чекбокс

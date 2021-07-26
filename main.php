@@ -24,7 +24,7 @@ $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_
 "comment" => "Комментарий", "protocol" => "Протокол");
 //формирование Запроса чере SESSION
 if (empty($_POST['orderHide']) && empty($_POST['order']))
-$_POST['orderHide'] = 'order by `uid` desc';
+$_POST['orderHide'] = 'order by `UID` desc';
 else if (!empty($_POST['order']))
 $_POST['orderHide'] = mysqli_real_escape_string($link, $_POST['order']);
 if (!isset($_POST['filter']) && isset($_POST['filterHide']))
@@ -88,11 +88,11 @@ else
 				if (isset($_POST['filter']))
 						crHiddenInpPostFilters($_POST['filter']);
 				if (!empty($_POST['lot']))
-					echo 'input type = "hidden" name = "lotHide" value = "'.htmlspecialchars($_POST['lot']).'"';
+					echo '<input type = "hidden" name = "lotHide" value = "'.htmlspecialchars($_POST['lot']).'">';
 				if (isset($_POST['page']))
 					echo '<input type = "hidden" name = "pageHide" form = "myform" value = "'.htmlspecialchars($_POST['page']).'">';
 				if (isset($_POST['orderHide']))
-					echo '<input type = "hidden" name = "orderHide" form = "myform" value = "'.htmlspecialchars($_POST['orderHide']).'">';
+					echo '<input type = "hidden" name = "orderHide" id = "orderHide" form = "myform" value = "'.htmlspecialchars($_POST['orderHide']).'">';
 				?>
 		</table>
 			<?php
@@ -117,8 +117,8 @@ else
 				selectDB($link, "Тестирование", "testing", "products");
 				selectDB($link, "В ремонте", "repair", "products");
 				echo '<div class = "filters"><label class = "filterName">Комментарий</label><label class="filterInput"><input  class = "sort" onchange="checkAddress(this, \'sort\')" name = "filter[comment][]" type="checkbox" form = "myform" value =" "'; if (!empty($_POST['filterHide']['comment'][0])) echo 'checked'; echo '>Наличие комментария</label></div>';
-				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input id = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_POST['filterHide']['date1'][0])) echo $_POST['filterHide']['date1'][0];
-				echo '" form = "myform"></label><label class="filterInput">по  </input><input id = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_POST['filterHide']['date2'][0])) echo $_POST['filterHide']['date2'][0]; echo '"></input></label></div>';
+				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input class = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_POST['filterHide']['date1'][0])) echo $_POST['filterHide']['date1'][0];
+				echo '" form = "myform"></label><label class="filterInput">по  </input><input class = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_POST['filterHide']['date2'][0])) echo $_POST['filterHide']['date2'][0]; echo '"></input></label></div>';
 				echo '</div>';
 				echo '</div>';
 				}
@@ -158,11 +158,9 @@ else
 							}
 						}
 						else
-						{
-							
 							sortSelect($columnName, "Прямая сортировка", "Обратная сортировка");
-						}
 						echo "</tr>";
+						
 						$result = mysqli_query($link, "SELECT * FROM  `products` ".$request." ".$_POST['orderHide']."");
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
@@ -191,22 +189,23 @@ else
 					{
 						if (($_POST['lotHide']) == 1)
 						{
-						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$request." group by type, name");
-						echo '<tr><td>Тип</td><td>Наименование</td><td style="padding-right: 40em;">Кол-во</td></tr>';
-						while ($row = mysqli_fetch_row($result))
-						{
-						echo "<tr>";
-						echo '<td> '.$row[0].'</td>';
-						echo '<td> '.$row[1].'</td>';
-						echo '<td> '.$row[2]. ' шт.</td>';
-						echo "</tr>";
-						}
+							$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$request." group by type, name");
+							echo '<thead><tr><td class = "pounterCurs">Тип</td class = "pounterCurs"><td class = "pounterCurs">Наименование</td><td style="padding-right: 35em;" class = "pounterCurs">Кол-во</td></tr></thead><tbody>';
+							while ($row = mysqli_fetch_row($result))
+							{
+							echo "<tr>";
+							echo '<td> '.$row[0].'</td>';
+							echo '<td> '.$row[1].'</td>';
+							echo '<td> '.$row[2]. ' шт.</td>';
+							echo "</tr>";
+							}
+							echo '</tbody>';
 						}
 						if (($_POST['lotHide']) == 2)
 						{
 						$locatMass = array("stock", "develop", "nelikvid", "isolator", "work", "repair");
 						$result = mysqli_query($link, "select type, name, count(type) as duplicates from products ".$request." group by type, name");
-						echo '<tr><td>Тип</td><td>Наименование</td><td>Склад</td><td>Разработка</td><td>Неликвид</td><td>Изолятор</td><td>Производство</td><td>В ремонте</td></tr>';
+						echo '<thead><tr><td class = "pounterCurs">Тип</td><td class = "pounterCurs">Наименование</td><td class = "pounterCurs">Склад</td><td class = "pounterCurs">Разработка</td><td class = "pounterCurs">Неликвид</td><td class = "pounterCurs">Изолятор</td><td class = "pounterCurs">Производство</td><td class = "pounterCurs">В ремонте</td></tr></thead><tbody>';
 						$viewStockSer = '';
 						if (!empty($_POST['filterHide']['serial']))
 						{
@@ -244,6 +243,7 @@ else
 							}
 							echo "</tr>";
 						}
+						echo '</tbody>';
 						}
 					}
 				?>
@@ -290,6 +290,27 @@ else
 			<p>Для служебного пользования сотрудниками АДС</p>
 	</div>
 	<script src = "js/script.js"></script>
-	<script>
+	<script>document.addEventListener('DOMContentLoaded', () => {
+
+const getSort = ({ target }) => {
+	const order = (target.dataset.order = -(target.dataset.order || -1));
+	const index = [...target.parentNode.cells].indexOf(target);
+	const collator = new Intl.Collator(['en', 'ru'], { numeric: true });
+	const comparator = (index, order) => (a, b) => order * collator.compare(
+		a.children[index].innerHTML,
+		b.children[index].innerHTML
+	);
+	
+	for(const tBody of target.closest('table').tBodies)
+		tBody.append(...[...tBody.rows].sort(comparator(index, order)));
+
+	for(const cell of target.parentNode.cells)
+		cell.classList.toggle('sorted', cell === target);
+};
+
+document.querySelectorAll('.table thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+
+});
+</script>
  </body>
 </html>
