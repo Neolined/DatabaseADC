@@ -51,7 +51,7 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 	echo '</div>';
 	echo '</div>';
 }
-function sortSelect($columnName, $sorttag1, $sorttag2) //create sort for table
+function sortSelect($columnName) //create sort for table
 		{
 			$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тест", "mismatch" => "Несоотв.",

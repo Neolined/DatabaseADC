@@ -24,11 +24,10 @@ checkRoot($link, NULL);
 		<table class="table1" align="center" style = "width: 30em;">
 		<form action = "nomenclature.php" method = "post" id = "myform">
 			<?php
+			if (!isset($_POST['hiddenOrder']))
+				$_POST['hiddenOrder'] = 'order by `type` asc';
 			echo '<input type = "hidden" name = "hiddenOrder" id = "hiddenOrder"  value = "';
-			if (isset($_POST['hiddenOrder']))
 				echo htmlspecialchars($_POST['hiddenOrder']);
-			else
-				$_POST['hiddenOrder'] = htmlspecialchars('order by `type` asc');
 			echo '"></input>';
 			$result = mysqli_query($link, 'select distinct `type` from list_of_products '.$_POST['hiddenOrder'].'');
 			$idCapt = '';
@@ -38,7 +37,7 @@ checkRoot($link, NULL);
 				echo 'desc';
 				$idCapt = 'id = \'activeColumnSortAsc\'';
 				}
-			if (!empty($_POST['hiddenOrder']) && $_POST['hiddenOrder'] == 'order by `type` desc')
+			else if (!empty($_POST['hiddenOrder']) && $_POST['hiddenOrder'] == 'order by `type` desc')
 				{
 				echo 'asc';
 				$idCapt = 'id = \'activeColumnSortDesc\'';

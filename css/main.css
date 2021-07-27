@@ -753,3 +753,9 @@ td.sorted[data-order="-1"]:hover::after{
 td.sorted[data-order="1"]:hover::after{
     opacity: 1;
 }
+#allRows{
+    margin: inherit;
+    padding: 0.3em 0em 0em 1em;
+    font-style: oblique;
+    color:#5C6F93;
+}

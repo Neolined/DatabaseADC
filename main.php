@@ -104,7 +104,16 @@ else
 				echo '<button id="hideFilter" onclick = "hide(\'showFilter\', \'hideFilter\', \'filterContent\')" style="display:none;">Скрыть</button>';
 				echo '<input id="hideFilter" type = "submit" form = "myform" name = "applyFilter" value = "Применить фильтры"></input>';
 				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
-				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button></div>';
+				echo '<button id="hideFilter" onclick = "clearFilter()">Очистить</button>';
+				if (empty($_POST['lotHide']))
+				{
+				$result = mysqli_query($link, "SELECT * FROM  `products` ".$request." ".$_POST['orderHide']."");
+					if(!$result)
+					die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
+				$all_rows=mysqli_num_rows($result);
+				echo '<h4 id = "allRows">Всего записей: '.$all_rows.'</h4>';
+				}
+				echo '</div>';
 				echo '<div id="filterContent" style="display:none">';
 				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="'; if (!empty($_POST['filterHide']['serial'][0])) echo $_POST['filterHide']['serial'][0]; echo '"></label></div>';
 				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input  class = "viewSort" onchange="checkAddress(this, \'viewSort\')" name = "lot" type="checkbox" form = "myform" value ="1"'; if (!empty($_POST['lotHide']) && $_POST['lotHide'] == 1) echo 'checked'; echo '>Количество</label>';
@@ -156,15 +165,14 @@ else
 								echo "</td>";
 								$i++;
 							}
+							echo "</tr>";
+							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'  order by date desc" );
+							if(!$result)
+								die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
 						}
 						else
-							sortSelect($columnName, "Прямая сортировка", "Обратная сортировка");
-						echo "</tr>";
-						
-						$result = mysqli_query($link, "SELECT * FROM  `products` ".$request." ".$_POST['orderHide']."");
-						if(!$result)
-							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
-						$all_rows=mysqli_num_rows($result);
+						{
+							sortSelect($columnName);
 						$pages = ((floor($all_rows/$_POST['maxrowsHide'])) + 1);
 						if($all_rows%$_POST['maxrowsHide'] == 0)
 							$pages = floor($all_rows/$_POST['maxrowsHide']);
@@ -172,16 +180,10 @@ else
 							$view_rows = 0;
 						else 
 							$view_rows = ($_POST['page'] - 1) * $_POST['maxrowsHide'];
-						if (!empty($_POST['history']))
-						{
-							$result = mysqli_query($link, "SELECT * from `history` where `uid` = '".mysqli_real_escape_string($link, $_POST['history'])."'  order by date desc" );
-							if(!$result)
-								die ('Ошибка запроса в Историю: mysqli_query'.mysqli_error($link)) . '<br>';
-						}
-						else
-							$result = mysqli_query($link, "SELECT * FROM  `products` ".$request." ".$_POST['orderHide']." LIMIT $view_rows, ".mysqli_real_escape_string($link, $_POST['maxrowsHide'])."");//выводим таблицу
+						$result = mysqli_query($link, "SELECT * FROM  `products` ".$request." ".$_POST['orderHide']." LIMIT $view_rows, ".mysqli_real_escape_string($link, $_POST['maxrowsHide'])."");//выводим таблицу
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link)) . '<br>';
+						}
 						paintRow($result, $columnName, empty($_POST['history']), true);
 						mysqli_free_result($result);
 					}
