@@ -59,6 +59,17 @@ if (!empty($_POST['postFromMain']))
 						if (!empty($row))
 						{
 							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
+							$result = mysqli_query($link, "select `date`, `comment` from `history` where `type_write` = 'mismatch' and uid = (select `uid` from products where serial = '".$_POST['serial']."') and comment != '' order by date desc");
+							$row = mysqli_fetch_array($result);
+							if (!empty($row[0]))
+							{
+							echo '<table class="tableMismatch">';
+							echo '<tr><td>Дата</td><td>Несоответствие</td></tr>';
+							echo '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td></tr>';
+							while ($row = mysqli_fetch_array($result))
+								echo '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td></tr>';
+							echo '</table>';
+							}
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"  maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 						}

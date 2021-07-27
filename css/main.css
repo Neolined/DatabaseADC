@@ -293,9 +293,8 @@ input {
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
 /*Table*/
-.table, .table1, .tableOtk {
+.table, .table1, .tableOtk, .tableMismatch {
     width: 100%;
     border-right: 5px solid #fff;
     border-left: 5px solid #fff;
@@ -315,7 +314,7 @@ input {
         
     }
 
-    .table td, .table1 td, .tableOtk td{
+    .table td, .table1 td, .tableOtk td, .tableMismatch td{
         padding: 0.5em;
         border: none;
         font-size: 15px;
@@ -324,6 +323,11 @@ input {
         border-bottom: 2px solid #ced4da;
         
         height: auto;
+    }
+    .tableMismatch{
+        margin: -1em 0em 1em 0em;
+        box-shadow: none;
+        border: none;
     }
     .table1 td{
         border:none;
