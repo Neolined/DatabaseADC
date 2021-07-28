@@ -87,6 +87,7 @@ button{
     min-height: 10em auto;
     box-shadow: 0px 0em 0.2em 0px rgba(255,255,255,1);
     background: #f0f0f0;
+    width: -moz-fit-content;
 }
 .form1 input::placeholder, .form input::placeholder {
     color: lightgrey;
@@ -128,7 +129,7 @@ option{
 select, input, textarea {
     background-color: white;
     border:1px solid #ced4da;
-
+    width: -moz-available;
 }
 select {
     height: 2.4em;
@@ -192,6 +193,7 @@ input {
     text-align: center;
     box-shadow: 0px 0em 1em 0px rgba(255,255,255,1);
     width: 100%;
+    line-height: 0.4;
 }
 #savedata, #savedata:hover, #nextbtn, .history, .history:hover {
     background:  #5c6f93;
@@ -381,6 +383,7 @@ input {
 .pagination {
     float: left;
     padding-left: 1em;
+    display: flex;
 }
 .pagBtn{
     color:black;
@@ -469,6 +472,7 @@ input {
     border: none;
     margin-right: 0.2em;
     border-radius: 0.3em;
+    width: -moz-fit-content;
  }
 #showFilter:hover, #hideFilter:hover{
 opacity: 0.8;
@@ -669,6 +673,7 @@ margin-top: -0.1em;
     background: #5C6F93;
     color: white;
     padding: 0.5em;
+    text-align: center;
 }
 #form_submit:link {
     color: blue;

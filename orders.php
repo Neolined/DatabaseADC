@@ -23,7 +23,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 	</div>
 	</div>
 	<div id="forma">
-		<table class="table" align="center" style = "width:fit-content">
+		<table class="table" align="center" style = "width:unset">
 			<caption>Таблица заказов</caption>
 			<?php
 				echo '<tr>';
