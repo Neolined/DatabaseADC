@@ -253,7 +253,7 @@ function paintRow($result, $array, $posthist, $href)
 					if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
 					echo '><a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
 					else if ($array[$i] == 'serial' && $posthist == true)
-						echo ' id = "tdAlign"><button class = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">'.$row[$array[$i]].'</button></td>';
+						echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['UID'].'\', \'myform\')">'.$row[$array[$i]].'</td>';
 					else 
 						echo '>'.$row[$array[$i]];
 				}

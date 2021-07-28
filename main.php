@@ -62,7 +62,7 @@ else
 	</div>
 	</div>
 	<div id="forma">
-		<form action = "main.php" method = "post" id="myform"></form>
+		<form action = "main.php" method = "post" id="myform"><input type="hidden" id = "history" name = "history" form = "myform"/></form>
 		<form method="post" id="locationPost" action = "refand.php"><input type="hidden" id = "locationInp" name = "postFromMain"/></form>
 		<form method="post" id="otkPost" action = "otk.php"><input type="hidden" id = "otkInp" name = "postFromMain"/></form>
 		<form method="post" id="testingPost" action = "testing.php"><input type="hidden" id = "testingInp" name = "postFromMain"/></form>
