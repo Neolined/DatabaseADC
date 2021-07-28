@@ -62,8 +62,6 @@ function sortSelect($columnName) //create sort for table
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 					$id = '';
-					if ($columnName[$i] == 'comment')
-						echo '<td>История</td>';
 					echo '<td onclick = "tranPost(\'orderHide\', \'order by `'.$columnName[$i].'`';
 					if (isset($_POST['orderHide']) && $_POST['orderHide'] == 'order by `'.$columnName[$i].'` asc')
 						{
@@ -242,22 +240,22 @@ function paintRow($result, $array, $posthist, $href)
 			echo "<tr>";
 			while (!empty($array[$i]))
 			{
-				if ($posthist == true && $array[$i] == 'comment')
-					echo '<td id = "tdAlign"><button class = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">История</button></td>';
-				echo '<td>';
+				echo '<td';
 				if (!empty($replace[$row[$array[$i]]]))
 				{
 				if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
-					echo '<a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
+					echo '><a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
 				else
-					echo $replace[$row[$array[$i]]];
+					echo '>'.$replace[$row[$array[$i]]];
 				}
 				else 
 				{
 					if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
-					echo '<a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
-					else
-					echo $row[$array[$i]];
+					echo '><a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
+					else if ($array[$i] == 'serial' && $posthist == true)
+						echo ' id = "tdAlign"><button class = "history" type = "submit" name = "history" value="'.$row['UID'].'" form = "myform">'.$row[$array[$i]].'</button></td>';
+					else 
+						echo '>'.$row[$array[$i]];
 				}
 				echo '</td>';
 				$i++;
