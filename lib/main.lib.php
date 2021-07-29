@@ -229,7 +229,7 @@ function paintRow($result, $array, $posthist, $href)
 	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
 "shipment" => "Отгрузка", "shipping" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
-"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
+"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус", "location" => "Местоположение",
 "comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
 "owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 	if(mysqli_num_rows($result) != 0)
@@ -243,14 +243,14 @@ function paintRow($result, $array, $posthist, $href)
 				echo '<td';
 				if (!empty($replace[$row[$array[$i]]]))
 				{
-				if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+				if ($posthist == true && $href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
 					echo '><a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
 				else
 					echo '>'.$replace[$row[$array[$i]]];
 				}
 				else 
 				{
-					if ($href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+					if ($posthist == true && $href == true && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
 					echo '><a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
 					else if ($array[$i] == 'serial' && $posthist == true)
 						echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['UID'].'\', \'myform\')">'.$row[$array[$i]].'</td>';

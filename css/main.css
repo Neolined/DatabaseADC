@@ -378,6 +378,9 @@ input {
     padding-left: 1em;
     display: flex;
 }
+.pagination a{
+    padding-top: 0.5em;
+}
 .pagBtn{
     color:black;
     padding: 0em 0.7em;

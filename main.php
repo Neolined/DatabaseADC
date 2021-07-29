@@ -21,7 +21,7 @@ header('Location: clearmain.php');
 $columnName = array ( "UID", "type", "name", "perfomance", "serial", "date", "owner", "location", "otk", "testing", "repair", "mismatch");
 $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "protocol" => "Протокол");
+"comment" => "Комментарий", "protocol" => "Протокол", "location" => "Местоположение");
 //формирование Запроса чере SESSION
 if (empty($_POST['orderHide']) && empty($_POST['order']))
 $_POST['orderHide'] = 'order by `UID` desc';
@@ -256,14 +256,20 @@ else
 				if(empty($_POST['history']))
 				{
 					echo '<div class= "pagination">';
+					$activepage = 0;
 					if (empty($_POST['page']))
 						$_POST['page'] = 1;
+					else $activepage = $_POST['page'];
 					for ($j = 1; $j <= $pages; $j++)
 					{
-						echo '<input type = "submit" name = "page" form = "myform" class = "pagBtn" value = "'.htmlspecialchars($j).'"';
+						if(($j==1)||($j==$pages)||(abs($activepage-$j) < 6))
+						{
+							echo '<input type = "submit" name = "page" form = "myform" class = "pagBtn" value = "'.htmlspecialchars($j).'"';
 						if ($_POST['page'] == $j)
 							echo ' id = "pagBtnActive"';
 						echo '">';
+						}
+						if(($j!=1)&&($j!=$pages)&&(abs($activepage-$j) == 6)) echo ' <a> ... </a> ';
 					}
 					echo '</div>';
 					echo '<div id = "maxrows">';
