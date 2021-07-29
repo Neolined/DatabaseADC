@@ -82,6 +82,8 @@ if (!empty($_POST['postFromMain']))
 </div>
  <div id="forma">
  		<form action="otk.php" method="post" align="left" id="nextForm"></form>
+		<form method="post" id="mismatchPost" action = "mismatch.php"><input type="hidden" id = "mismatchInp" name = "postFromMain"/></form>
+		<form method="post" id="historyPost" action = "main.php"><input type="hidden" id = "history" name = "history"/></form>
 		<form action="otk.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">ОТК</p>
 			<div class="serial_lot">
@@ -114,13 +116,13 @@ if (!empty($_POST['postFromMain']))
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
-							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус</td></tr>';
+							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус ОТК</td><td>Тестирование</td><td>Несоответствия</td><td>История</td></tr>';
 							if (!empty($_POST['serial']))
-						  $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-              if (!empty($_POST['serialHide']))
-              $result = mysqli_query($link, "select `uid`, `type`, `name`, `otk` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
-							$columnName = array("type", "name", "otk");
-							paintRow($result, $columnName, false, false);
+						 		$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`, `mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
+             				if (!empty($_POST['serialHide']))
+             					$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`,`mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
+							$columnName = array("type", "name", "otk", "testing", "mismatch", "history");
+							paintRow($result, $columnName, false, "otk");
 							echo '</table>';
 							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
 							$num = mysqli_num_rows($result);
@@ -252,5 +254,6 @@ if (!empty($_POST['postFromMain']))
 	);
 	});
 	</script>
+	<script src="js/script.js"></script>
  </body>
 </html>
