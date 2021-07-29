@@ -13,13 +13,7 @@ checkRoot($link, NULL);
   <title>Номенклатура</title>
  </head>
  <body>
- <div class="header">
-	<?php createMenu($link) ?>
-	<img id="adc" src="images/adc.png" align="center">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-	</div>
+ <?php createHeader($link);?>
 	<div id="forma">
 		<table class="table1" align="center" style = "width: 30em;">
 		<form action = "nomenclature.php" method = "post" id = "myform">
@@ -79,9 +73,7 @@ checkRoot($link, NULL);
 		</form>
 		</table>
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
 	<script src = "js/script.js"></script>
  </body>
 </html>

@@ -75,9 +75,7 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 			?>
 			</form>	
 		</div>
-	<div class="footer" role="contentinfo">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<div class="footer" role="contentinfo"><p>Для служебного пользования сотрудниками АДС</p></div>
 	</div>
  </body>
 </html>

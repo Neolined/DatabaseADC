@@ -33,13 +33,7 @@ if (!empty($_POST['postFromMain']))
   <title>Интерфейс испытателя</title>
  </head>
  <body>
- <div class="header">
- <?php createMenu($link) ?>
-	<img id="adc" src="images/adc.png">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-</div>
+ <?php createHeader($link);?>
  <div id="forma">
 		<form action="testing.php" method="post" align="left" id="nextForm"></form>
 		<form action="testing.php" method="post" align="left" class="form1">
@@ -116,9 +110,7 @@ if (!empty($_POST['postFromMain']))
 			</div>
 		</form>
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
 	<script>
 		var once = 0;
 		function hideotk()

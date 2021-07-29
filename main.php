@@ -3,7 +3,6 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
-print_r($_POST);
 if (!empty($_POST['postFromOrders']))
 {
 	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");
@@ -55,13 +54,7 @@ else
   <title>Главная</title>
  </head>
  <body>
- <div class="header">
-	<?php createMenu($link) ?>
-	<img id="adc" src="images/adc.png" align="center">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-	</div>
+ <?php createHeader($link);?>
 	<div id="forma">
 		<form action = "main.php" method = "post" id="myform"><input type="hidden" id = "history" name = "history" form = "myform"/></form>
 		<form method="post" id="locationPost" action = "refand.php"><input type="hidden" id = "locationInp" name = "postFromMain"/></form>
@@ -298,9 +291,7 @@ else
 			</div>
 			
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
 	<script src = "js/script.js"></script>
 	<script>document.addEventListener('DOMContentLoaded', () => {
 

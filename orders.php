@@ -15,13 +15,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
   <title>Заказы</title>
  </head>
  <body>
- <div class="header">
-	<?php createMenu($link) ?>
-	<img id="adc" src="images/adc.png" align="center">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-	</div>
+ <?php createHeader($link);?>
 	<div id="forma">
 		<table class="table" align="center" style = "width:unset">
 			<caption>Таблица заказов</caption>
@@ -40,9 +34,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			?>	
 		</table>
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
  </body>
 </html>
 <script>

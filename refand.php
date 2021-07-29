@@ -56,12 +56,7 @@ if (!empty($_POST['postFromMain']))
  </head>
  <body>
  <div class="header">
- <?php createMenu($link) ?>
-	<img id="adc" src="images/adc.png">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-</div>
+ <?php createHeader($link);?>
  <div id="forma">
  		<form action="refand.php" method="post" align="left" id="nextForm"></form>
 		<form action="refand.php" method="post" align="left" class="form1">

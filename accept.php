@@ -92,13 +92,7 @@ if (!empty ($_POST['sumb']))
   <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
  </head>
  <body>
- <div class="header">
- 	<?php createMenu($link); ?>
-	<img id="adc" src="images/adc.png">
-	<div id="worker">
-	<p><img id="exit" src="images/worker.png"><?php echo $_SESSION['worker']; ?></p>
-	</div>
-</div>
+<?php createHeader($link);?>
  <div id="forma">
 		<form action="accept.php" method="post" align="left" class="form">
 			<p id="priem_name" align="center">Первичный прием </p>
@@ -127,9 +121,7 @@ if (!empty ($_POST['sumb']))
 			echo "<p class=\"msg1\"> Данные сохранены</p>";
 		?>
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
 	<script>
 $(document).ready(function(){
 $("#type").autocompleteArray(
