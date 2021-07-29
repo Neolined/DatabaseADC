@@ -3,6 +3,7 @@ session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, NULL);
+print_r($_POST);
 if (!empty($_POST['postFromOrders']))
 {
 	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");
@@ -100,7 +101,10 @@ else
 				{
 				echo '<div class = "filterButton">';
 				echo '<div id = "filtersButtonAct">';
-				echo '<button id="showFilter" onclick = "show(\'showFilter\', \'hideFilter\', \'filterContent\')">Показать фильтры</button>';
+				echo '<button id="showFilter" onclick = "show(\'showFilter\', \'hideFilter\', \'filterContent\')"';
+				if (!empty($_POST['filter']))
+					echo 'class = " blinkText"';
+				echo '>Показать фильтры</button>';
 				echo '<button id="hideFilter" onclick = "hide(\'showFilter\', \'hideFilter\', \'filterContent\')" style="display:none;">Скрыть</button>';
 				echo '<input id="hideFilter" type = "submit" form = "myform" name = "applyFilter" value = "Применить фильтры"></input>';
 				echo '<input id="hideFilter" type="button" onclick="location.href=\'clearmain.php\'" value = "Сбросить фильтры">';
