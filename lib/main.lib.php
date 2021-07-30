@@ -1,43 +1,47 @@
 ﻿<?php
 function createHeader($link){
 	echo '<div class="header">';
-	echo '<div class="dropdown">';
-    echo '<button class="dropbtn" align="center"><img id = "menu" src = "images/menu.png"></button>';
-    echo '<div class="dropdown-content">';
-    if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) || (empty($_SESSION['hash'])))
-        echo '<a href="index.php">Авторизоваться</a>';
-    else
-    {
-		$result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
-    	$rootdb = mysqli_fetch_row($result);
-        if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
-            echo '<a href="main.php">Главная</a>';
-        if (!strpos($_SERVER['SCRIPT_NAME'], "accept.php") && (strpos($rootdb[0], "accept") !==false))
-            echo '<a href="accept.php">Приемка</a>';
-        if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php") && (strpos($rootdb[0], "otk") !==false))
-            echo '<a href="otk.php">ОТК</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php") && (strpos($rootdb[0], "testing") !==false))
-		echo '<a href="testing.php">Тестирование</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php") && (strpos($rootdb[0], "mismatch") !==false))
-            echo '<a href="mismatch.php">Несоответствия</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php") && (strpos($rootdb[0], "repair") !==false))
-            echo '<a href="repair.php">Ремонт</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php") && (strpos($rootdb[0], "shipment") !==false))
-            echo '<a href="shipment.php">Отгрузка</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php") && (strpos($rootdb[0], "refand") !==false))
-			echo '<a href="refand.php">Возврат</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
-			echo '<a href="orders.php">Заказы</a>';
-		if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
-			echo '<a href="nomenclature.php">Номенклатура</a>';
-        echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
-    }
-    echo '</div>';
-    echo '</div>';
+	createMenu($link);
 	echo '<a href="main.php" style = "position: absolute;"><img  id="adc" src="images/adc.png" align="center"></a>';
 	echo '<div id="worker"><p><img id="exit" src="images/worker.png">'.$_SESSION['worker'].'</p></div>';
 	echo '</div>';
 }
+function createMenu($link)
+	{
+		echo '<div class="dropdown">';
+		echo '<button class="dropbtn" align="center"><img id = "menu" src = "images/menu.png"></button>';
+		echo '<div class="dropdown-content">';
+		if ((!isset($_SESSION['user'])) || ($_SESSION['ua'] !== $_SERVER['HTTP_USER_AGENT']) || (empty($_SESSION['hash'])))
+			echo '<a href="index.php">Авторизоваться</a>';
+		else
+		{
+			$result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
+			$rootdb = mysqli_fetch_row($result);
+			if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
+				echo '<a href="main.php">Главная</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "accept.php") && (strpos($rootdb[0], "accept") !==false))
+				echo '<a href="accept.php">Приемка</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "otk.php") && (strpos($rootdb[0], "otk") !==false))
+				echo '<a href="otk.php">ОТК</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "testing.php") && (strpos($rootdb[0], "testing") !==false))
+			echo '<a href="testing.php">Тестирование</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "mismatch.php") && (strpos($rootdb[0], "mismatch") !==false))
+				echo '<a href="mismatch.php">Несоответствия</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "repair.php") && (strpos($rootdb[0], "repair") !==false))
+				echo '<a href="repair.php">Ремонт</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "shipment.php") && (strpos($rootdb[0], "shipment") !==false))
+				echo '<a href="shipment.php">Отгрузка</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php") && (strpos($rootdb[0], "refand") !==false))
+				echo '<a href="refand.php">Возврат</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
+				echo '<a href="orders.php">Заказы</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
+				echo '<a href="nomenclature.php">Номенклатура</a>';
+			echo '<a href="exit.php">Выход<img id="exit" src="images/exit.png"></a>';
+		}
+		echo '</div>';
+		echo '</div>';
+	}
 function createFooter(){
 	echo '<div class="footer"><p>Для служебного пользования сотрудниками АДС</p></div>';
 }

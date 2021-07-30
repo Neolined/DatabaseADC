@@ -43,8 +43,8 @@ if (!empty($_POST['savebtn']))
 		<form action="shipment.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Отгрузка</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Год</label><input type="text" name="year" maxlength="4" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_POST['yearHide'])) echo $_POST['yearHide']; else echo date ( 'Y' ) ; ?>" required/> </div>
-			<div id = "inputLabel"><label>Номер заказа</label><input type="text" name="order" maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_POST['orderHide'])) echo $_POST['orderHide']; ?>" required/> </div>
+			<div class = "inputLabel"><label>Год</label><input type="text" name="year" maxlength="4" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['year'])) echo $_POST['year']; elseif (!empty($_POST['yearHide'])) echo $_POST['yearHide']; else echo date ( 'Y' ) ; ?>" required/> </div>
+			<div class = "inputLabel"><label>Номер заказа</label><input type="text" name="order" maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['order'])) echo $_POST['order']; elseif (!empty($_POST['orderHide'])) echo $_POST['orderHide']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее"  form = "nextForm"/>
 			</div>
 			<div id = "contentOtk">
@@ -107,7 +107,7 @@ if (!empty($_POST['savebtn']))
 								echo '<p class="msg1">Заказ отгружен</p>';
 								else if (!empty($msgShip))
 								echo '<p class="msg">Заказ уже отгружен</p>';
-								echo '<div id = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
+								echo '<div class = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
 								echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 								echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
 							}
