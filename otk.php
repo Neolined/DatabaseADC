@@ -77,7 +77,7 @@ if (!empty($_POST['postFromMain']))
  <div id="forma">
  		<form action="otk.php" method="post" align="left" id="nextForm"></form>
 		<form method="post" id="mismatchPost" action = "mismatch.php"><input type="hidden" id = "mismatchInp" name = "postFromMain"/></form>
-		<form method="post" id="historyPost" action = "main.php"><input type="hidden" id = "history" name = "history"/></form>
+		<form method="post" id="historyPost" action = "main.php"><input type="hidden" id = "history" name = "historyOtk"/></form>
 		<form action="otk.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">ОТК</p>
 			<div class="serial_lot">

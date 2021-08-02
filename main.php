@@ -10,6 +10,8 @@ if (!empty($_POST['postFromOrders']))
 	if ($row[0]!= '')
 	$_POST['filter']['serial'][0] = $row[0];
 }
+if (!empty($_POST['historyOtk']))
+	$_POST['history'] = $_POST['historyOtk'];
 if (empty($_POST['filter']['serial'][0]))
 	unset($_POST['filter']['serial']);
 if (empty($_POST['filter']['date1'][0]))
@@ -282,10 +284,19 @@ else
 				}
 				else
 				{
+					if (!empty($_POST['historyOtk']))
+					{
+						$result = mysqli_query($link, "select `serial` from products where `uid` = ".$_POST['historyOtk']."");
+						$row = mysqli_fetch_row($result);
+						echo '<button type = "button" id = "returnBtn" onclick = "tranPost(\'otkInp\', \''.$row[0].'\', \'otkPost\')">Назад</button>';
+					}
+					else
+					{
 					echo '<button type = "submit" id = "returnBtn" form = "myform" name = "page" value = "';
 					if (isset($_POST['pageHide']))
 						echo htmlspecialchars($_POST['pageHide']);
 					echo '">Назад</button>';
+					}
 				}
 			?>
 			</div>

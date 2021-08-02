@@ -792,3 +792,11 @@ td.sorted[data-order="1"]:hover::after {
 #lotCrOrderLab {
     text-align: center;
 }
+#historyOtk{
+    background: #FFF7D3;
+    cursor: pointer;
+}
+#historyOtk:hover{
+    opacity: 0.6;
+    background: rgb(226, 226, 226);
+}

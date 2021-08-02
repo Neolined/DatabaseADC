@@ -1,4 +1,17 @@
 ﻿<?php
+function connect()//connect to DB
+{
+    $host = 'localhost';
+    $database = 'adcproducts';
+    $user = 'root';
+    $password = 'qwerty123';
+    $link = mysqli_connect($host, $user, $password, $database);
+    if (!$link) 
+    {
+        die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
+    }
+    return($link);
+}
 function createHeader($link){
 	echo '<div class="header">';
 	createMenu($link);
@@ -219,19 +232,6 @@ function error403($link){
 		</html>';
 	die;
 }
-function connect()//connect to DB
-{
-    $host = 'localhost';
-    $database = 'adcproducts';
-    $user = 'root';
-    $password = 'qwerty123';
-    $link = mysqli_connect($host, $user, $password, $database);
-    if (!$link) 
-    {
-        die('Ошибка при подключении к базе данных: ' . mysqli_connect_error($link));
-    }
-    return($link);
-}
 function paintRow($result, $array, $posthist, $pageName)
 {	
 	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
@@ -250,7 +250,7 @@ function paintRow($result, $array, $posthist, $pageName)
 			{
 				echo '<td';
 				if ($pageName == "otk" && $array[$i] == 'history')
-					echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.$array[$i].'Post\')">Показать</td>';
+					echo ' id = "historyOtk" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.$array[$i].'Post\')">Показать</td>';
 				else if (!empty($replace[$row[$array[$i]]]))
 				{
 					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
