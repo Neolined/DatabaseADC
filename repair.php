@@ -77,7 +77,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="repair.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Ремонт</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div class = "inputLabel"><label>Серийный номер</label><input type="text" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn"  value="Далее" />
 			</div>
 			<div id = "contentOtk">

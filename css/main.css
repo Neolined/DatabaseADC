@@ -331,10 +331,8 @@ button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
     max-width: 25em;
     border-bottom: 1px solid #CED4DA;
     border-left: 1px solid #DDDFE1;
+    border-right: 1px solid #DDDFE1;
     height: auto;
-}
-.tableMismatch td {
-    width: 1em;
 }
 .tableMismatch {
     margin: -1em 0em 1em 0em;

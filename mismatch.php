@@ -36,7 +36,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="mismatch.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Несоответствия</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
+			<div class = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -50,15 +50,40 @@ if (!empty($_POST['postFromMain']))
 						if (!empty($row))
 						{
 							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
-							$result = mysqli_query($link, "select `date`, `comment` from `history` where `type_write` = 'mismatch' and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') and comment != '' order by date desc");
-							$row = mysqli_fetch_array($result);
+							$result = mysqli_query($link, "select `date`, `type_write`, `status`, `comment` from `history` where `type_write` = 'otk' or `type_write` = 'mismatch' or `type_write` = 'repair' and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') and comment != '' order by date desc");
+							$row = mysqli_fetch_row($result);
 							if (!empty($row[0]))
 							{
+							$defineRu = array("otk" => "ОТК", "mismatch" => "Несоответсвия", "repair" => "Ремонт", "ok" => "Успешно", "fail" => "Не успешно");
 							echo '<table class="tableMismatch">';
-							echo '<tr><td>Дата</td><td>Несоответствие</td></tr>';
-							echo '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td></tr>';
-							while ($row = mysqli_fetch_array($result))
-								echo '<tr><td>'.$row[0].'</td><td>'.$row[1].'</td></tr>';
+							echo '<tr><td>Дата</td><td>Тип записи</td><td>Статус</td><td>Комментарий</td></tr>';
+							echo '<tr><td>'.$row[0].'</td><td>';
+							if (isset($defineRu[$row[1]]))
+								echo $defineRu[$row[1]];
+							else
+								echo $row[1];
+							echo '</td><td>';
+							if (isset($defineRu[$row[2]]))
+								echo $defineRu[$row[2]];
+							else 
+								echo $row[2];
+							echo '</td><td>';
+							echo $row[3].'</td></tr>';
+							while ($row = mysqli_fetch_row($result))
+							{
+								echo '<tr><td>'.$row[0].'</td><td>';
+							if (isset($defineRu[$row[1]]))
+								echo $defineRu[$row[1]];
+							else 
+								echo $row[1];
+							echo '</td><td>';
+							if (isset($defineRu[$row[2]]))
+								echo $defineRu[$row[2]];
+							else 
+								echo $row[2];
+							echo '</td><td>';
+								echo $row[3].'</td></tr>';
+							}
 							echo '</table>';
 							}
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment"  maxlength="1000"></textarea>';

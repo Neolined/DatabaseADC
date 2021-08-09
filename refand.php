@@ -62,7 +62,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="refand.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Возврат</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtN'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; else if ($error_t1 == 0 || $error_n1 == 0) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
+			<div class = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtN'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; else if ($error_t1 == 0 || $error_n1 == 0) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
 			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">

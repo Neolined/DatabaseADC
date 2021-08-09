@@ -36,7 +36,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="testing.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Тестирование</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div class = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial" maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
 			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">

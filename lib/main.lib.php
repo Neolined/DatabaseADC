@@ -16,7 +16,7 @@ function createHeader($link){
 	echo '<div class="header">';
 	createMenu($link);
 	echo '<a href="main.php" style = "position: absolute;"><img  id="adc" src="images/adc.png" align="center"></a>';
-	echo '<div id="worker"><p><img id="exit" src="images/worker.png">'.$_SESSION['worker'].'</p></div>';
+	echo '<div id="worker"><p><img id="exit" src="images/worker.png">'.htmlspecialchars($_SESSION['worker']).'</p></div>';
 	echo '</div>';
 }
 function createMenu($link)
