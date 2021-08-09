@@ -163,9 +163,7 @@ if (!empty($_POST['postFromMain']))
 			</div>
 		</form>
 	</div>
-	<div class="footer">
-			<p>Для служебного пользования сотрудниками АДС</p>
-	</div>
+	<?php createFooter();?>
 	<script>
 		var once = 0;
 		function hideotk()
