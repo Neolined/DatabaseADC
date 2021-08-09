@@ -50,7 +50,7 @@ if (!empty($_POST['postFromMain']))
 						if (!empty($row))
 						{
 							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
-							$result = mysqli_query($link, "select `date`, `type_write`, `status`, `comment` from `history` where `type_write` = 'otk' or `type_write` = 'mismatch' or `type_write` = 'repair' and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') and comment != '' order by date desc");
+							$result = mysqli_query($link, "select `date`, `type_write`, `status`, `comment` from `history` where (`type_write` = 'otk' or `type_write` = 'mismatch' or `type_write` = 'repair') and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') order by date desc");
 							$row = mysqli_fetch_row($result);
 							if (!empty($row[0]))
 							{
