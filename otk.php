@@ -110,7 +110,7 @@ if (!empty($_POST['postFromMain']))
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус ОТК</td><td>Тестирование</td><td>Несоответствия</td><td>История</td></tr>';
 							if (!empty($_POST['serial']))
 						 		$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`, `mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-             				if (!empty($_POST['serialHide']))
+             				else if (!empty($_POST['serialHide']))
              					$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`,`mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
 							$columnName = array("type", "name", "otk", "testing", "mismatch", "history");
 							paintRow($result, $columnName, false, "otk");
