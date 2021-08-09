@@ -9,10 +9,10 @@ $error_n1 = 1;
 $error_t1 = 1;
 if (!empty($_POST['savebtY']))
 {
-	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".$_POST['serialHide']."'), NOW(), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'), NOW(), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
-	$result = "UPDATE `products` SET `location` = '".mysqli_real_escape_string($link, $_POST['location'])."', `owner` = 'АДС' where `serial` = '".$_POST['serialHide']."'";
+	$result = "UPDATE `products` SET `location` = '".mysqli_real_escape_string($link, $_POST['location'])."', `owner` = 'АДС' where `serial` = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		$succ = 1;
@@ -27,7 +27,7 @@ if (!empty($_POST['savebtN']))
 		$error_n1 = mysqli_num_rows($result);
 		if ($error_n1 > 0)
 		{
-			$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['perfomance'])."', '".$_POST['serialHide']."', '".mysqli_real_escape_string($link, $_POST['location'])."', 'АДС', NOW())";
+			$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['perfomance'])."', '".mysqli_real_escape_string($link, $_POST['serialHide'])."', '".mysqli_real_escape_string($link, $_POST['location'])."', 'АДС', NOW())";
 			if (mysqli_query($link, $result))
 				$id = (mysqli_insert_id($link));
 			else 
@@ -62,7 +62,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="refand.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Возврат</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtN'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; else if ($error_t1 == 0 || $error_n1 == 0) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" form = "nextForm" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtN'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; else if ($error_t1 == 0 || $error_n1 == 0) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
 			<input type="submit" id="nextbtn" form = "nextForm" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">

@@ -204,16 +204,15 @@ input {
 #regdata, #regdata:hover {
     background: #FCDD76;
 }
-#addBtn {
-    width: 2.5em;
+#addBtn, .delBtn {
     align-self: center;
     background-color: white;
     border: none;
 }
-#addBtn:hover {
+#addBtn:hover, .delBtn:hover {
     opacity: 0.6;
 }
-#addBtn p{
+#addBtn p, .delBtn p{
     font-size: x-large;
     margin: 0em;
 }

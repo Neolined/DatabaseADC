@@ -9,14 +9,13 @@ if (!empty($_POST['savebtn']))
 {
 	if (!empty($_POST['order']))
 	{
-		$_POST['order'] = mysqli_real_escape_string($link, $_POST['order']);
 		if (preg_match('[^\d{7}$]', $_POST['order']))
 		{
-			$result = mysqli_query($link, "select uid from orders where UID = '".$_POST['order']."'");
+			$result = mysqli_query($link, "select uid from orders where UID = '".mysqli_real_escape_string($link, $_POST['order'])."'");
 			$row = mysqli_num_rows($result);
 			if ($row == 0)
 			{
-				$result = "INSERT INTO orders (uid, composition) VALUES ('".$_POST['order']."','".$_POST['serialHide'].",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,' ".$_POST['serialHide'].",')";
+				$result = "INSERT INTO orders (uid, composition) VALUES ('".mysqli_real_escape_string($link, $_POST['order'])."','".mysqli_real_escape_string($link, $_POST['serialHide']).",') ON DUPLICATE KEY UPDATE composition=CONCAT(composition,' ".mysqli_real_escape_string($link, $_POST['serialHide']).",')";
 				if (!(mysqli_query($link, $result)))
 					die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 				$msgOrder = 1;
@@ -24,11 +23,11 @@ if (!empty($_POST['savebtn']))
 			}
 			else
 			{
-				$result = mysqli_query($link, "select composition from orders where UID = '".$_POST['order']."'");
+				$result = mysqli_query($link, "select composition from orders where UID = '".mysqli_real_escape_string($link, $_POST['order'])."'");
 				$row = mysqli_fetch_row($result);
 				if (!(strpos($row[0], $_POST['serialHide']) !==false))
 				{
-					$result = "update orders set composition = concat (composition, ' ".$_POST['serialHide'].",') where uid = '".$_POST['order']."'";
+					$result = "update orders set composition = concat (composition, ' ".mysqli_real_escape_string($link, $_POST['serialHide']).",') where uid = '".mysqli_real_escape_string($link, $_POST['order'])."'";
 					if (!(mysqli_query($link, $result)))
 						die ('Ошибка записи в ТБ заказы:'  .mysqli_error($link));
 					$msgCmpsn1 = 1;
@@ -40,18 +39,16 @@ if (!empty($_POST['savebtn']))
 	}
 	if (empty($msgOrder2))
 	{
-		$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
-		$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `number_order`, `date`) values ('".$_POST['uidHide']."', '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'otk', '".$_POST['comment']."', '".$_POST['status']."', '".$_POST['order']."', NOW())";
+		$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `status`, `number_order`, `date`) values ('".mysqli_real_escape_string($link, $_POST['uidHide'])."', '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'otk', '".mysqli_real_escape_string($link, $_POST['comment'])."', '".mysqli_real_escape_string($link, $_POST['status'])."', '".mysqli_real_escape_string($link, $_POST['order'])."', NOW())";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в историю:'  .mysqli_error($link));
 		if ($_POST['status'] == 'fail')
-			$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'yes' where `uid` = '".$_POST['uidHide']."'";
+			$result = "UPDATE products set `otk` = '".mysqli_real_escape_string($link, $_POST['status'])."', `mismatch` = 'yes' where `uid` = '".mysqli_real_escape_string($link, $_POST['uidHide'])."'";
 		else
 			if ($_POST['status'] == 'ok')
-				$result = "UPDATE products set `otk` = '".$_POST['status']."', `mismatch` = 'no' where `uid` = '".$_POST['uidHide']."'";
+				$result = "UPDATE products set `otk` = '".mysqli_real_escape_string($link, $_POST['status'])."', `mismatch` = 'no' where `uid` = '".mysqli_real_escape_string($link, $_POST['uidHide'])."'";
 			else			
-				$result = "UPDATE products set `otk` = '".$_POST['status']."' where `uid` = '".$_POST['uidHide']."'";
+				$result = "UPDATE products set `otk` = '".mysqli_real_escape_string($link, $_POST['status'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['uidHide'])."'";
 		if (!(mysqli_query($link, $result)))
 			die ('Ошибка записи в продукты:'  .mysqli_error($link));
 		else $succ = 1;

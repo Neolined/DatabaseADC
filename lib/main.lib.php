@@ -162,7 +162,7 @@ function requestDB($index, $link) //create request for DB from main
 				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'yes')
 				$str = $str. "repair != 'no'";
 				else if ($index[$j] == "comment")
-				$str = $str. "`" .$index[$j]. "` != '" .$_POST['filter'][$index[$j]][$i]. "'";
+				$str = $str. "`" .$index[$j]. "` != '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date1")
 				$str = $str . "`date` >= '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date2")

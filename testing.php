@@ -7,13 +7,10 @@ mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
 {
-	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$_POST['protocol'] = mysqli_real_escape_string($link, $_POST['protocol']);
-	$_POST['status'] = mysqli_real_escape_string($link, $_POST['status']);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".$_POST['uid']."', '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'testing', '".$_POST['status']."', '".$_POST['comment']."', '".$_POST['protocol']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".mysqli_real_escape_string($link, $_POST['uid'])."', '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'testing', '".$mysqli_real_escape_string($link, $_POST['status'])."', '".mysqli_real_escape_string($link, $_POST['comment'])."', '".mysqli_real_escape_string($link, $_POST['protocol'])."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
-	$result = "UPDATE products set `testing` = '".$_POST['status']."' where `uid` = '".$_POST['uid']."'";
+	$result = "UPDATE products set `testing` = '".mysqli_real_escape_string($link, $_POST['status'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['uid'])."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
@@ -48,12 +45,11 @@ if (!empty($_POST['postFromMain']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						$_POST['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
-						$result = mysqli_query($link, "select `uid` from products where serial = '".$_POST['serial']."'");
+						$result = mysqli_query($link, "select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
-							$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+							$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
@@ -69,7 +65,7 @@ if (!empty($_POST['postFromMain']))
 							paintRow($result ,$columnName, false, "testing");
 							echo "</tr>";
 							echo '</table>';
-							$result = mysqli_query($link, "select * from products where serial = '".$_POST['serial']."'");
+							$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
 							$mass = array('Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');

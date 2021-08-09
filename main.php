@@ -115,7 +115,7 @@ else
 				}
 				echo '</div>';
 				echo '<div id="filterContent" style="display:none">';
-				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="'; if (!empty($_POST['filterHide']['serial'][0])) echo $_POST['filterHide']['serial'][0]; echo '"></label></div>';
+				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="'; if (!empty($_POST['filterHide']['serial'][0])) echo htmlspecialchars($_POST['filterHide']['serial'][0]); echo '"></label></div>';
 				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input  class = "viewSort" onchange="checkAddress(this, \'viewSort\')" name = "lot" type="checkbox" form = "myform" value ="1"'; if (!empty($_POST['lotHide']) && $_POST['lotHide'] == 1) echo 'checked'; echo '>Количество</label>';
 				echo '<label class="filterInput"><input class = "viewSort" onchange="checkAddress(this, \'viewSort\')"  name = "lot" type="checkbox" form = "myform" value ="2"'; if (!empty($_POST['lotHide']) && $_POST['lotHide'] == 2 ) echo 'checked'; echo '>Склад</label></div>';
 				selectDB($link, "Тип", "type", "products");	
@@ -216,7 +216,7 @@ else
 								if ($i == 0)
 								$viewStockSer = "and (";
 								else $viewStockSer = $viewStockSer . " or ";
-								$viewStockSer = $viewStockSer . "`serial` LIKE '%".$_POST['filterHide']['serial'][$i]."%'";
+								$viewStockSer = $viewStockSer . "`serial` LIKE '%".mysqli_real_escape_string($link, $_POST['filterHide']['serial'][$i])."%'";
 								$i++;
 							}
 							$viewStockSer = $viewStockSer . ")";

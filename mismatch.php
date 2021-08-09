@@ -6,15 +6,12 @@ checkRoot($link, "mismatch");
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 
-if (!empty($_POST['serial']))
-	$_POST['serial'] = mysqli_real_escape_string($link, $_POST['serial']);
 if (!empty($_POST['savebtn']))
 {
-	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".$_POST['serial']."'), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'mismatch', '".$_POST['comment']."', NOW())";
+	$result = "INSERT into history (`uid`, `worker`, `type_write`, `comment`, `date`) values ((select uid from products where `serial` = '".mysqli_real_escape_string($link, $_POST['serial'])."'), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'mismatch', '".mysqli_real_escape_string($link, $_POST['comment'])."', NOW())";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table history:'  .mysqli_error($link));
-	$result = "UPDATE products set `mismatch` = 'yes' where `serial` = '".$_POST['serial']."'";
+	$result = "UPDATE products set `mismatch` = 'yes' where `serial` = '".mysqli_real_escape_string($link, $_POST['serial'])."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table products:'  .mysqli_error($link));
 	else $succ = 1;
@@ -39,7 +36,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="mismatch.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">Несоответствия</p>
 			<div class="serial_lot">
-			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo $_POST['serial']; ?>" required/> </div>
+			<div id = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial']) && empty($_POST['savebtn']) ) echo htmlspecialchars($_POST['serial']); ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" value="Далее" />
 			</div>
 			<div id = "contentOtk">
@@ -48,12 +45,12 @@ if (!empty($_POST['postFromMain']))
 				{
 					if (!empty($_POST['serial']))
 					{
-						$result = mysqli_query($link, "select name, type from products where serial = '".$_POST['serial']."'");
+						$result = mysqli_query($link, "select name, type from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
 							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
-							$result = mysqli_query($link, "select `date`, `comment` from `history` where `type_write` = 'mismatch' and uid = (select `uid` from products where serial = '".$_POST['serial']."') and comment != '' order by date desc");
+							$result = mysqli_query($link, "select `date`, `comment` from `history` where `type_write` = 'mismatch' and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') and comment != '' order by date desc");
 							$row = mysqli_fetch_array($result);
 							if (!empty($row[0]))
 							{

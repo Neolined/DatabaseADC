@@ -23,7 +23,7 @@ checkRoot($link, NULL);
 			echo '<input type = "hidden" name = "hiddenOrder" id = "hiddenOrder"  value = "';
 				echo htmlspecialchars($_POST['hiddenOrder']);
 			echo '"></input>';
-			$result = mysqli_query($link, 'select distinct `type` from list_of_products '.$_POST['hiddenOrder'].'');
+			$result = mysqli_query($link, 'select distinct `type` from list_of_products '.mysqli_real_escape_string($link, $_POST['hiddenOrder']).'');
 			$idCapt = '';
 			echo '<caption onclick = "tranPost(\'hiddenOrder\', \'order by `type` ';
 			if (!empty($_POST['hiddenOrder']) && $_POST['hiddenOrder'] == 'order by `type` asc')
@@ -63,9 +63,9 @@ checkRoot($link, NULL);
 				echo '\', \'myform\')"'.$idMainRow.'>'.$columnName[$i][0].'</td>';
 				echo '</tr>';
 				if (!empty($_POST[$columnName[$i][0]]))
-					$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".$columnName[$i][0]."' ".$_POST[$columnName[$i][0]]."");
+					$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".mysqli_real_escape_string($link, $columnName[$i][0])."' ".mysqli_real_escape_string($link, $_POST[$columnName[$i][0]])."");
 				else
-				$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".$columnName[$i][0]."'");
+				$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".mysqli_real_escape_string($link, $columnName[$i][0])."'");
 					while ($row = mysqli_fetch_row($query))
 						echo '<tr><td style = "background: beige !important;">'.$row[0].'</td></tr>';
 			}

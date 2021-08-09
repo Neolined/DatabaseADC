@@ -6,19 +6,17 @@ checkRoot($link, "shipment");
 mysqli_set_charset($link, 'utf8');
 if (!empty($_POST['savebtn']))
 {
-	$_POST['recipient'] = mysqli_real_escape_string($link, $_POST['recipient']);
-	$_POST['comment'] = mysqli_real_escape_string($link, $_POST['comment']);
-	$result = "UPDATE orders set `recipient` = '".$_POST['recipient']."', `shipped` = 'yes', `comment` = '".$_POST['comment']."' where `uid` = '".$_POST['yearHide']."".$_POST['orderHide']."'";
+	$result = "UPDATE orders set `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."', `shipped` = 'yes', `comment` = '".mysqli_real_escape_string($link, $_POST['comment'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['yearHide'])."".mysqli_real_escape_string($link, $_POST['orderHide'])."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
-	$result = "UPDATE products set `location` = 'shipped', `owner` = '".$_POST['recipient']."'".$_POST['str']."";
+	$result = "UPDATE products set `location` = 'shipped', `owner` = '".mysqli_real_escape_string($link, $_POST['recipient'])."'".mysqli_real_escape_string($link, $_POST['str'])."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
 	$result = "insert into history (`uid`, `worker`, `type_write`, `whom_order`, `order_from`, `comment`, `date`) values";
 	$i = 0;
 	while (!empty($_POST['orderArrHide'][$i]))
 	{
-		$result = $result . " ((select uid from products where `serial` = '".$_POST['orderArrHide'][$i]."'), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'shipping', '".$_POST['recipient']."', 'АДС', '".$_POST['comment']."', NOW())";
+		$result = $result . " ((select uid from products where `serial` = '".$_POST['orderArrHide'][$i]."'), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'shipping', '".mysqli_real_escape_string($link, $_POST['recipient'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."', NOW())";
 		$i++;
 		if (!empty($_POST['orderArrHide'][$i]))
 		$result = $result . ",";
@@ -63,11 +61,11 @@ if (!empty($_POST['savebtn']))
 							$_POST['year'] = $_POST['yearHide'];
 							$_POST['order'] = $_POST['orderHide'];
 						}
-						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".$_POST['year']."".$_POST['order']."'");
+						$result = mysqli_query($link, "select (uid) from orders where `uid` = '".mysqli_real_escape_string($link, $_POST['year'])."".mysqli_real_escape_string($link, $_POST['order'])."'");
 						$row = mysqli_num_rows($result);
 						if ($row != 0)
 						{
-							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".$_POST['year']."".$_POST['order']."'");
+							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".mysqli_real_escape_string($link, $_POST['year'])."".mysqli_real_escape_string($link, $_POST['order'])."'");
 							$row = mysqli_fetch_row($result);
 							if ($row[0] == 'yes')
 								$msgShip = 1;
