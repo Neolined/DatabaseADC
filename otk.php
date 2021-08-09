@@ -136,9 +136,9 @@ if (!empty($_POST['postFromMain']))
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 							echo '<input type="hidden" name="serialHide" value ="';
-              if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']);
-              else echo htmlspecialchars($_POST['serialHide']);
-              echo '">';
+							if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']);
+							else echo htmlspecialchars($_POST['serialHide']);
+							echo '">';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						

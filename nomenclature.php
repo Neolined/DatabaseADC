@@ -36,20 +36,20 @@ checkRoot($link, NULL);
 				echo 'asc';
 				$idCapt = 'id = \'activeColumnSortDesc\'';
 				}
-			echo '\', \'myform\')" '.$idCapt.'>Номенклатура</caption>';
+			echo '\', \'myform\')" '.htmlspecialchars($idCapt).'>Номенклатура</caption>';
 			$columnName = mysqli_fetch_all ($result);
 			$i = 0;
 			for ($i = 0; !empty($columnName[$i][0]); $i++)
 			{
-				echo '<input type = "hidden" name = "'.$columnName[$i][0].'" id = "'.$columnName[$i][0].'"';
+				echo '<input type = "hidden" name = "'. htmlspecialchars($columnName[$i][0]).'" id = "'. htmlspecialchars($columnName[$i][0]).'"';
 				if (!empty($_POST[$columnName[$i][0]]))
 				{
-					echo '<input type = "hidden" name = "'.$columnName[$i][0].'" id = "'.$columnName[$i][0].'" value = "'.htmlspecialchars($_POST[$columnName[$i][0]]).'" >';//для того, чтобы сохранять выбранную сортировку в массиве пост после обновления страницы
+					echo '<input type = "hidden" name = "'.htmlspecialchars($columnName[$i][0]).'" id = "'.htmlspecialchars($columnName[$i][0]).'" value = "'.htmlspecialchars($_POST[$columnName[$i][0]]).'" >';//для того, чтобы сохранять выбранную сортировку в массиве пост после обновления страницы
 				}
 				else
 					$_POST[$columnName[$i][0]] = "order by `name` asc";//сортировка по-умолчанию
 				echo '<tr>';
-				echo '<td onclick = "tranPost(\''.$columnName[$i][0].'\', \'order by `name` ';
+				echo '<td onclick = "tranPost(\''.htmlspecialchars($columnName[$i][0]).'\', \'order by `name` ';
 				if (!empty($_POST[$columnName[$i][0]]) && $_POST[$columnName[$i][0]] == 'order by `name` asc')
 				{
 					echo 'desc';
@@ -60,14 +60,14 @@ checkRoot($link, NULL);
 					echo 'asc';
 					$idMainRow = 'id = \'activeColumnSortDesc\'';
 					}
-				echo '\', \'myform\')"'.$idMainRow.'>'.$columnName[$i][0].'</td>';
+				echo '\', \'myform\')"'.htmlspecialchars($idMainRow).'>'.htmlspecialchars($columnName[$i][0]).'</td>';
 				echo '</tr>';
 				if (!empty($_POST[$columnName[$i][0]]))
 					$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".mysqli_real_escape_string($link, $columnName[$i][0])."' ".mysqli_real_escape_string($link, $_POST[$columnName[$i][0]])."");
 				else
 				$query = mysqli_query($link, "select `name` from list_of_products where `type` = '".mysqli_real_escape_string($link, $columnName[$i][0])."'");
 					while ($row = mysqli_fetch_row($query))
-						echo '<tr><td style = "background: beige !important;">'.$row[0].'</td></tr>';
+						echo '<tr><td style = "background: beige !important;">'.htmlspecialchars($row[0]).'</td></tr>';
 			}
 			?>
 		</form>
