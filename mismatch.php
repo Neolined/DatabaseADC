@@ -57,32 +57,32 @@ if (!empty($_POST['postFromMain']))
 							$defineRu = array("otk" => "ОТК", "mismatch" => "Несоответсвия", "repair" => "Ремонт", "ok" => "Успешно", "fail" => "Не успешно");
 							echo '<table class="tableMismatch">';
 							echo '<tr><td>Дата</td><td>Тип записи</td><td>Статус</td><td>Комментарий</td></tr>';
-							echo '<tr><td>'.$row[0].'</td><td>';
+							echo '<tr><td>'.htmlspecialchars($row[0]).'</td><td>';
 							if (isset($defineRu[$row[1]]))
 								echo $defineRu[$row[1]];
 							else
-								echo $row[1];
+								echo htmlspecialchars($row[1]);
 							echo '</td><td>';
 							if (isset($defineRu[$row[2]]))
 								echo $defineRu[$row[2]];
 							else 
-								echo $row[2];
+								echo htmlspecialchars($row[2]);
 							echo '</td><td>';
-							echo $row[3].'</td></tr>';
+							echo htmlspecialchars($row[3]).'</td></tr>';
 							while ($row = mysqli_fetch_row($result))
 							{
 								echo '<tr><td>'.$row[0].'</td><td>';
 							if (isset($defineRu[$row[1]]))
 								echo $defineRu[$row[1]];
 							else 
-								echo $row[1];
+								echo htmlspecialchars($row[1]);
 							echo '</td><td>';
 							if (isset($defineRu[$row[2]]))
 								echo $defineRu[$row[2]];
 							else 
-								echo $row[2];
+								echo htmlspecialchars($row[2]);
 							echo '</td><td>';
-								echo $row[3].'</td></tr>';
+								echo htmlspecialchars($row[3]).'</td></tr>';
 							}
 							echo '</table>';
 							}
