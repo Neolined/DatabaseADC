@@ -250,24 +250,24 @@ function paintRow($result, $array, $posthist, $pageName)
 			{
 				echo '<td';
 				if ($pageName == "otk" && $array[$i] == 'history')
-					echo ' id = "historyOtk" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.$array[$i].'Post\')">Показать</td>';
+					echo ' id = "historyOtk" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.htmlspecialchars($array[$i]).'Post\')">Показать</td>';
 				else if (!empty($replace[$row[$array[$i]]]))
 				{
 					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
-						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
+						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.htmlspecialchars($array[$i]).'Inp\', \''.htmlspecialchars($row["serial"]).'\', \''.htmlspecialchars($array[$i]).'Post\')">'.$replace[$row[$array[$i]]].'</a>';
 					else if ($pageName == "otk" && $array[$i] == 'mismatch')
-						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.$array[$i].'Inp\', \''.$row["serial"].'\', \''.$array[$i].'Post\')">'.$replace[$row[$array[$i]]].'</a>';
+						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.htmlspecialchars($array[$i]).'Inp\', \''.htmlspecialchars($row["serial"]).'\', \''.htmlspecialchars($array[$i]).'Post\')">'.$replace[$row[$array[$i]]].'</a>';
 					else
-						echo '>'.$replace[$row[$array[$i]]];
+						echo '>'.htmlspecialchars($replace[$row[$array[$i]]]);
 				}
 				else 
 				{
 					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
-					echo '><a href="#" id="form_submit" onclick = "tranPost("'.$array[$i].'", '.$row["serial"].')">'.$row[$array[$i]].'</a>';
+					echo '><a href="#" id="form_submit" onclick = "tranPost("'.htmlspecialchars($array[$i]).'", '.htmlspecialchars($row["serial"]).')">'.htmlspecialchars($row[$array[$i]]).'</a>';
 					else if ($array[$i] == 'serial' && $posthist == true)
-						echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['UID'].'\', \'myform\')">'.$row[$array[$i]].'</td>';
+						echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['UID'].'\', \'myform\')">'.htmlspecialchars($row[$array[$i]]).'</td>';
 					else 
-						echo '>'.$row[$array[$i]];
+						echo '>'.htmlspecialchars($row[$array[$i]]);
 				}
 				echo '</td>';
 				$i++;
