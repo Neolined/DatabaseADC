@@ -78,7 +78,7 @@ if (!empty($_POST['postFromMain']))
 		<form action="otk.php" method="post" align="left" class="form1">
 			<p id="priem_name" align="center">ОТК</p>
 			<div class="serial_lot">
-			<div class = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo $_POST['serial']; elseif (!empty($_POST['serialHide'])) echo $_POST['serialHide']; ?>" required/> </div>
+			<div class = "inputLabel"><label>Серийный номер</label><input type="text" name="serial"  maxlength="10" form = "nextForm" <?php if (!empty($_POST['savebtn'])) echo 'onclick = "hideotk()"';?> oninput="hideotk()" value = "<?php if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']); elseif (!empty($_POST['serialHide'])) echo htmlspecialchars($_POST['serialHide']); ?>" required/> </div>
 			<input type="submit" id="nextbtn" name = "nextbtn" form = "nextForm" value="Далее" />
 			</div>
 			<div id = "contentOtk">
