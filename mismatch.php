@@ -49,7 +49,7 @@ if (!empty($_POST['postFromMain']))
 						$row = mysqli_fetch_row($result);
 						if (!empty($row))
 						{
-							echo '<p id = "infoBoard">'.$row[0].' '.$row[1].'</p>';
+							echo '<p id = "infoBoard">'.htmlspecialchars($row[0]).' '.htmlspecialchars($row[1]).'</p>';
 							$result = mysqli_query($link, "select `date`, `type_write`, `status`, `comment` from `history` where (`type_write` = 'otk' or `type_write` = 'mismatch' or `type_write` = 'repair') and uid = (select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."') order by date desc");
 							if (mysqli_num_rows($result) > 0)
 							{
@@ -59,14 +59,14 @@ if (!empty($_POST['postFromMain']))
 							echo '<tr><td>Дата</td><td>Тип записи</td><td>Статус</td><td>Комментарий</td></tr>';
 							while ($row = mysqli_fetch_row($result))
 							{
-								echo '<tr><td>'.$row[0].'</td><td>';
+								echo '<tr><td>'.htmlspecialchars($row[0]).'</td><td>';
 							if (isset($defineRu[$row[1]]))
-								echo $defineRu[$row[1]];
+								echo htmlspecialchars($defineRu[$row[1]]);
 							else 
 								echo htmlspecialchars($row[1]);
 							echo '</td><td>';
 							if (isset($defineRu[$row[2]]))
-								echo $defineRu[$row[2]];
+								echo htmlspecialchars($defineRu[$row[2]]);
 							else 
 								echo htmlspecialchars($row[2]);
 							echo '</td><td>';
