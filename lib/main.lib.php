@@ -158,9 +158,9 @@ function requestDB($index, $link) //create request for DB from main
 				if ($index[$j] == "serial")
 					$str = $str. "`" .$index[$j]. "` LIKE '%" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "%'";
 				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'no')
-				$str = $str. "repair = 'no'";
+				$str = $str. "repair = 'NULL'";
 				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'yes')
-				$str = $str. "repair != 'no'";
+				$str = $str. "repair != 'NULL'";
 				else if ($index[$j] == "comment")
 				$str = $str. "`" .$index[$j]. "` != '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date1")
@@ -232,7 +232,7 @@ function error403($link){
 		</html>';
 	die;
 }
-function paintRow($result, $array, $posthist, $pageName)
+function paintRow($link, $result, $array, $posthist, $pageName)
 {	
 	$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
@@ -253,7 +253,7 @@ function paintRow($result, $array, $posthist, $pageName)
 					echo ' id = "historyOtk" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.htmlspecialchars($array[$i]).'Post\')">Показать</td>';
 				else if (!empty($replace[$row[$array[$i]]]))
 				{
-					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'mismatch'))
 						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.htmlspecialchars($array[$i]).'Inp\', \''.htmlspecialchars($row["serial"]).'\', \''.htmlspecialchars($array[$i]).'Post\')">'.$replace[$row[$array[$i]]].'</a>';
 					else if ($pageName == "otk" && $array[$i] == 'mismatch')
 						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.htmlspecialchars($array[$i]).'Inp\', \''.htmlspecialchars($row["serial"]).'\', \''.htmlspecialchars($array[$i]).'Post\')">'.$replace[$row[$array[$i]]].'</a>';
@@ -262,8 +262,22 @@ function paintRow($result, $array, $posthist, $pageName)
 				}
 				else 
 				{
-					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'repair' || $array[$i] == 'mismatch'))
+					if ($posthist == true && $pageName == "main" && ($array[$i] == 'location' || $array[$i] == 'otk' || $array[$i] == 'testing' || $array[$i] == 'mismatch'))
 					echo '><a href="#" id="form_submit" onclick = "tranPost("'.htmlspecialchars($array[$i]).'", '.htmlspecialchars($row["serial"]).')">'.htmlspecialchars($row[$array[$i]]).'</a>';
+					else if ($posthist == true && $pageName == "main" && $array[$i] == 'repair')
+					{
+						echo '><a href="#" id="form_submit" onclick = "tranPost(\''.htmlspecialchars($array[$i]).'Inp\', \''.htmlspecialchars($row["serial"]).'\', \''.htmlspecialchars($array[$i]).'Post\')">';
+						if (empty($row[$array[$i]]))
+							echo 'Нет';
+						else
+						{
+							$query = mysqli_query($link, "select worker from users where user = '".mysqli_real_escape_string($link, $row[$array[$i]])."'");
+							$queryRow = mysqli_fetch_row($query);
+							echo htmlspecialchars($queryRow[0]);
+						}
+						echo '</a>';
+						
+					}
 					else if ($array[$i] == 'serial' && $posthist == true)
 						echo ' id = "history" onclick = "tranPost(\'history\', \''.$row['UID'].'\', \'myform\')">'.htmlspecialchars($row[$array[$i]]).'</td>';
 					else 

@@ -62,7 +62,7 @@ if (!empty($_POST['postFromMain']))
 							}
 							echo '</tr>';
 							echo "<tr>";
-							paintRow($result ,$columnName, false, "testing");
+							paintRow($link, $result, $columnName, false, "testing");
 							echo "</tr>";
 							echo '</table>';
 							$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
@@ -77,7 +77,7 @@ if (!empty($_POST['postFromMain']))
 							}
 							echo '</tr>';
 							echo "<tr>";
-							paintRow($result ,$columnName, false, false, "testing");
+							paintRow($link, $result ,$columnName, false, "testing");
 							echo "</tr>";
 							echo '</table>';
 							echo '<input type = "hidden" name = "uid" value = "'.htmlspecialchars($row[0]).'">';

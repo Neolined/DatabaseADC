@@ -110,10 +110,10 @@ if (!empty($_POST['postFromMain']))
 							echo '<tr><td>Тип</td><td>Наименование</td><td>Статус ОТК</td><td>Тестирование</td><td>Несоответствия</td><td>История</td></tr>';
 							if (!empty($_POST['serial']))
 						 		$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`, `mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-             				else if (!empty($_POST['serialHide']))
+             				if (!empty($_POST['serialHide']))
              					$result = mysqli_query($link, "select `uid`, `type`, `name`, `otk`, `testing`,`mismatch`, `serial` from products where serial = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'");
 							$columnName = array("type", "name", "otk", "testing", "mismatch", "history");
-							paintRow($result, $columnName, false, "otk");
+							paintRow($link, $result, $columnName, false, "otk");
 							echo '</table>';
 							$result = mysqli_query($link, "select `uid`, `worker`, `date`, `status`, `comment` from history where (uid = '".$row['uid']."') and (`type_write` = 'otk')");
 							$num = mysqli_num_rows($result);
@@ -124,8 +124,7 @@ if (!empty($_POST['postFromMain']))
 								echo '<caption> История ОТК</caption>';
 								echo '<tr><td>UID</td><td>Сотрудник</td><td>Дата</td><td>Статус</td><td class = "comment">Комментарий</td></tr>';
 								$columnName = array("uid", "worker", "date", "status", "comment");
-								paintRow($result, $columnName, false, false);
-								
+								paintRow($link, $result, $columnName, false, "otk");
 								echo '</table>';
 							}
 							echo '<select class="select" name="status" required>';
@@ -136,9 +135,9 @@ if (!empty($_POST['postFromMain']))
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name = "savebtn" value="Сохранить данные"/>';
 							echo '<input type="hidden" name="serialHide" value ="';
-							if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']);
-							else echo htmlspecialchars($_POST['serialHide']);
-							echo '">';
+              if (!empty($_POST['serial'])) echo htmlspecialchars($_POST['serial']);
+              else echo htmlspecialchars($_POST['serialHide']);
+              echo '">';
 						}
 						else echo "<p class=\"msg\">Данного изделия не существует в базе</p>";
 						

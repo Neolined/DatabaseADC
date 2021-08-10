@@ -38,7 +38,7 @@ if (!empty($_POST['endRepair']))
 {
 	if (!empty($_POST['status']))
 	{
-		$result = "UPDATE products set `repair` = 'no', `location` = 'stock' where `uid` = '".mysqli_real_escape_string($link, $_POST['uid'])."'";
+		$result = "UPDATE products set `repair` = NULL, `location` = 'stock' where `uid` = '".mysqli_real_escape_string($link, $_POST['uid'])."'";
 		if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 		if ($_POST['status'] == 'ok')
@@ -108,7 +108,7 @@ if (!empty($_POST['postFromMain']))
 						echo '<td>'.$row['type'].'</td>';
 						echo '<td>'.$row['name'].'</td>';
 						echo '<td>';
-						if ($row['repair'] != 'no')
+						if ($row['repair'] != NULL)
 						{
 							$result = mysqli_query($link, "select `worker` from users where user = '".$row['repair']."'");
 							$usr = mysqli_fetch_row($result);
@@ -142,11 +142,10 @@ if (!empty($_POST['postFromMain']))
 							}
 							echo '</table>';
 						}
-						if ($access == 'no')
-						echo '<input type="submit" class = "buttons" id="acceptbtn" name = "acceptbtn" value="Принять в ремонт"/>';
+						if ($access == NULL)
+							echo '<input type="submit" class = "buttons" id="acceptbtn" name = "acceptbtn" value="Принять в ремонт"/>';
 						else if ($access != $_SESSION['user'])
-						echo "<p class=\"msg\">Изделие уже в ремонте</p>";
-
+							echo "<p class=\"msg\">Изделие уже в ремонте</p>";
 						if ((!empty($_POST['acceptbtn']) || !empty($_POST['diagBtn']) || !empty($_POST['repairBtn'])) || $access == $_SESSION['user'])
 						{
 							

@@ -28,7 +28,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 				echo '</tr>';
 				echo "<tr>";
 				$result = mysqli_query($link, "select * from orders");
-				paintRowOrder($result, $columnName, $replace, false, "orders");
+				paintRowOrder($result, $columnName, $replace, false);
 				echo "</tr>";
 				echo "<tr style = 'height: 0.5em;' ></tr>";
 			?>	

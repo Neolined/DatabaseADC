@@ -183,7 +183,7 @@ else
 						if(!$result)
 							die ('Ошибка запроса в Продукты: mysqli_query'.mysqli_error($link));
 						}
-						paintRow($result, $columnName, empty($_POST['history']), "main");
+						paintRow($link, $result, $columnName, empty($_POST['history']), "main");
 						mysqli_free_result($result);
 					}
 					else
