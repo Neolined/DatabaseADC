@@ -20,7 +20,7 @@ if (empty($_POST['filter']['date2'][0]))
 	unset($_POST['filter']['date2']);
 if (!empty($_POST['applyFilter']) && (empty($_POST['filter'])) && (empty($_POST['lot']) && (empty($_POST['order']))))
 header('Location: clearmain.php');
-$columnName = array ( "UID", "type", "name", "perfomance", "serial", "date", "owner", "location", "otk", "testing", "repair", "mismatch");
+$columnName = array ( "UID", "type", "name", "serial", "date", "owner", "location", "otk", "testing", "repair", "mismatch");
 $replace = array ("worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
 "comment" => "Комментарий", "protocol" => "Протокол", "location" => "Местоположение");

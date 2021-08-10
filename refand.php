@@ -27,7 +27,7 @@ if (!empty($_POST['savebtN']))
 		$error_n1 = mysqli_num_rows($result);
 		if ($error_n1 > 0)
 		{
-			$result = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['perfomance'])."', '".mysqli_real_escape_string($link, $_POST['serialHide'])."', '".mysqli_real_escape_string($link, $_POST['location'])."', 'АДС', NOW())";
+			$result = "INSERT INTO products (`type`, `name`, `serial`, `location`, `owner`,  `date`) VALUES ('".mysqli_real_escape_string($link, $_POST['type'])."', '".mysqli_real_escape_string($link, $_POST['name'])."', '".mysqli_real_escape_string($link, $_POST['serialHide'])."', '".mysqli_real_escape_string($link, $_POST['location'])."', 'АДС', NOW())";
 			if (mysqli_query($link, $result))
 				$id = (mysqli_insert_id($link));
 			else 
@@ -71,7 +71,7 @@ if (!empty($_POST['postFromMain']))
 				if (!empty($_POST['serial']))
 					echo htmlspecialchars($_POST['serial']);
 				echo '">';
-				$arrInput = array("order_from", "type", "name", "perfomance", "comment", "location");
+				$arrInput = array("order_from", "type", "name", "comment", "location");
 				$i = 0;
 				while (isset($arrInput[$i]))
 				{
@@ -113,7 +113,6 @@ if (!empty($_POST['postFromMain']))
 								
 								echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required '; if (!empty($_POST['typeHide'])) echo 'value = "'.$_POST['typeHide'].'"'; echo '></input></div>';
 								echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required '; if (!empty($_POST['nameHide'])) echo 'value = "'.$_POST['nameHide'].'"'; echo '></input></div>';
-								echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" id = "perfomance" maxlength="100" '; if (!empty($_POST['perfomanceHide'])) echo 'value = "'.htmlspecialchars($_POST['perfomanceHide']).'"'; echo '></input></div>';
 								echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" id = "order_from" maxlength="100" required '; if (!empty($_POST['order_fromHide'])) echo 'value = "'.htmlspecialchars($_POST['order_fromHide']).'"'; echo '></input></div>';
 								echo '<select class="select" name="location" id = "location" required>';
 								echo '<option value = "">Выберите местоположение</option>';
@@ -136,7 +135,6 @@ if (!empty($_POST['postFromMain']))
 				{
 					echo '<div id = "inp"> <label>Тип</label><input id = "type" type="text" name="type" maxlength="100" required '; if (!empty($_POST['typeHide'])) echo 'value = "'.$_POST['typeHide'].'"'; echo '></input></div>';
 					echo '<div id = "inp"> <label>Название изделия</label><input id = "name" type="text" name="name" maxlength="100" required '; if (!empty($_POST['nameHide'])) echo 'value = "'.$_POST['nameHide'].'"'; echo '></input></div>';
-					echo '<div id = "inp"> <label>Исполнение</label><input type="text" name="perfomance" id = "perfomance" maxlength="100" '; if (!empty($_POST['perfomanceHide'])) echo 'value = "'.htmlspecialchars($_POST['perfomanceHide']).'"'; echo '></input></div>';
 					echo '<div id = "inp"> <label>От кого</label><input type="text" name="order_from" id = "order_from" maxlength="100" required '; if (!empty($_POST['order_fromHide'])) echo 'value = "'.htmlspecialchars($_POST['order_fromHide']).'"'; echo '></input></div>';
 					echo '<select class="select" name="location" id = "location" required>';
 					echo '<option value = "">Выберите местоположение</option>';

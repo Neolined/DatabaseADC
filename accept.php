@@ -57,7 +57,7 @@ if (!empty ($_POST['sumb']))
 								$suc = 1;
 								while ($lot > 0)
 								{
-									$query = "INSERT INTO products (`type`, `name`, `perfomance`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".mysqli_real_escape_string($link, $_POST['perfomance'])."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
+									$query = "INSERT INTO products (`type`, `name`, `serial`, `location`, `owner`, `otk`, `date`) VALUES ('".$_POST['type']."', '".$_POST['name']."', '".$str."', 'stock', 'АДС', 'nocheck', NOW())";
 									if (mysqli_query($link, $query))
 										$id = (mysqli_insert_id($link));
 									else 
@@ -99,8 +99,6 @@ if (!empty ($_POST['sumb']))
 			<input type="reset" id = "clearFormAccept" position= "bottom" value="Очистить данные формы"/>
 			<label>Тип</label><input <?php if ($error_t1 == 0) echo "class=\"color_err1\"";?> type="text" id = "type" name="type" maxlength="100" value="<?php if (!empty($_POST['type'])) echo htmlspecialchars($_POST['type']); ?>" required/>
 			<label>Название изделия</label><input <?php if ($error_n1 == 0) echo "class=\"color_err1\"";?> id = "name" type="text" name="name" maxlength="100" value="<?php if (!empty($_POST['name'])) echo htmlspecialchars($_POST['name']); ?>" required/>
-			<label>Исполнение</label><input type="text" id = "perfomance" name="perfomance" maxlength="100" value="<?php if (!empty($_POST['perfomance'])) echo htmlspecialchars($_POST['perfomance']); ?>">
-			
 			<div class="serial_lot">
 			<div><label>Серийный номер</label><input <?php if (($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) echo "class=\"color_err\""; else echo "class=\"serial\""; ?> value="<?php if (($error_s1>0) || ($error_s4>0) || ($error_n1 == 0)) echo $_POST['serial']; if ($error_s2>0) echo "Системная ошибка"; if ($error_s3>0) echo $str; ?>" type="text" name="serial" maxlength="100" required/> </div>
 			<div><label>Количество</label><input class="lot" type="text" name="lot" maxlength="3" value="<?php if ((($error_n1 == 0) || ($error_s1 > 0) || ($error_s2 > 0) || ($error_s3 > 0)||($error_s4 > 0)) && (!empty($_POST['lot']))) echo $_POST['lot']; else echo '1'; ?>"/></div>

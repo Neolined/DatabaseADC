@@ -53,8 +53,8 @@ if (!empty($_POST['postFromMain']))
 							//Рисую таблицу с информацией о типе, имени, ОТК
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
-							$mass = array('UID', 'Тип', 'Имя', 'Исполнение', 'Серийный номер', 'Дата');
-							$columnName = array ( "UID", "type", "name", "perfomance", "serial", "date");
+							$mass = array('UID', 'Тип', 'Имя', 'Серийный номер', 'Дата');
+							$columnName = array ( "UID", "type", "name", "serial", "date");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
