@@ -102,6 +102,12 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 			echo 'Ремонт';
 			else if ($row[$option] == 'work')
 			echo 'Производство';
+			else if ($option == 'repair')
+				{
+					$query = mysqli_query($link, "select worker from users where user = '".mysqli_real_escape_string($link, $row[$option])."'");
+					$rowWorker = mysqli_fetch_row($query);
+					echo htmlspecialchars($rowWorker[0]);
+				}
 			else echo $row[$option];
 			echo '</label>';
 			$num--;
@@ -116,7 +122,7 @@ function sortSelect($columnName) //create sort for table
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тест", "mismatch" => "Несоотв.",
 "shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Имя", "perfomance" => "Исп.", "serial" => "S/N",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Имя", "serial" => "S/N",
 "owner" => "Владелец", "location" => "Местопол.", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
@@ -157,10 +163,6 @@ function requestDB($index, $link) //create request for DB from main
 			{
 				if ($index[$j] == "serial")
 					$str = $str. "`" .$index[$j]. "` LIKE '%" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "%'";
-				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'no')
-				$str = $str. "repair = 'NULL'";
-				else if ($index[$j] == "repair" && $_POST['filter'][$index[$j]][$i] == 'yes')
-				$str = $str. "repair != 'NULL'";
 				else if ($index[$j] == "comment")
 				$str = $str. "`" .$index[$j]. "` != '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date1")
@@ -238,7 +240,7 @@ function paintRow($link, $result, $array, $posthist, $pageName)
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
 "shipment" => "Отгрузка", "shipping" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус", "location" => "Местоположение",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "perfomance" => "Исполнение", "serial" => "Серийный номер",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "serial" => "Серийный номер",
 "owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 	if(mysqli_num_rows($result) != 0)
 	{

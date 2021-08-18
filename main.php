@@ -122,7 +122,6 @@ else
 				selectDB($link, "Название", "name", "products");
 				selectDB($link, "Местоположение", "location", "products");
 				selectDB($link, "Владелец", "owner", "products");
-				selectDB($link, "ОТК", "otk", "products");
 				selectDB($link, "Тестирование", "testing", "products");
 				selectDB($link, "В ремонте", "repair", "products");
 				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input class = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_POST['filterHide']['date1'][0])) echo $_POST['filterHide']['date1'][0];
