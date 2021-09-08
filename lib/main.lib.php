@@ -273,9 +273,11 @@ function paintRow($link, $result, $array, $posthist, $pageName)
 							echo 'Нет';
 						else
 						{
+							echo '<div title = "'.htmlspecialchars($row[$array[$i]]).'">';
 							$query = mysqli_query($link, "select worker from users where user = '".mysqli_real_escape_string($link, $row[$array[$i]])."'");
 							$queryRow = mysqli_fetch_row($query);
 							echo htmlspecialchars($queryRow[0]);
+							echo '</div>';
 						}
 						echo '</a>';
 						
