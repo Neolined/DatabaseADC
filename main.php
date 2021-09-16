@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-checkRoot($link, NULL);
+checkRoot($link, NULL, false);
 if (!empty($_POST['postFromOrders']))
 {
 	$result = mysqli_query($link, "select replace (`composition`,' ','') from `orders` where `uid` = '".mysqli_real_escape_string($link, $_POST['postFromOrders'])."'");

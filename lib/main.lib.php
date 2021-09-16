@@ -188,7 +188,7 @@ function requestDB($index, $link) //create request for DB from main
 	
 	return($str);
 }
-function checkRoot($link, $root) //check root from database
+function checkRoot($link, $root, $orders) //check root from database
 {
     if (empty($_SESSION))
     error403($link);
@@ -198,11 +198,23 @@ function checkRoot($link, $root) //check root from database
     error403($link);
     $result = mysqli_query($link, "select `root` from `users` where `user` = '".mysqli_real_escape_string($link, $_SESSION['user'])."'");
     $rootdb = mysqli_fetch_row($result);
-    if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "orders.php") || strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
+    if (strpos($_SERVER['SCRIPT_NAME'], "main.php") || strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
     {
         if ($rootdb[0] == "")
         error403($link);
     }
+	else if ($orders == true){
+		for ($i = 0; $i < count($root); $i++){
+			if (strpos($rootdb[0], $root[$i]) == true){
+				$return = $root[$i];
+				break;
+			}
+		}
+		if (isset($return))
+			return($return);
+		else
+			return("aaa");
+	}
     else if (!(strpos($rootdb[0], $root)!==false))
         error403($link);
 }
@@ -305,7 +317,9 @@ function paintRowOrder($result, $array, $replace, $posthist)
 		while (!empty($array[$i]))
 		{
 			echo '<td>';
-			if ($array[$i] == 'composition' && (mb_substr($row[$array[$i]], -1) == ','))
+			if ($array[$i] == 'id')//добавить проверку прав и статуса заказа, если статус активен, то разрешается редактировать
+				echo '<div class = "orderItemsView">'.$row[$array[$i]].'</div>';
+			else if ($array[$i] == 'composition' && (mb_substr($row[$array[$i]], -1) == ','))
 			echo mb_substr($row[$array[$i]], 0, -1);
 			else if (!empty($replace[$row[$array[$i]]]))
 			echo $replace[$row[$array[$i]]];
@@ -315,6 +329,7 @@ function paintRowOrder($result, $array, $replace, $posthist)
 			echo '</td>';
 			$i++;
 		}
+		echo "</tr>";
 	}
 }
 function crHiddenInpPostFilters($postFilters)
