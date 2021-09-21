@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-$root = array(0 => "ordercreate", 1 => "accept");
+$root = array(0 => "ok", 1 => "accept");//заменить на реальные права
 $root = checkRoot($link, $root, true);
 $columnName = array ( "id", "date", "deadline", "status", "recipient");
 $columnNameRu = array ( "№ Заказа", "Дата создания", "Срок исполнения", "Статус", "Получатель");
@@ -34,11 +34,12 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						echo '</div>';
 						echo '<div id = "contCreateOrder">';
 						echo '</div>';
-						echo '<button type = "button" id = "addBtn"><p>+</p><p id = "addItemsCreateOrder">Добавить</p></button>';
-						if ($root == "ordercreate" || $root ==  "accept"){//заменить на реальные права
-							echo '<input class = "orders_hide_input" name = "action"></input>';
-							echo '<div class = "inputLabel"><button type = "submit" id="savedata">Сохранить данные</button></div>';
-						}
+						if ($root ==  "accept")//заменить на реальные права того, кто создает заказ
+							echo '<button type = "button" id = "addBtn"><p>+</p><p id = "addItemsCreateOrder">Добавить</p></button>';
+						if ($root == "otk")//заменить на реальные права того, кто принимает заказ и вписывает серийные номера
+							echo '<div class = "inputLabel"><button type = "button" id = "orders_acceptBtn" style = "display:none">Принять</button></div>';
+						echo '<input class = "orders_hide_input" name = "action"></input>';
+						echo '<div class = "inputLabel"><button type = "submit" id="savedata" style = "display:none">Сохранить данные</button></div>';
 						echo "<p class=\"msg_orderItems\" id = \"err1\" style = \"display:none\">Красным цветом подсвечены поля с недопустимым значением</p>";
 						echo "<p class=\"msg_orderItems\" id = \"err2\" style = \"display:none\">Серийный номер уже существует в базе</p>";
 						echo "<p class=\"msg_orderItems\" id = \"err3\" style = \"display:none\">В базе существует несколько таких серийных номеров.<br>Просьба обратиться к разработчику</p>";
@@ -50,7 +51,8 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			<table class="table" align="center" style = "width:unset">
 				<caption>Заказы</caption>
 				<?php
-					echo '<tr><td colspan = "5" id = "createNewOrder"><span id = "createNewOrderPlus">+</span><span id = "createNewOrderText">Создать заказ<span></td></tr>';
+					if ($root ==  "accept")//заменить на реальные права того, кто создает заказ
+						echo '<tr><td colspan = "5" id = "createNewOrder"><span id = "createNewOrderPlus">+</span><span id = "createNewOrderText">Создать заказ<span></td></tr>';
 					echo '<tr>';
 					for ($i = 0; (!empty($columnNameRu[$i])); $i++)
 						echo '<td>'.$columnNameRu[$i].'</td>';
@@ -107,34 +109,54 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			);
 		}
 	})
-	function addItems(val){
-		if (val == false){
-			val = [];
-			val[0] = '';
-			val[1] = '';
-			val[2] = 1;
+	function addItems(val, option){
+		if (option == 0){
+			$("#contCreateOrder").append('<div class = "serial_lot"><div class = "inputLabel">\
+			<label>Тип</label><input style="width: 12em;" type="text" class = "type" name = "type[]" maxlength = "100" value = "'+val[0]+'" required/></div>\
+			<div class = "inputLabel"><label>Название</label><input type = "text" class = "name" name = "name[]" maxlength = "100" value = "'+val[1]+'" required/></div>\
+			<div class = "inputLabel"><label id = "lotCrOrderLab">шт.</label><input class="lotCrOrder" type="text" name="lot[]" maxlength="3" value = "'+val[2]+'" required></div>\
+			</div>');
 		}
+		else if (option == 1){
+			if (val == false){
+				val = [];
+				val[0] = '';
+				val[1] = '';
+				val[2] = 1;
+			}
+			$("#contCreateOrder").append('<div class = "serial_lot"><div class = "inputLabel">\
+			<label>Тип</label><input style="width: 12em;" type="text" class = "type" name = "type[]" maxlength = "100" value = "'+val[0]+'" required/></div>\
+			<div class = "inputLabel"><label>Название</label><input type = "text" class = "name" name = "name[]" maxlength = "100" value = "'+val[1]+'" required/></div>\
+			<div class = "inputLabel"><label id = "lotCrOrderLab">шт.</label><input class="lotCrOrder" type="text" name="lot[]" maxlength="3" value = "'+val[2]+'" required></div>\
+			<div class = "inputLabel"><button type = "button" class = "delBtn"><img  id="createOrderBascketImg" src="images/basket.png" align="center"></button></div>\
+			</div>');
+			if ($("#contCreateOrder .serial_lot").eq(-1).index() == 0)
+				$("#contCreateOrder .serial_lot:eq(0) button").css({'display':'none'});
+			else if ($("#contCreateOrder .serial_lot:eq(0) button").css('display') == 'none')
+				$("#contCreateOrder .serial_lot:eq(0) button").css({'display':'block'});
+		}
+		else if(option == 2){
+		if (val[2] == null)
+			val[2] = '';
 		$("#contCreateOrder").append('<div class = "serial_lot"><div class = "inputLabel">\
-		<label>Тип</label><input style="width: 12em;" type="text" class = "type" name = "type[]" maxlength = "100" value = "'+val[0]+'" required/></div>\
-		<div class = "inputLabel"><label>Название</label><input type = "text" class = "name" name = "name[]" maxlength = "100" value = "'+val[1]+'" required/></div>\
-		<div class = "inputLabel"><label id = "lotCrOrderLab">шт.</label><input class="lotCrOrder" type="text" name="lot[]" maxlength="3" value = "'+val[2]+'" required></div>\
-		<div class = "inputLabel"><button type = "button" class = "delBtn"><img  id="createOrderBascketImg" src="images/basket.png" align="center"></button></div>\
-		</div>');
-		if ($("#contCreateOrder .serial_lot").eq(-1).index() == 0)
-			$("#contCreateOrder .serial_lot:eq(0) button").css({'display':'none'});
-		else if ($("#contCreateOrder .serial_lot:eq(0) button").css('display') == 'none')
-			$("#contCreateOrder .serial_lot:eq(0) button").css({'display':'block'});
+			<label>Тип</label><input style="width: 12em;" type="text" class = "type" name = "type[]" maxlength = "100" value = "'+val[0]+'" readonly required/></div>\
+			<div class = "inputLabel"><label>Название</label><input type = "text" class = "name" name = "name[]" maxlength = "100" value = "'+val[1]+'" readonly required/></div>\
+			<div class = "inputLabel"><label>Серийный номер</label><input type = "text" class = "serial" name = "serial[]" maxlength = "100" value = "'+val[2]+'" required/></div>\
+			</div>');
+		}
+
 	}
 	$("#addBtn").click(function (){
-		addItems(false);
+		addItems(false, 1);
 	});
 	$(document).on("focus", "input.lotCrOrder", function (){
 		$(this).val('');
 	});
 	$(document).on("click", "#createNewOrder", function(){
-		addItems(false);
-		$(".orders_hide_input").val('save');
+		addItems(false, 1);
+		$(".orders_hide_input").val('create');
 		$("#createOrderForm").css({"display":"block"});
+		$("#savedata").css({"display":"block"});
 	})
 	function show_item(id, status){
 		if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
@@ -155,6 +177,8 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$(".order, .deadline, .recipient").val("");
 		$(".order, .deadline, .recipient").prop("readonly", true);
 		$('input').css({"border": "1px solid #CED4DA"});
+		$("#savedata").css({"display":"none"});
+		$("#orders_acceptBtn").css({"display":"none"});
 	});
 	$(document).on("click", ".orderItemsView", function(){
 		indexThisRow = $(this).parent().parent().index();
@@ -168,22 +192,64 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 				jsonData = JSON.parse(response);
 				if (jsonData.user == 1){
 					for(i = 0; i != jsonData.items.length; i++)
-						addItems(jsonData.items[i]);
+						addItems(jsonData.items[i], 1);
 					if (jsonData.status == 'created'){
 						$("#addBtn, #savedata").css({"display":"block"});
-						$("input").prop("readonly", false);
+						$(".").prop("readonly", false);
 					}
 					else{
 						$("#addBtn, .delBtn, #savedata").css({"display":"none"});
 						$("input").prop("readonly", true);
 					}
 				}
+				else if (jsonData.user == 2 && jsonData.status == "created"){
+					for(i = 0; i != jsonData.items.length; i++)
+						addItems(jsonData.items[i], 0);
+					$("input").prop("readonly", true);
+					$("#orders_acceptBtn").css({"display":"block"});
+				}
+				else if (jsonData.user == 2 && jsonData.status == "accept"){
+					for(i = 0; i != jsonData.items.length; i++)
+						addItems(jsonData.items[i], 2);
+					$("#savedata").css({"display":"block"});
+				}
 				$(".year").val($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(0,4));
 				$(".order").val($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(4,7));
 				$(".deadline").val($(".table tr:eq("+indexThisRow+") td:eq(2)").text());
 				$(".recipient").val($(".table tr:eq("+indexThisRow+") td:eq(4)").text());
-				$(".order, .deadline, .recipient").prop("readonly", true);
 				$("#createOrderForm").css({"display":"block"});
+			}
+		})
+	})
+	$("#orders_acceptBtn").on("click", function(){
+		$.ajax({
+			type: "POST",
+			url: 'handler.php',
+			data: {"serial":$(".year").val()+$(".order").val(),
+			"action":"accept",
+			},
+			success: function(response){
+				console.log(response);
+				var jsonData = JSON.parse(response);
+				if (jsonData.accept == 'ok')
+				{
+					$("#orders_acceptBtn").css({"display":"none"});
+					$("#savedata").css({"display":"block"});
+					$.ajax({
+						type: "POST",
+						url: "ordersItemsView.php",
+						data: {"serial":$(".year").val()+$(".order").val()},
+						success: function(response){
+							console.log(response);
+							jsonData = JSON.parse(response);
+							if (jsonData.user == 2 && jsonData.status == "accept"){
+								$("#contCreateOrder").children().remove();
+								for(i = 0; i != jsonData.items.length; i++)
+									addItems(jsonData.items[i], 2);
+							}
+						}
+					})
+				}
 			}
 		})
 	})

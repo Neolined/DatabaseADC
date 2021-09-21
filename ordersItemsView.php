@@ -2,9 +2,8 @@
     session_start();
     require_once 'lib/main.lib.php';
     $link = connect();
-    $root = array(0 => "ordercreate", 1 => "accept");//здесь должны быть права для того, кто создает заказы и добавляет серийные номера
+    $root = array(0 => "ok", 1 => "accept");//здесь должны быть права для того, кто создает заказы и добавляет серийные номера
     $root = checkRoot($link, $root, true);
-    //print_r($_SESSION);
     if (preg_match('/^[0-9]{7}$/',$_POST['serial']) == false)
         echo (json_encode(array("err" => 1.1)));
     else{
@@ -13,14 +12,14 @@
                 echo (json_encode(array("errDB" => 'Ошибка запроса: mysqli_query '.mysqli_error($link))));
         else{
             $status = mysqli_fetch_row($result)[0];
-            if ($root == "accept"){//здесь должны быть права для того, кто создает заказы
-                $result = mysqli_query($link, "select type, name, count(type) as duplicates from `order-items`  where `order_id` = '".$_POST['serial']."' group by type, name");
-                $root = 1;
-            }
-            if ($root == "accep"){//здесь должны быть права для того, кто вносит серийнийки
-                $result = mysqli_query($link, "select `type`, `name`, `serial` from `order-items` where `order_id` = '".$_POST['serial']."'");
+            if ($root == "accept")//здесь должны быть права для того, кто создает заказы
+                    $root = 1;
+            else if ($root == "otk")//здесь должны быть права для того, кто вносит серийнийки
                 $root = 2;
-            }
+            if ($status == 'created' || $root == "accept")//здесь должны быть права для того, кто создает заказы
+                $result = mysqli_query($link, "select type, name, count(type) as duplicates from `order-items`  where `order_id` = '".$_POST['serial']."' group by type, name");
+            else if ($status == "accept")//здесь должны быть права для того, кто вносит серийнийки
+                $result = mysqli_query($link, "select `type`, `name`, `serial` from `order-items` where `order_id` = '".$_POST['serial']."'");
             if (!$result)
                 echo (json_encode(array("errDB" => 'Ошибка запроса: mysqli_query '.mysqli_error($link))));
             else
