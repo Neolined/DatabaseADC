@@ -34,8 +34,11 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						echo '</div>';
 						echo '<div id = "contCreateOrder">';
 						echo '</div>';
-						if ($root ==  "accept")//заменить на реальные права того, кто создает заказ
+						if ($root ==  "accept"){//заменить на реальные права того, кто создает заказ
 							echo '<button type = "button" id = "addBtn"><p>+</p><p id = "addItemsCreateOrder">Добавить</p></button>';
+							echo '<input class = "orders_hide_input_old_year" name = "uid[oldYear]"></input>';
+							echo '<input class = "orders_hide_input_old_order" name = "uid[oldOrder]"></input>';
+						}
 						if ($root == "otk")//заменить на реальные права того, кто принимает заказ и вписывает серийные номера
 							echo '<div class = "inputLabel"><button type = "button" id = "orders_acceptBtn" style = "display:none">Принять</button></div>';
 						echo '<input class = "orders_hide_input" name = "action"></input>';
@@ -157,6 +160,9 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$(".orders_hide_input").val('create');
 		$("#createOrderForm").css({"display":"block"});
 		$("#savedata").css({"display":"block"});
+		$("input").prop("readonly", false);
+		$(".year").prop("readonly", true);
+
 	})
 	function show_item(id, status){
 		if (status==0)	$('#'+id).animate({ height: "hide"}, "hide");
@@ -170,6 +176,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$(this).parent().parent().remove();
 	});
 	$(document).on("click", ".createOrderCloser", function(){
+		$("#active").removeAttr("id");
 		$("#createOrderForm").css({"display":"none"});
 		$("#contCreateOrder").children().remove();
 		$(".msg_orderItems, .msgOrderItems1").css({"display":"none"});
@@ -182,7 +189,10 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 	});
 	$(document).on("click", ".orderItemsView", function(){
 		indexThisRow = $(this).parent().parent().index();
+		$(this).parent().parent().attr("id", "active");
 		$(".orders_hide_input").val('change');
+		$(".orders_hide_input_old_year").val($(".year"));
+		$(".orders_hide_input_old_order").val('.order');
 		$.ajax({
 			type: "POST",
 			url: "ordersItemsView.php",
@@ -195,7 +205,8 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						addItems(jsonData.items[i], 1);
 					if (jsonData.status == 'created'){
 						$("#addBtn, #savedata").css({"display":"block"});
-						$(".").prop("readonly", false);
+						$("input").prop("readonly", false);
+						$(".year, .order").prop("readonly", true);
 					}
 					else{
 						$("#addBtn, .delBtn, #savedata").css({"display":"none"});
@@ -225,13 +236,14 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$.ajax({
 			type: "POST",
 			url: 'handler.php',
-			data: {"serial":$(".year").val()+$(".order").val(),
+			data: {"year":$(".year").val(),
+			"order":$(".order").val(),
 			"action":"accept",
 			},
 			success: function(response){
 				console.log(response);
 				var jsonData = JSON.parse(response);
-				if (jsonData.accept == 'ok')
+				if (jsonData.action == 'accept')
 				{
 					$("#orders_acceptBtn").css({"display":"none"});
 					$("#savedata").css({"display":"block"});
@@ -264,8 +276,20 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			success: function(response){
 				console.log(response);
 				var jsonData = JSON.parse(response);
-				if (jsonData.save == "ok")
+				if (jsonData.result == "ok")
 				{
+					if (jsonData.action == "create")
+						$(".table tr:eq(1)").after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
+						</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
+						': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
+					if (jsonData.action == "change")
+						$("#active .ordersItemsView").text($(".year").val()+$(".order").val());
+						$("#active td:eq(1)").
+
+						after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
+						</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
+						': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
+					$("#active").removeAttr("id");
 					$('.msg1').css({'display':'block'});
 				}
 				else if (jsonData.name || jsonData.type){
