@@ -2,11 +2,11 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-$root = array(0 => "otk", 1 => "acept");//заменить на реальные права
+$root = array(0 => "addserial", 1 => "createorder");//заменить на реальные права
 $root = checkRoot($link, $root, true);
 $columnName = array ( "id", "date", "deadline", "status", "recipient");
 $columnNameRu = array ( "№ Заказа", "Дата создания", "Срок исполнения", "Статус", "Получатель");
-$replace = array ("no" => "Нет", "yes" => "Да");
+$replace = array ("no" => "Нет", "yes" => "Да", "created" => "Создан", "accept" => "Принят", "completed" => "Сформирован","verify" => "Проверен","otk" => "ОТК", "shipped" => "Отгружен");
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,6 +21,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		<?php createHeader($link)?>
 		<div id="forma" style = "margin:0em !important"><!-- Попробовать убрать из main.css и посмотреть, что будет с другими интерфейсами-->
 			<div id = "createOrderForm" style = "display:none">
+				<form method="post" action = "orders.php" id = "myform" align="left" style = "display:none"><></form>
 				<form method="post" align="left" class="form1" style = "display:flex">
 					<div id="priem_name" align="center">Формирование заказа<div class = "createOrderCloser">✕</div></div>
 					<?php
@@ -34,19 +35,24 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						echo '</div>';
 						echo '<div id = "contCreateOrder">';
 						echo '</div>';
-						if ($root ==  "accept"){//заменить на реальные права того, кто создает заказ
+						if ($root ==  "createorder"){//заменить на реальные права того, кто создает заказ
 							echo '<button type = "button" id = "addBtn"><p>+</p><p id = "addItemsCreateOrder">Добавить</p></button>';
 							echo '<input class = "orders_hide_input_old_year" name = "uid[oldYear]" style = "display:none"></input>';
 							echo '<input class = "orders_hide_input_old_order" name = "uid[oldOrder]"style = "display:none"></input>';
 						}
-						if ($root == "otk")//заменить на реальные права того, кто принимает заказ и вписывает серийные номера
+						if ($root == "addserial")//заменить на реальные права того, кто принимает заказ и вписывает серийные номера
 							echo '<div class = "inputLabel"><button type = "button" id = "orders_acceptBtn" style = "display:none">Принять</button></div>';
 						echo '<input class = "orders_hide_input" name = "action" style = "display:none"></input>';
 						echo '<div class = "inputLabel"><button type = "submit" id="savedata" style = "display:none">Сохранить данные</button></div>';
 						echo "<p class=\"msg_orderItems\" id = \"err1\" style = \"display:none\">Красным цветом подсвечены поля с недопустимым значением</p>";
-						echo "<p class=\"msg_orderItems\" id = \"err2\" style = \"display:none\">Серийный номер уже существует в базе</p>";
-						echo "<p class=\"msg_orderItems\" id = \"err3\" style = \"display:none\">В базе существует несколько таких серийных номеров.<br>Просьба обратиться к разработчику</p>";
-						echo "<p class=\"msg_orderItems\" id = \"err4\"></p>";
+						echo "<p class=\"msg_orderItems\" id = \"err2\" style = \"display:none\">Сериный номер, который вы пытаетесь изменить <br> либо не существует в базе, либо таких номеров <br>несколько. Просьба обратиться к разработчику</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err3\">Номер закакза, на который вы хотите заменить текущий,<br> уже существует в базе заказов</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err4\">В базе такой номер уже существует</p>";	
+						echo "<p class=\"msg_orderItems\" id = \"err5\">В базе таких номеров несколько. Просьба обратиться к разработчику</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err6\">Заказ был принят производством</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err7\">Статус заказа не позволяет его принять</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err8\">Статус заказа не позволяет изменить его данные</p>";
+						echo "<p class=\"msg_orderItems\" id = \"err9\"></p>";
 						echo "<p class=\"msg1_orderItems\" id = \"ok\" style = \"display:none\">Данные успешно занесены</p>";
 					?>
 				</form>
@@ -54,17 +60,61 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			<table class="table" align="center" style = "width:unset">
 				<caption>Заказы</caption>
 				<?php
-					if ($root ==  "accept")//заменить на реальные права того, кто создает заказ
-						echo '<tr><td colspan = "5" id = "createNewOrder"><span id = "createNewOrderPlus">+</span><span id = "createNewOrderText">Создать заказ<span></td></tr>';
-					echo '<tr>';
-					for ($i = 0; (!empty($columnNameRu[$i])); $i++)
-						echo '<td>'.$columnNameRu[$i].'</td>';
-					echo '</tr>';
-					$result = mysqli_query($link, "SELECT id, DATE(`datetime`) as date, deadline, status, recipient FROM `orders` order by datetime desc");
-					paintRowOrder($result, $columnName, $replace, false);
-					echo "<tr style = 'height: 5px;' ></tr>";
+						if (!isset($_POST['page']))
+							$_POST['page'] = 1;
+						if (empty($_POST['maxrows'])){
+							if (empty($_POST['maxrowsHide']))
+								$_POST['maxrows'] = 20;
+							else
+								$_POST['maxrows'] = $_POST['maxrowsHide'];
+						}
+						echo '<input type = "hidden" name = "maxrowsHide" form = "myform" value = "'.htmlspecialchars($_POST['maxrows']).'" >';
+						$result = mysqli_query($link, "select count(*) as lot from `orders`");
+						$all_rows = mysqli_fetch_row($result)[0];
+						$pages = ((floor($all_rows/$_POST['maxrows'])) + 1);
+						if($all_rows%$_POST['maxrows'] == 0)
+							$pages = floor($all_rows/$_POST['maxrows']);
+						if ($_POST['page'] == 1)
+							$view_rows = 0;
+						else 
+							$view_rows = ($_POST['page'] - 1) * $_POST['maxrows'];
+						$arrMaxrows = array("20", "30", "50", "100");
+						if ($root ==  "createorder")//заменить на реальные права того, кто создает заказ
+							echo '<tr><td colspan = "5" id = "createNewOrder"><span id = "createNewOrderPlus">+</span><span id = "createNewOrderText">Создать заказ<span></td></tr>';
+						echo '<tr>';
+						for ($i = 0; (!empty($columnNameRu[$i])); $i++)
+							echo '<td>'.$columnNameRu[$i].'</td>';
+						echo '</tr>';
+						$result = mysqli_query($link, "SELECT id, DATE(`datetime`) as date, deadline, status, recipient FROM `orders` order by datetime desc limit ".$view_rows.", ".$_POST['maxrows']."");
+						paintRowOrder($result, $columnName, $replace, false);
+				?>
+			
+				<?php
+				echo '<tr><td  colspan = "5" style = "background:white; border: none;">';
+					echo '<div class= "pagination">';
+						for ($j = 1; $j <= $pages; $j++)
+						{
+							if(($j==1)||($j==$pages)||(abs($_POST['page']-$j) < 6))
+							{
+								echo '<input type = "submit" name = "page" form = "myform" class = "pagBtn" value = "'.htmlspecialchars($j).'"';
+							if ($_POST['page'] == $j)
+								echo ' id = "pagBtnActive"';
+							echo '">';
+							}
+							if(($j!=1)&&($j!=$pages)&&(abs($_POST['page']-$j) == 6)) echo ' <a> ... </a> ';
+						}
+						echo '</div>';
+						echo '<div id = "maxrows">';
+						for ($i=0; isset($arrMaxrows[$i]); $i++)
+						{
+							echo '<button type = "submit" form = "myform" class = "maxrowsBtn" name = "maxrows"';
+							if (isset($_POST['maxrows']) && $_POST['maxrows'] == $arrMaxrows[$i])
+								echo 'id = "activeMaxRows"';
+							echo 'value = "'.htmlspecialchars($arrMaxrows[$i]).'">'.htmlspecialchars($arrMaxrows[$i]).'</button>|';
+						}
+					echo '</div></td></tr>';
 				?>	
-			</table>
+				</table>
 		</div>
 		<?php createFooter();?>
 	</body>
@@ -141,7 +191,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$("#contCreateOrder").append('<div class = "serial_lot"><div class = "inputLabel">\
 			<label>Тип</label><input style="width: 12em;" type="text" class = "type" name = "type[]" maxlength = "100" value = "'+val[0]+'" readonly required/></div>\
 			<div class = "inputLabel"><label>Название</label><input type = "text" class = "name" name = "name[]" maxlength = "100" value = "'+val[1]+'" readonly required/></div>\
-			<div class = "inputLabel"><label>Серийный номер</label><input type = "text" class = "serial" name = "serial[]" maxlength = "100" value = "'+val[2]+'" required/></div>\
+			<div class = "inputLabel"><label>Серийный номер</label><input type = "text" class = "serial" name = "serial[]" maxlength = "100" value = "'+val[2]+'"/></div>\
 			</div>');
 		}
 
@@ -176,7 +226,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$("#active").removeAttr("id");
 		$("#createOrderForm").css({"display":"none"});
 		$("#contCreateOrder").children().remove();
-		$(".msg_orderItems, .msgOrderItems1").css({"display":"none"});
+		$(".msg_orderItems, .msg1_orderItems").css({"display":"none"});
 		$(".year").val((new Date).getFullYear());
 		$(".order, .deadline, .recipient").val("");
 		$(".order, .deadline, .recipient").prop("readonly", true);
@@ -213,13 +263,15 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 				else if (jsonData.user == 2 && jsonData.status == "created"){
 					for(i = 0; i != jsonData.items.length; i++)
 						addItems(jsonData.items[i], 0);
-					$("input").prop("readonly", true);
 					$("#orders_acceptBtn").css({"display":"block"});
+					$("input").prop("readonly", true);
 				}
 				else if (jsonData.user == 2 && jsonData.status == "accept"){
 					for(i = 0; i != jsonData.items.length; i++)
 						addItems(jsonData.items[i], 2);
 					$("#savedata").css({"display":"block"});
+					$("input").prop("readonly", true);
+					$(".serial").prop("readonly", false);
 				}
 				$(".year").val($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(0,4));
 				$(".order").val(parseInt($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(4,7)));
@@ -240,7 +292,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			success: function(response){
 				console.log(response);
 				var jsonData = JSON.parse(response);
-				if (jsonData.action == 'accept')
+				if (jsonData.result == 'ok')
 				{
 					$("#orders_acceptBtn").css({"display":"none"});
 					$("#savedata").css({"display":"block"});
@@ -259,13 +311,15 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						}
 					})
 				}
+				else if (jsonData.err == 1.8)
+					$('#err7').css({'display':'block'});
+
 			}
 		})
 	})
 	$(".form1").on("submit", function(e){
-		$('.msg').css({'display':'none'});
-		$('.msg1').css({'display':'none'});
 		$('input').css({"border": "1px solid #CED4DA"});
+		$(".msg_orderItems, .msg1_orderItems").css({"display":"none"});
 		$.ajax({
 			type: "POST",
 			url: 'handler.php',
@@ -273,70 +327,83 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			success: function(response){
 				console.log(response);
 				var jsonData = JSON.parse(response);
-				if (jsonData.result == "ok" && jsonData.user == 1)
+				if (jsonData.result == "ok")
+					$(".msg1_orderItems").css({"display":"block"});
+				if (jsonData.user == 1)
 				{
-					if (jsonData.action == "create")
-						$(".table tr:eq(1)").after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
-						</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
-						': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
-					if (jsonData.action == "change"){
-						$("#active .orderItemsView").text($(".year").val()+$(".order").val());
-						$("#active td:eq(1)").text(new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
-						': '')+new Date().getDate());
-						$("#active td:eq(2)").text($(".deadline").val());
-						$("#active td:eq(3)").text("Создан");
-						$("#active td:eq(3)").text($(".recipient").val());
-					$(".orders_hide_input_old_year").val($(".year").val());
-					$(".orders_hide_input_old_order").val($(".order").val());
+					if (jsonData.result == "ok"){
+						if (jsonData.action == "create")
+							$(".table tr:eq(1)").after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
+							</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
+							': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
+						if (jsonData.action == "change"){
+							$("#active .orderItemsView").text($(".year").val()+$(".order").val());
+							$("#active td:eq(1)").text(new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
+							': '')+new Date().getDate());
+							$("#active td:eq(2)").text($(".deadline").val());
+							$("#active td:eq(3)").text("Создан");
+							$("#active td:eq(3)").text($(".recipient").val());
+						$(".orders_hide_input_old_year").val($(".year").val());
+						$(".orders_hide_input_old_order").val($(".order").val());
+						}
+						$("#active").removeAttr("id");
+						$('.msg1').css({'display':'block'});
 					}
-					$("#active").removeAttr("id");
-					$('.msg1').css({'display':'block'});
+					else if (jsonData.name || jsonData.type){
+							$('#err1').css({'display':'block'});
+						if (jsonData.name){
+							i = 0;
+							$('.name').each(function(index){
+								if (jsonData.name[i] == index){
+									$(this).css({'border': ' 0.1em solid red'});
+									i++;
+								}
+							});
+						}
+						if (jsonData.type){
+							i = 0;
+							$('.type').each(function(index){
+								if (jsonData.type[i] == index){
+									$(this).css({'border': ' 0.1em solid red'});
+									i++;
+								}
+							});
+						}
+					}
 				}
-				else if (jsonData.name || jsonData.type){
+				else if (jsonData.user == 2){
+					if (jsonData.result == "ok")
+						$('.msg1').css({'display':'block'});
+					else if (jsonData.serial){
+						i = 0;
+						$('.serial').each(function(index){
+							if (jsonData.serial[i] == index){
+								$(this).css({'border': ' 0.1em solid red'});
+								i++;
+							}
+						});
 						$('#err1').css({'display':'block'});
-					if (jsonData.name){
-						i = 0;
-						$('.name').each(function(index){
-							if (jsonData.name[i] == index){
-								$(this).css({'border': ' 0.1em solid red'});
-								i++;
-							}
-						});
-					}
-					if (jsonData.type){
-						i = 0;
-						$('.type').each(function(index){
-							if (jsonData.type[i] == index){
-								$(this).css({'border': ' 0.1em solid red'});
-								i++;
-							}
-						});
 					}
 				}
-				else if (jsonData.err == 1.1)
-				{
-					$('#err1').css({'display':'block'});
-					$('.year').css({'border': ' 0.1em solid red'});
-				}
-				else if (jsonData.err == 1.2)
-				{
-					$('#err1').css({'display':'block'});
-					$('.order').css({'border': ' 0.1em solid red'});
-				}
-				else if (jsonData.err == 2.1)
-				{
-					$('#err2').css({'display':'block'});
-					$('.order').css({'border': ' 0.1em solid red'});
-				}
-				else if (jsonData.err == 2.2)
-				{
-					$('#err3').css({'display':'block'});
-					$('.order').css({'border': ' 0.1em solid red'});
-				}
-				else if (jsonData.errDB)
-				{
-					$('#err4').text(jsonData.errDB);
-					$('#err4').css({'display':'block'});
+				else if (jsonData.err){
+					if (jsonData.err >= 1.2 && jsonData <= 1.6)
+						$('.order').css({'border': ' 0.1em solid red'});
+					if (jsonData.err == 1.1 || jsonData.err == 1.2)
+						$('#err1').css({'display':'block'});
+					else if (jsonData.err == 1.4)
+						$('#err3').css({'display':'block'});
+					else if (jsonData.err == 1.5)
+						$('#err4').css({'display':'block'});
+					else if (jsonData.err == 1.6)
+						$('#err5').css({'display':'block'});
+					else if (jsonData.err == 1.7)
+						$('#err6').css({'display':'block'});
+					else if (jsonData.err == 1.9)
+						$('#err8').css({'display':'block'});
+					else if (jsonData.errDB){
+						$('#err9').text(jsonData.errDB);
+						$('#err9').css({'display':'block'});
+					}
 				}
 			}
 		})
