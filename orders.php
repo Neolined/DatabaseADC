@@ -2,7 +2,7 @@
 session_start();
 require_once 'lib/main.lib.php';
 $link = connect();
-$root = array(0 => "ok", 1 => "accept");//заменить на реальные права
+$root = array(0 => "otk", 1 => "acept");//заменить на реальные права
 $root = checkRoot($link, $root, true);
 $columnName = array ( "id", "date", "deadline", "status", "recipient");
 $columnNameRu = array ( "№ Заказа", "Дата создания", "Срок исполнения", "Статус", "Получатель");
@@ -26,7 +26,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 					<?php
 						echo '<div class="serial_lot" style="width: 100%;">';
 						echo '<div class = "inputLabel" ><label>Год</label><input style="width: 12em;" class = "year" type="text" name="uid[year]" maxlength="4" value = "'.date ( 'Y' ).'"  readonly/> </div>';
-						echo '<div class = "inputLabel"><label>Номер заказа</label><input type="number" class = "order" name="uid[order]" maxlength="3"  required/></div>';
+						echo '<div class = "inputLabel"><label>Номер заказа</label><input type="number" class = "order" name="uid[order]" maxlength="3" required/></div>';
 						echo '</div>';
 						echo '<div class="serial_lot" style="width: 100%;">';
 						echo '<div class = "inputLabel" ><label>Сроки исполнения</label><input style="width: 12em;" type="date" class = "deadline" name="deadline"  required/></div>';
@@ -36,12 +36,12 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 						echo '</div>';
 						if ($root ==  "accept"){//заменить на реальные права того, кто создает заказ
 							echo '<button type = "button" id = "addBtn"><p>+</p><p id = "addItemsCreateOrder">Добавить</p></button>';
-							echo '<input class = "orders_hide_input_old_year" name = "uid[oldYear]"></input>';
-							echo '<input class = "orders_hide_input_old_order" name = "uid[oldOrder]"></input>';
+							echo '<input class = "orders_hide_input_old_year" name = "uid[oldYear]" style = "display:none"></input>';
+							echo '<input class = "orders_hide_input_old_order" name = "uid[oldOrder]"style = "display:none"></input>';
 						}
 						if ($root == "otk")//заменить на реальные права того, кто принимает заказ и вписывает серийные номера
 							echo '<div class = "inputLabel"><button type = "button" id = "orders_acceptBtn" style = "display:none">Принять</button></div>';
-						echo '<input class = "orders_hide_input" name = "action"></input>';
+						echo '<input class = "orders_hide_input" name = "action" style = "display:none"></input>';
 						echo '<div class = "inputLabel"><button type = "submit" id="savedata" style = "display:none">Сохранить данные</button></div>';
 						echo "<p class=\"msg_orderItems\" id = \"err1\" style = \"display:none\">Красным цветом подсвечены поля с недопустимым значением</p>";
 						echo "<p class=\"msg_orderItems\" id = \"err2\" style = \"display:none\">Серийный номер уже существует в базе</p>";
@@ -60,7 +60,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 					for ($i = 0; (!empty($columnNameRu[$i])); $i++)
 						echo '<td>'.$columnNameRu[$i].'</td>';
 					echo '</tr>';
-					$result = mysqli_query($link, "select * from orders");
+					$result = mysqli_query($link, "SELECT id, DATE(`datetime`) as date, deadline, status, recipient FROM `orders` order by datetime desc");
 					paintRowOrder($result, $columnName, $replace, false);
 					echo "<tr style = 'height: 5px;' ></tr>";
 				?>	
@@ -100,9 +100,6 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			?>
 			,
 				{
-					select:function(){
-						console.log("aaaa");
-					},
 					delay: 10,
 					minChars:0,
 					matchSubset:1,
@@ -191,8 +188,6 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		indexThisRow = $(this).parent().parent().index();
 		$(this).parent().parent().attr("id", "active");
 		$(".orders_hide_input").val('change');
-		$(".orders_hide_input_old_year").val($(".year"));
-		$(".orders_hide_input_old_order").val('.order');
 		$.ajax({
 			type: "POST",
 			url: "ordersItemsView.php",
@@ -206,7 +201,9 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 					if (jsonData.status == 'created'){
 						$("#addBtn, #savedata").css({"display":"block"});
 						$("input").prop("readonly", false);
-						$(".year, .order").prop("readonly", true);
+						$(".year").prop("readonly", true);
+						$(".orders_hide_input_old_year").val($(".table tr:eq("+indexThisRow+") .orderItemsView").text().substr(0,4));
+						$(".orders_hide_input_old_order").val($(".table tr:eq("+indexThisRow+") .orderItemsView").text().substr(4,7));
 					}
 					else{
 						$("#addBtn, .delBtn, #savedata").css({"display":"none"});
@@ -225,7 +222,7 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 					$("#savedata").css({"display":"block"});
 				}
 				$(".year").val($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(0,4));
-				$(".order").val($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(4,7));
+				$(".order").val(parseInt($(".table tr:eq("+indexThisRow+") td:eq(0)").text().substr(4,7)));
 				$(".deadline").val($(".table tr:eq("+indexThisRow+") td:eq(2)").text());
 				$(".recipient").val($(".table tr:eq("+indexThisRow+") td:eq(4)").text());
 				$("#createOrderForm").css({"display":"block"});
@@ -236,8 +233,8 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 		$.ajax({
 			type: "POST",
 			url: 'handler.php',
-			data: {"year":$(".year").val(),
-			"order":$(".order").val(),
+			data: {"uid[year]":$(".year").val(),
+			"uid[order]":$(".order").val(),
 			"action":"accept",
 			},
 			success: function(response){
@@ -276,19 +273,22 @@ $replace = array ("no" => "Нет", "yes" => "Да");
 			success: function(response){
 				console.log(response);
 				var jsonData = JSON.parse(response);
-				if (jsonData.result == "ok")
+				if (jsonData.result == "ok" && jsonData.user == 1)
 				{
 					if (jsonData.action == "create")
 						$(".table tr:eq(1)").after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
 						</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
 						': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
-					if (jsonData.action == "change")
-						$("#active .ordersItemsView").text($(".year").val()+$(".order").val());
-						$("#active td:eq(1)").
-
-						after("<tr><td><div class='orderItemsView'>"+$(".year").val()+$(".order").val()+"</div>\
-						</td><td>"+new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
-						': '')+new Date().getDate()+"</td><td>"+$(".deadline").val()+"</td><td>Создан</td><td>"+$(".recipient").val()+"</td></tr>");
+					if (jsonData.action == "change"){
+						$("#active .orderItemsView").text($(".year").val()+$(".order").val());
+						$("#active td:eq(1)").text(new Date().getFullYear()+'-'+((new Date().getMonth()+1)<10 ? '0': '')+(new Date().getMonth()+1)+'-'+(new Date().getDate()<10 ? '0\
+						': '')+new Date().getDate());
+						$("#active td:eq(2)").text($(".deadline").val());
+						$("#active td:eq(3)").text("Создан");
+						$("#active td:eq(3)").text($(".recipient").val());
+					$(".orders_hide_input_old_year").val($(".year").val());
+					$(".orders_hide_input_old_order").val($(".order").val());
+					}
 					$("#active").removeAttr("id");
 					$('.msg1').css({'display':'block'});
 				}
