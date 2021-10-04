@@ -132,7 +132,7 @@ button {
 option {
     margin:0,5em;
 }
-select, input, textarea {
+textarea {
     background-color: white;
     border: 1px solid #CED4DA;
     outline: none;
@@ -141,9 +141,15 @@ select, input, textarea {
     width: -webkit-fill-available;
 }
 select {
+    background-color: white;
+    border: 1px solid #CED4DA;
+    outline: none;
     height: 2.4em;
 }
 input {
+    background-color: white;
+    border: 1px solid #CED4DA;
+    outline: none;
     height: 2em;
 }
 input[type=number]::-webkit-inner-spin-button, 
