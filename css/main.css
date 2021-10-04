@@ -136,7 +136,9 @@ select, input, textarea {
     background-color: white;
     border: 1px solid #CED4DA;
     outline: none;
+    width: 100%;
     width: -moz-available;
+    width: -webkit-fill-available;
 }
 select {
     height: 2.4em;
