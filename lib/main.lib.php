@@ -12,6 +12,14 @@ function connect()//connect to DB
     }
     return($link);
 }
+function HtmlHead(){
+	echo '<meta charset=utf-8">'."\n";
+	echo '<link rel="icon" href="images/favicon.ico">'."\n";
+	echo '<link rel="stylesheet" href="css/main.css">'."\n";
+	echo '<script src="js/jquery.js"></script>'."\n";
+	echo '<script type="text/javascript" src="js/jquery.autocomplete.js"></script>'."\n";
+}
+
 function createHeader($link){
 	echo '<div class="header">';
 	createMenu($link);
@@ -30,6 +38,7 @@ function createMenu($link)
 		{
 			$result = mysqli_query($link, "select `root` from `users` where `user` = '".$_SESSION['user']."'");
 			$rootdb = mysqli_fetch_row($result);
+			print_r($rootdb[0]);
 			if (!strpos($_SERVER['SCRIPT_NAME'], "main.php"))
 				echo '<a href="main.php">Главная</a>';
 			if (!strpos($_SERVER['SCRIPT_NAME'], "accept.php") && (strpos($rootdb[0], "accept") !==false))
@@ -46,6 +55,8 @@ function createMenu($link)
 				echo '<a href="shipment.php">Отгрузка</a>';
 			if (!strpos($_SERVER['SCRIPT_NAME'], "refand.php") && (strpos($rootdb[0], "refand") !==false))
 				echo '<a href="refand.php">Возврат</a>';
+			if (!strpos($_SERVER['SCRIPT_NAME'], "transform.php") && (strpos($rootdb[0], "transform") !==false))
+				echo '<a href="transform.php">Трансформация</a>';
 			if (!strpos($_SERVER['SCRIPT_NAME'], "orders.php"))
 				echo '<a href="orders.php">Заказы</a>';
 			if (!strpos($_SERVER['SCRIPT_NAME'], "nomenclature.php"))
@@ -118,12 +129,11 @@ function selectDB($link, $option_text, $option, $table_name) //create filters fo
 }
 function sortSelect($columnName) //create sort for table
 		{
-			$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", 
-"notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тест", "mismatch" => "Несоотв.",
-"shipment" => "Отгрузка", "repair" => "В ремонте", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
-"order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Имя", "serial" => "S/N",
-"owner" => "Владелец", "location" => "Местопол.", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
+			$replace = array ("yes" => "Да", "no" => "Нет", "ok" => "Успешно", "fail" => "Не успешно", "stock" => "Склад", "shipped" => "Отправлено", "notest" => "Не тестировалось", 
+				"nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тест", "mismatch" => "Несоотв.", "shipment" => "Отгрузка", "repair" => "В ремонте",
+				"worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи", "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа",
+				"status" => "Статус","comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Имя", "serial" => "S/N", "owner" => "Владелец","location" => "Местопол.", "protocol" => "Протокол",
+				"develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство", "transform" => "Трансформация");
 			for ($i = 0; !empty($columnName[$i]); $i++)
 			{
 					$id = '';
@@ -162,7 +172,7 @@ function requestDB($index, $link) //create request for DB from main
 			while(!empty($_POST['filter'][$index[$j]][$i]))
 			{
 				if ($index[$j] == "serial")
-					$str = $str. "`" .$index[$j]. "` LIKE '%" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "%'";
+					$str = $str. "`" .$index[$j]. "` LIKE '%" .trim(mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i])). "%'";
 				else if ($index[$j] == "comment")
 				$str = $str. "`" .$index[$j]. "` != '" .mysqli_real_escape_string($link, $_POST['filter'][$index[$j]][$i]). "'";
 				else if ($index[$j] == "date1")
@@ -252,7 +262,7 @@ function paintRow($link, $result, $array, $posthist, $pageName)
 "notest" => "Не тестировалось", "nocheck" => "Не проверялось", "record" => "Запись", "otk" => "ОТК", "testing" => "Тестирование", "mismatch" => "Несоответствия",
 "shipment" => "Отгрузка", "shipping" => "Отгрузка", "repair" => "Ремонт", "worker" => "Сотрудник", "date" => "Дата", "type_write" => "Тип записи",
 "order_from" => "От кого принята", "whom_order" => "Кому отправлена", "number_order" => "Номер заказа", "status" => "Статус", "location" => "Местоположение",
-"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "serial" => "Серийный номер",
+"comment" => "Комментарий", "UID" => "№ ", "type" => "Тип", "name" => "Наименование", "serial" => "Серийный номер", "transform" => "Трансформация",
 "owner" => "Владелец", "location" => "Местоположение", "protocol" => "Протокол", "develop" => "Разработка", "isolator" => "Изолятор брака", "nelikvid" => "Неликвид", "work" => "Производство");
 	if(mysqli_num_rows($result) != 0)
 	{
@@ -263,6 +273,11 @@ function paintRow($link, $result, $array, $posthist, $pageName)
 			while (!empty($array[$i]))
 			{
 				echo '<td';
+				if (!empty($row[$array[$i]])){
+					if (($row[$array[$i]]=="fail") || ($row[$array[$i]]=="mismatch") || (($array[$i] == "mismatch")&&($row[$array[$i]]=="yes"))|| (($array[$i] == "repair")&&($row[$array[$i]]!="no")) ){
+						echo ' class = "warning_cell"';
+					}
+				}
 				if ($pageName == "otk" && $array[$i] == 'history')
 					echo ' id = "historyOtk" onclick = "tranPost(\'history\', \''.$row['uid'].'\', \''.htmlspecialchars($array[$i]).'Post\')">Показать</td>';
 				else if (!empty($replace[$row[$array[$i]]]))
@@ -317,7 +332,7 @@ function paintRowOrder($result, $array, $replace, $posthist)
 		while (!empty($array[$i]))
 		{
 			echo '<td>';
-			if ($array[$i] == 'id')//добавить проверку прав и статуса заказа, если статус активен, то разрешается редактировать
+			if ($array[$i] == 'UID')//добавить проверку прав и статуса заказа, если статус активен, то разрешается редактировать
 				echo '<div class = "orderItemsView">'.$row[$array[$i]].'</div>';
 			else if ($array[$i] == 'composition' && (mb_substr($row[$array[$i]], -1) == ','))
 			echo mb_substr($row[$array[$i]], 0, -1);

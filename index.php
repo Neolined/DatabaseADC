@@ -41,8 +41,7 @@ if ((!empty($_POST['login'])) && (!empty($_POST['password'])))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
+ <?php HtmlHead();?>
   <title>Авторизация</title>
  </head>
  <body>

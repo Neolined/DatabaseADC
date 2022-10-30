@@ -7,10 +7,8 @@ checkRoot($link, NULL, false);
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
-  <title>Номенклатура</title>
+ <?php HtmlHead();?>
+ <title>Номенклатура</title>
  </head>
  <body>
  <?php createHeader($link);?>

@@ -4,12 +4,24 @@ require_once 'lib/main.lib.php';
 $link = connect();
 checkRoot($link, "shipment", false);
 mysqli_set_charset($link, 'utf8');
-if (!empty($_POST['savebtn']))
+if(!empty($_POST['savebtn']))
 {
-	$result = "UPDATE orders set `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."', `shipped` = 'yes', `comment` = '".mysqli_real_escape_string($link, $_POST['comment'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['yearHide'])."".mysqli_real_escape_string($link, $_POST['orderHide'])."'";
+	$result = "UPDATE orders set `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."', `status` = 'shipped', `comment` = '".mysqli_real_escape_string($link, $_POST['comment'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['yearHide'])."".mysqli_real_escape_string($link, $_POST['orderHide'])."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Заказы":'  .mysqli_error($link));
-	$result = "UPDATE products set `location` = 'shipped', `owner` = '".mysqli_real_escape_string($link, $_POST['recipient'])."'".mysqli_real_escape_string($link, $_POST['str'])."";
+	
+	//Decoding string with serial numbers to sql command
+	$i = 0;
+	$str = " where";
+	while (!empty($_POST['orderArrHide'][$i]))
+	{
+		$str = $str . " `serial` = '".$_POST['orderArrHide'][$i]."'";
+		$i++;
+		if (!empty($_POST['orderArrHide'][$i]))
+		$str = $str . " or ";
+	}
+
+	$result = "UPDATE products set `location` = 'shipped', `owner` = '".mysqli_real_escape_string($link, $_POST['recipient'])."'".$str."";
 	if (!(mysqli_query($link, $result)))
 	die ('Ошибка записи в таблицу "Продукты":'  .mysqli_error($link));
 	$result = "insert into history (`uid`, `worker`, `type_write`, `whom_order`, `order_from`, `comment`, `date`) values";
@@ -29,9 +41,7 @@ if (!empty($_POST['savebtn']))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
+ <?php HtmlHead();?>	 
   <title>Отгрузка</title>
  </head>
  <body>
@@ -65,10 +75,15 @@ if (!empty($_POST['savebtn']))
 						$row = mysqli_num_rows($result);
 						if ($row != 0)
 						{
-							$result = mysqli_query($link, "select shipped, replace (composition,' ','')  from orders where `uid` = '".mysqli_real_escape_string($link, $_POST['year'])."".mysqli_real_escape_string($link, $_POST['order'])."'");
+							if(!($result = mysqli_query($link, "select status,  replace (composition,' ',''), recipient, comment from orders where `uid` = '".mysqli_real_escape_string($link, $_POST['year'])."".mysqli_real_escape_string($link, $_POST['order'])."'")))
+							die ('Ошибка чтения "Заказы":'  .mysqli_error($link));
 							$row = mysqli_fetch_row($result);
-							if ($row[0] == 'yes')
+
+							if ($row[0] == 'shipped')
 								$msgShip = 1;
+							if ($row[0] != 'otk')
+								$msgNotReadyForShip = 1;
+
 							if (!empty($row[1]))
 							{
 								$orderArr = explode(',', $row[1]);
@@ -78,16 +93,29 @@ if (!empty($_POST['savebtn']))
 									echo '<input type = "hidden" name = "orderArrHide['.$i.']" value = "'.htmlspecialchars($orderArr[$i]).'">';
 									$i++;
 								}
+
+								$recepient_txt='';
+								if(!empty($row[2])){
+									$recepient_txt=$row[2];
+								}
+								$comment_txt='';
+								if(!empty($row[3])){
+									$comment_txt=$row[3];
+								}
+
+
+
+								//Decoding string with serial numbers to sql command
 								$i = 0;
 								$str = " where";
 								while (!empty($orderArr[$i]))
-								{
+								{								
 									$str = $str . " `serial` = '".$orderArr[$i]."'";
 									$i++;
 									if (!empty($orderArr[$i]))
 									$str = $str . " or ";
 								}
-								echo '<input type = "hidden" name = "str" value = "'.htmlspecialchars($str).'">';
+								
 								$result = mysqli_query($link, "select type, name, count(type) as duplicates from products $str group by type, name");
 								echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 								echo '<caption> Данные о заказе</caption>';
@@ -101,13 +129,30 @@ if (!empty($_POST['savebtn']))
 								echo "</tr>";
 								}
 								echo '</table>';
-								if (!empty($succ))
-								echo '<p class="msg1">Заказ отгружен</p>';
-								else if (!empty($msgShip))
-								echo '<p class="msg">Заказ уже отгружен</p>';
-								echo '<div class = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" required></input></div>';
-								echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
-								echo '<input type="submit" id="savedata" name = "savebtn" value="Отгружено"/>';
+								$btnShipEnable = true;
+								if (!empty($succ)){
+									echo '<p class="msg1">Заказ отгружен</p>';
+									$btnShipEnable = false;
+								}								
+								else if (!empty($msgShip)){
+									echo '<p class="msg">Заказ уже отгружен</p>';
+									$btnShipEnable = false;
+								}				
+								else if (!empty($msgNotReadyForShip)){
+									echo '<p class="msg">Заказ не прошёл ОТК</p>';
+									$btnShipEnable = false;
+								}				
+												
+								echo '<div class = "inputLabel"<label>Получатель</label><input type="text" name="recipient" maxlength="100" value = "'.htmlspecialchars($recepient_txt).'" required';
+								if(!$btnShipEnable) echo ' disabled';
+								echo '></input></div>';
+								echo '<label>Примечание</label><textarea class="comment" type="text" name="comment" maxlength="1000"';
+								if(!$btnShipEnable) echo ' disabled';
+								echo '>'.htmlspecialchars($comment_txt).'</textarea>';								
+								echo '<input type="submit" id="savedata" name = "savebtn" value="Отгрузить"';
+								if(!$btnShipEnable) echo ' disabled';
+								echo '/>';
+								
 							}
 							else echo '<p class="msg">В состав заказа не входит ни одно изделие</p>';
 

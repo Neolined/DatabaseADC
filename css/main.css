@@ -3,7 +3,7 @@ html, body {
     min-width: max-content;
 }
 body {
-    background: #FCDD76;
+    background: #5C6F93;
     /* fallback for old browsers */
     margin: 0;
     align-content: center;
@@ -52,7 +52,7 @@ body {
 }
 .header {
     background: #FFF;
-    box-shadow: 0px 0.1em 1em 0px rgba(255, 255, 255, 1);
+    /* box-shadow: 0px 0.1em 1em 0px rgba(255, 255, 255, 1); */
     height: 3.5em;
     text-align: center;
     padding-bottom: 0.5em;
@@ -78,8 +78,7 @@ button {
     background: #FDFDFD;
     border-radius: 1.9em 1.9em 1.9em 1.9em;
 }
-.form1 {
-    margin-top: 10%;
+.form1 {    
     display: flex;
     flex-direction: column;
     position: center absolute;
@@ -136,9 +135,9 @@ textarea {
     background-color: white;
     border: 1px solid #CED4DA;
     outline: none;
-    width: 100%;
+	width: 100%;
     width: -moz-available;
-    width: -webkit-fill-available;
+	width: -webkit-fill-available;
 }
 select {
     background-color: white;
@@ -167,7 +166,6 @@ input[type=number]::-webkit-outer-spin-button {
 .comment {
     resize: vertical;
     height: 5em;
-    width: auto;
 }
 .msg, .msg_orders, .msg_orderItems {
     border: 1px solid orangered;
@@ -220,7 +218,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
     border: none;
     text-align: center;
-    box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1);
+    /* box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1); */
     width: 100%;
     line-height: 0.4;
 }
@@ -340,7 +338,7 @@ button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
     border-left: 5px solid #FFF;
     font-size: 1em;
     background: #FFF !important;
-    box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1);
+    /* box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1); */
     border-collapse: collapse;
     margin-bottom: 0;
 }
@@ -389,14 +387,10 @@ button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
     color: white;
     font-size: large;
     padding: 0.4em 0;
-    box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1);
-}
-.table caption, .table1 caption, .tableOtk caption {
-    background-color: #5C6F93;
-    box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1);
+    /* box-shadow: 0px 0em 1em 0px rgba(255, 255, 255, 1); */
 }
 .table tbody tr:nth-child(even) {
-    background: #FFF7D3 !important;
+    background: #f8f8f8 !important;
 }
 .allPagination {
     display: inline-block;
@@ -405,7 +399,7 @@ button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
     background-color: white;
     min-width: 55em;
     width: 100%;
-    box-shadow: 0px 3px 6px -1px rgb(255 255 255);
+    /* box-shadow: 0px 3px 6px -1px rgb(255 255 255); */
 }
 .pagination {
     float: left;
@@ -611,7 +605,7 @@ button, #exitbut, #savedata:hover, .buttons:hover, #regdata:hover, #nextbtn {
 }
 .new-select {
     position: relative;
-    border: 1px solid #CED4DA;
+    border: 1px solid #5C6F93;
     padding: 0.4em 0.2em;
     cursor: pointer;
     user-select: none;
@@ -870,4 +864,7 @@ td.sorted[data-order="1"]:hover::after {
 }
 #orders_acceptBtn{
     background-color: red;
+}
+.warning_cell{
+    background-color:#FFF7D3
 }

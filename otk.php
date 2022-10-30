@@ -63,10 +63,7 @@ if (!empty($_POST['postFromMain']))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+ <?php HtmlHead();?>	 
   <title>ОТК</title>
  </head>
  <body>

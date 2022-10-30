@@ -4,18 +4,15 @@ require_once 'lib/main.lib.php';
 $link = connect();
 $root = array(0 => "addserial", 1 => "createorder");//заменить на реальные права
 $root = checkRoot($link, $root, true);
-$columnName = array ( "id", "date", "deadline", "status", "recipient");
-$columnNameRu = array ( "№ Заказа", "Дата создания", "Срок исполнения", "Статус", "Получатель");
+$columnName = array ( "UID", "date", "deadline", "status", "recipient", "composition", "comment");
+$columnNameRu = array ( "№ Заказа", "Дата создания", "Срок исполнения", "Статус", "Получатель","Состав","Комментарий");
 $replace = array ("no" => "Нет", "yes" => "Да", "created" => "Создан", "accept" => "Принят", "completed" => "Сформирован","verify" => "Проверен","otk" => "ОТК", "shipped" => "Отгружен");
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset=utf-8">
-		<link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-		<script src="js/jquery.js"></script>
-		<script type="text/javascript" src="js/jquery.autocomplete.js"></script>
-		<title>Заказы</title>
+	<?php HtmlHead();?>
+	<title>Заказы</title>
 	</head>
 	<body>
 		<?php createHeader($link)?>
@@ -85,7 +82,7 @@ $replace = array ("no" => "Нет", "yes" => "Да", "created" => "Создан"
 						for ($i = 0; (!empty($columnNameRu[$i])); $i++)
 							echo '<td>'.$columnNameRu[$i].'</td>';
 						echo '</tr>';
-						$result = mysqli_query($link, "SELECT id, DATE(`datetime`) as date, deadline, status, recipient FROM `orders` order by datetime desc limit ".$view_rows.", ".$_POST['maxrows']."");
+						$result = mysqli_query($link, "SELECT UID, DATE(`datetime`) as date, deadline, status, recipient, composition, comment FROM `orders` order by datetime desc limit ".$view_rows.", ".$_POST['maxrows']."");
 						paintRowOrder($result, $columnName, $replace, false);
 				?>
 			

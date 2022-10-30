@@ -42,8 +42,7 @@ if ((!empty($_POST["login"])) && (!empty($_POST["password"])) && (!empty($_POST[
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
+ <?php HtmlHead();?>	 
   <title>Регистрация</title>
  </head>
  <body>

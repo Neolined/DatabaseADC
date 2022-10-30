@@ -15,22 +15,22 @@
             else{
                 if($_POST["action"] != "create"){//заменить на реальные права (vereshagyen order)
                     if ($root == 'createorder' && $_POST["action"] == 'change')
-                        $result = mysqli_query($link, "select `status` from `orders` where `id` = '".mysqli_real_escape_string($link, $_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
+                        $result = mysqli_query($link, "select `status` from `orders` where `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
                     else
-                        $result = mysqli_query($link, "select `status` from `orders` where `id` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
+                        $result = mysqli_query($link, "select `status` from `orders` where `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
                     if (!$result)
                         die (json_encode(array("errDB" => 'Ошибка запроса 1: mysqli_query '.mysqli_error($link))));
                     else
                         $status = mysqli_fetch_row($result)[0];
                 }
-                $result = mysqli_query($link, "select `id` from `orders` where `id` = '".mysqli_real_escape_string($link,$_POST['uid']['year'].$_POST['uid']['order'])."'");
+                $result = mysqli_query($link, "select `UID` from `orders` where `UID` = '".mysqli_real_escape_string($link,$_POST['uid']['year'].$_POST['uid']['order'])."'");
                 if (!$result)
                     die (json_encode(array("errDB" => 'Ошибка запроса 2: mysqli_query '.mysqli_error($link))));
                 else{
                     $id_lot = mysqli_num_rows($result);
                     if ($root == "createorder"  && (!empty($_POST['type'][0]) && !empty($_POST['name'][0]))){//заменить на реальные права (vereshagyen order)
                         if ($_POST["action"] == "change" && $status == "created" && ($_POST['uid']['oldYear'] != $_POST['uid']['year'] || $_POST['uid']['oldOrder'] != $_POST['uid']['order'])){
-                            $result = mysqli_query($link, "select `id` from `orders` where `id` = '".mysqli_real_escape_string($link,$_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
+                            $result = mysqli_query($link, "select `UID` from `orders` where `UID` = '".mysqli_real_escape_string($link,$_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
                             if (!$result)
                                 die (json_encode(array("errDB" => 'Ошибка запроса 3: mysqli_query '.mysqli_error($link))));
                             else{
@@ -69,7 +69,7 @@
                                         if (!$result)
                                             die (json_encode(array("errDB" => 'Ошибка запроса 4: mysqli_query '.mysqli_error($link))));
                                         else{
-                                            $result = mysqli_query($link, "update `orders` SET `deadline` = '".mysqli_real_escape_string($link, $_POST['deadline'])."', `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."', `id` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'  where `id` = '".mysqli_real_escape_string($link, $_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
+                                            $result = mysqli_query($link, "update `orders` SET `deadline` = '".mysqli_real_escape_string($link, $_POST['deadline'])."', `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."', `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'  where `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['oldYear'].$_POST['uid']['oldOrder'])."'");
                                             if (!$result)
                                                 die (json_encode(array("errDB" => 'Ошибка запроса 5: mysqli_query '.mysqli_error($link))));
                                         }
@@ -79,11 +79,11 @@
                                         if (!$result)
                                             die (json_encode(array("errDB" => 'Ошибка запроса 6: mysqli_query '.mysqli_error($link))));
                                         else
-                                            $result = mysqli_query($link, "update `orders` SET `deadline` = '".mysqli_real_escape_string($link, $_POST['deadline'])."', `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."' where `id` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
+                                            $result = mysqli_query($link, "update `orders` SET `deadline` = '".mysqli_real_escape_string($link, $_POST['deadline'])."', `recipient` = '".mysqli_real_escape_string($link, $_POST['recipient'])."' where `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
                                     }
                                 }
                                 else if ($_POST["action"] == "create")
-                                    $result = mysqli_query($link, "insert into `orders` (`id`, `datetime`, `deadline`, `recipient`) values ('".mysqli_real_escape_string($link,$_POST['uid']['year'].$_POST['uid']['order'])."', NOW(), '".mysqli_real_escape_string($link,$_POST['deadline'])."', '".mysqli_real_escape_string($link,$_POST['recipient'])."')");
+                                    $result = mysqli_query($link, "insert into `orders` (`UID`, `datetime`, `deadline`, `recipient`) values ('".mysqli_real_escape_string($link,$_POST['uid']['year'].$_POST['uid']['order'])."', NOW(), '".mysqli_real_escape_string($link,$_POST['deadline'])."', '".mysqli_real_escape_string($link,$_POST['recipient'])."')");
                                 if (!$result){
                                     die (json_encode(array("errDB" => 'Ошибка запроса 7: mysqli_query '.mysqli_error($link))));
                                 }
@@ -113,11 +113,11 @@
                     }
                     else if ($root == 'addserial' && $id_lot == 1){//заменить на реальные права (olga order)
                         if ($_POST['action'] == 'accept'){
-                            $result = mysqli_query($link, "select `status` from `orders` where `id` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
+                            $result = mysqli_query($link, "select `status` from `orders` where `UID` = '".mysqli_real_escape_string($link, $_POST['uid']['year'].$_POST['uid']['order'])."'");
                             if (!$result)
                                 die (json_encode(array("errDB" => 'Ошибка запроса 9: mysqli_query '.mysqli_error($link))));
                             else if ($status == 'created'){
-                                $result = mysqli_query($link, "update `orders` set `status` =  'accept' where `id` = '".$_POST['uid']['year'].$_POST['uid']['order']."'");
+                                $result = mysqli_query($link, "update `orders` set `status` =  'accept' where `UID` = '".$_POST['uid']['year'].$_POST['uid']['order']."'");
                                 if (!$result)
                                     die (json_encode(array("errDB" => 'Ошибка запроса 10: mysqli_query '.mysqli_error($link))));
                                 else

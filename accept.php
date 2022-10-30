@@ -63,7 +63,7 @@ if (!empty ($_POST['sumb']))
 									else 
 										die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
 									
-									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ('$id', NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+									$query = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`, `location`) VALUES ('$id', NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."','stock')";
 									if (!(mysqli_query($link, $query)))
 										die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 									$str++;
@@ -85,11 +85,8 @@ if (!empty ($_POST['sumb']))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
+<?php HtmlHead();?>
   <title>Интерфейс приемщика</title>
-  <script src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
  </head>
  <body>
 <?php createHeader($link);?>

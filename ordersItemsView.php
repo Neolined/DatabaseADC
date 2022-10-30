@@ -7,7 +7,7 @@
     if (preg_match('/^[0-9]{7}$/',$_POST['serial']) == false)
         echo (json_encode(array("err" => 1.1)));
     else{
-        $result = mysqli_query($link, "select `status` from `orders` where `id` = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
+        $result = mysqli_query($link, "select `status` from `orders` where `UID` = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
         if (!$result)
                 echo (json_encode(array("errDB" => 'Ошибка запроса: mysqli_query '.mysqli_error($link))));
         else{

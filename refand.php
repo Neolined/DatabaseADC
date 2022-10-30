@@ -9,7 +9,7 @@ $error_n1 = 1;
 $error_t1 = 1;
 if (!empty($_POST['savebtY']))
 {
-	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ((select uid from products where `serial` = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'), NOW(), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+	$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`, `location`) VALUES ((select uid from products where `serial` = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'), NOW(), '".mysqli_real_escape_string($link,$_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."', '".mysqli_real_escape_string($link, $_POST['location'])."')";
 	if (!(mysqli_query($link, $result)))
 		die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 	$result = "UPDATE `products` SET `location` = '".mysqli_real_escape_string($link, $_POST['location'])."', `owner` = 'АДС' where `serial` = '".mysqli_real_escape_string($link, $_POST['serialHide'])."'";
@@ -32,7 +32,7 @@ if (!empty($_POST['savebtN']))
 				$id = (mysqli_insert_id($link));
 			else 
 				die ('Ошибка записи в ТБ продукты:'  .mysqli_error($link));
-			$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`) VALUES ($id, NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."')";
+			$result = "INSERT INTO `history` (`UID`, `date`,  `worker`, `type_write`, `order_from`, `whom_order`, `comment`, `location`) VALUES ($id, NOW(), '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'record', '".mysqli_real_escape_string($link, $_POST['order_from'])."', 'АДС', '".mysqli_real_escape_string($link, $_POST['comment'])."', '".mysqli_real_escape_string($link, $_POST['location'])."')";
 			if (!(mysqli_query($link, $result)))
 				die ('Ошибка записи в ТБ история:'  .mysqli_error($link));
 			$succ = 2;
@@ -48,10 +48,7 @@ if (!empty($_POST['postFromMain']))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
-  <script type="text/javascript" src="js/jquery.autocomplete.js"></script>
+ <?php HtmlHead();?>	 
   <title>Возврат</title>
  </head>
  <body>

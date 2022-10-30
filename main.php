@@ -37,7 +37,7 @@ $request = '';
 unset($_POST['filterHide']);
 }
 else if (!empty($_POST['filter']))
-	$request = requestDB(array("serial", "type","name", "location", "owner", "otk", "testing", "repair", "mismatch", "date1", "date2"), $link);
+	$request = requestDB(array("serial", "type","name", "location", "owner", "testing", "otk", "repair", "mismatch", "date1", "date2"), $link);
 if (!empty($_POST['applyFilter']))
 {
 if (!empty($_POST['lot']))
@@ -50,9 +50,7 @@ else
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
+ <?php HtmlHead();?>
   <title>Главная</title>
  </head>
  <body>
@@ -115,7 +113,10 @@ else
 				}
 				echo '</div>';
 				echo '<div id="filterContent" style="display:none">';
-				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="'; if (!empty($_POST['filterHide']['serial'][0])) echo htmlspecialchars($_POST['filterHide']['serial'][0]); echo '"></label></div>';
+				echo '<div class = "filters"><label class = "filterName">Серийный номер</label><label class="filterInput"><input type = "text" name = "filter[serial][]"  form = "myform" value ="';
+				$si=0;
+				while (!empty($_POST['filterHide']['serial'][$si])) echo htmlspecialchars($_POST['filterHide']['serial'][$si++].',');
+				echo '"></label></div>';
 				echo '<div class = "filters"><label class = "filterName">Отображение</label><label class="filterInput"><input  class = "viewSort" onchange="checkAddress(this, \'viewSort\')" name = "lot" type="checkbox" form = "myform" value ="1"'; if (!empty($_POST['lotHide']) && $_POST['lotHide'] == 1) echo 'checked'; echo '>Количество</label>';
 				echo '<label class="filterInput"><input class = "viewSort" onchange="checkAddress(this, \'viewSort\')"  name = "lot" type="checkbox" form = "myform" value ="2"'; if (!empty($_POST['lotHide']) && $_POST['lotHide'] == 2 ) echo 'checked'; echo '>Склад</label></div>';
 				selectDB($link, "Тип", "type", "products");	
@@ -124,6 +125,7 @@ else
 				selectDB($link, "Владелец", "owner", "products");
 				selectDB($link, "Тестирование", "testing", "products");
 				selectDB($link, "В ремонте", "repair", "products");
+				selectDB($link, "Отк", "otk", "products");
 				echo '<div class = "filters"><label class = "filterName">Дата</label><label class="filterInput">от  <input class = "date" name = "filter[date1][]" type ="date" min="2015-01-01" max="'; echo date("Y-m-d"); echo '" value = "'; if (!empty($_POST['filterHide']['date1'][0])) echo $_POST['filterHide']['date1'][0];
 				echo '" form = "myform"></label><label class="filterInput">по  </input><input class = "date" name = "filter[date2][]" type = "date" min="2016-01-01" max="'; echo date("Y-m-d"); echo '" form = "myform" value = "'; if (!empty($_POST['filterHide']['date2'][0])) echo $_POST['filterHide']['date2'][0]; echo '"></input></label></div>';
 				echo '</div>';

@@ -6,10 +6,10 @@ checkRoot($link, "testing", false);
 mysqli_set_charset($link, 'utf8');
 $succ = 0;
 if (!empty($_POST['savebtn']))
-{
+{	
 	$result = "INSERT into history (`uid`, `worker`, `type_write`, `status`, `comment`, `protocol`, `date`) values ('".mysqli_real_escape_string($link, $_POST['uid'])."', '".mysqli_real_escape_string($link, $_SESSION['worker'])."', 'testing', '".mysqli_real_escape_string($link, $_POST['status'])."', '".mysqli_real_escape_string($link, $_POST['comment'])."', '".mysqli_real_escape_string($link, $_POST['protocol'])."', NOW())";
 	if (!(mysqli_query($link, $result)))
-	die ('Error recording in table history:'  .mysqli_error($link));
+	die ('Error recording in table history:'  .mysqli_error($link));	
 	$result = "UPDATE products set `testing` = '".mysqli_real_escape_string($link, $_POST['status'])."' where `uid` = '".mysqli_real_escape_string($link, $_POST['uid'])."'";
 	if (!(mysqli_query($link, $result)))
 	die ('Error recording in table products:'  .mysqli_error($link));
@@ -24,9 +24,7 @@ if (!empty($_POST['postFromMain']))
 <!DOCTYPE html>
 <html>
  <head>
-  <meta charset=utf-8">
-  <link rel="stylesheet" href="css/main.css"<?php echo(microtime(true).rand()); ?>>
-  <script src="js/jquery.js"></script>
+ <?php HtmlHead();?>	 
   <title>Интерфейс испытателя</title>
  </head>
  <body>
@@ -44,50 +42,55 @@ if (!empty($_POST['postFromMain']))
 				if (!empty($_POST['nextbtn']))
 				{
 					if (!empty($_POST['serial']))
-					{
-						$result = mysqli_query($link, "select `uid` from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-						$row = mysqli_fetch_row($result);
+					{						
+						$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
+						$row = mysqli_fetch_assoc($result);						
+						mysqli_data_seek($result,0); // Reset pointer to the beginning of the result set 						
 						if (!empty($row))
-						{
-							$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-							//Рисую таблицу с информацией о типе, имени, ОТК
+						{																					
+							//Products table
 							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
 							echo '<caption> Данные изделия</caption>';
-							$mass = array('UID', 'Тип', 'Имя', 'Серийный номер', 'Дата');
-							$columnName = array ( "UID", "type", "name", "serial", "date");
+							$mass = array('Дата', 'Тип', 'Имя', '№','Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
+							$columnName = array ( "date", "type", "name", "serial","owner", "location", "testing", "otk", "comment");
 							echo '<tr>';
 							for ($i = 0; (!empty($mass[$i])); $i++)
 							{
-							echo '<td>'.$mass[$i].'</td>';
+							echo '<td><i>'.$mass[$i].'</i></td>';
 							}
 							echo '</tr>';
 							echo "<tr>";
 							paintRow($link, $result, $columnName, false, "testing");
 							echo "</tr>";
 							echo '</table>';
-							$result = mysqli_query($link, "select * from products where serial = '".mysqli_real_escape_string($link, $_POST['serial'])."'");
-							echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
-							echo '<caption> Данные изделия</caption>';
-							$mass = array('Владелец', 'Местоположение', 'Тестирование', 'ОТК', 'Комментарий');
-							$columnName = array ("owner", "location", "testing", "otk", "comment");
-							echo '<tr>';
-							for ($i = 0; (!empty($mass[$i])); $i++)
-							{
-							echo '<td>'.$mass[$i].'</td>';
+							
+							//History table 
+							$result = mysqli_query($link, "select * from history where UID = '".$row['UID']."' AND type_write IN ('testing','otk','repair','mismatch')");
+							if  (mysqli_num_rows($result)>0){
+							  echo '<table class="tableOtk" align="center" style = "margin: 1em 0;">';
+							  echo '<caption> История</caption>';
+							  $mass = array('Дата', 'Кто', 'Тип', 'Статус', 'Комментарий','Протокол');
+							  $columnName = array ("date","worker","type_write", "status", "comment", "protocol");
+							  echo '<tr>';
+							  for ($i = 0; (!empty($mass[$i])); $i++){
+							    echo '<td><i>'.$mass[$i].'</i></td>';
+							  }
+							  echo '</tr>';
+							  echo "<tr>";
+							  paintRow($link, $result ,$columnName, false, "testing");
+							  echo "</tr>";
+							  echo '</table>';
 							}
-							echo '</tr>';
-							echo "<tr>";
-							paintRow($link, $result ,$columnName, false, "testing");
-							echo "</tr>";
-							echo '</table>';
-							echo '<input type = "hidden" name = "uid" value = "'.htmlspecialchars($row[0]).'">';
+							echo '<input type = "hidden" name = "uid" value = "'.htmlspecialchars($row['UID']).'">';
 							echo '<div id = "downContentTesting">';
 							echo '<select class="select" name="status" required>';
 							echo '<option value = "">Выберите статус тестирования</option>';
 							echo '<option value="ok">Тестирование прошло успешно</option>';
 							echo '<option value="fail">Выявлены ошибки</option>';
 							echo '</select>';
-							echo '<label>Протокол</label><input type = text name="protocol" maxlength="100"></input>';
+							echo '<label>Протокол</label><input type = text name="protocol" maxlength="100"';
+							echo 'value = "'.$row['serial'].'"';
+							echo ' />';							
 							echo '<label style = "margin-top: 1em" >Комментарий</label><textarea class="comment" type="text" name="comment" maxlength="1000"></textarea>';
 							echo '<input type="submit" id="savedata" name="savebtn" value="Сохранить данные"/>';
 							echo '</div>';
